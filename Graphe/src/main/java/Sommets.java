@@ -58,13 +58,12 @@ public class Sommets {
     }
     
     public void afficherVoisins() {
-        String msg = "";
         Arete voisin = this.voisins;
         while (voisin != null) {
-            msg += voisin +" --> \n";
+            System.out.println(voisin);
             voisin = voisin.getSuivant();
         }
-        System.out.println(msg + " None");
+        
     }
     
 }
