@@ -106,7 +106,22 @@ public class Graphe {
         }
         return res;
     }
-    public void afficherSuccesseur(String som){
+    public ArrayList<Arete> getTousVoisins(){
+        ArrayList<Arete> res = null;
+        Sommets sommet = this.sommets;
+        if(sommet!= null){
+            res = sommet.getVoisins();
+            while(sommet.getAutreSommet()!= null){
+                sommet = sommet.getAutreSommet();
+                ArrayList<Arete> aretes = sommet.getVoisins();
+                for(int i = 0; i < aretes.size(); i++){
+                    res.add(aretes.get(i));
+                }
+            }
+        }
+        return res;
+    }
+    public void afficherVoisins(String som){
         if(this.existeSommet(som)){
             Sommets sommet = this.sommets;
             if(sommet.getTete().equals(som)){
@@ -144,7 +159,7 @@ public class Graphe {
         return res;
     } 
 
-    public String plusCourtChemin(String som1, String som2){
+    public ArrayList<String> plusCourtChemin(String som1, String som2){
         HashMap<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>();
         HashMap<String, Boolean> marquage = new HashMap<String, Boolean>();
         ArrayList<Sommets> listSommets = this.getSommets();
@@ -164,7 +179,7 @@ public class Graphe {
             for(int i = 0; i < succSom.size(); i++){
                 String nomSucc = succSom.get(i).getSommet();
                 if(!marquage.get(nomSucc)){
-                    res.put(nomSucc, res.get(som));
+                    res.put(nomSucc, new ArrayList<String>(res.get(som)));
                     res.get(nomSucc).add(nomSucc);
                     marquage.put(nomSucc, true);
                     newFile.enfiler(nomSucc);
@@ -172,9 +187,9 @@ public class Graphe {
             }
         }
         if(!(res.containsKey(som2))){
-            return "impossible d'accéder au sommet";
+            return null;
         }
-        return res.get(som2).toString();
+        return res.get(som2);
     }
 
 }
@@ -224,6 +239,9 @@ class Sommets {
         this.nombreVoisins = 0;
     }
 
+    public String toString(){
+        return "[Nom: "+this.tete+", Type: "+this.type+"]";
+    }
     public String getTete() {
         return this.tete;
     }
@@ -304,7 +322,6 @@ class Sommets {
             System.out.println(voisin);
             voisin = voisin.getSuivant();
         }
-        
     } 
 }
 class Arete {

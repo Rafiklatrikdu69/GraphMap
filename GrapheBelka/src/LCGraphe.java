@@ -1,4 +1,3 @@
-
 class LCGraphe {
     public class MaillonGrapheSec {
         private double fiab;
@@ -7,10 +6,10 @@ class LCGraphe {
         private String dest;
         private MaillonGrapheSec suiv;
 
-        private MaillonGrapheSec(double f, double dt , double dr, String d) {
-            fiab = f;
-            dist = dt;
-            dur = dr;
+        private MaillonGrapheSec(double fiabilite, double distance , double duree, String d) {
+            fiab = fiabilite;
+            dist = distance;
+            dur = duree;
             dest = d;
             suiv = null;
         }
@@ -40,16 +39,46 @@ class LCGraphe {
 
     public void addMain(String ori, String t){
         MaillonGraphe nouv = new MaillonGraphe(ori,t);
-        nouv.suiv= this.premier;
+        nouv.suiv = this.premier;
         this.premier = nouv;
     }
 
-    public void addEdge(String o, String d, double fiab, double dist, double dur){
-        MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, d);
+
+    public boolean existEdge(String o, String d){
+        boolean res = false;
+        MaillonGraphe tmp = this.premier;
+        MaillonGrapheSec tmp2 = null;
+        while(!tmp.nom.equals(o)){
+            tmp = tmp.suiv;
+        }
+        if(tmp != null){
+            tmp2 = tmp.lVois;
+            while(!res && tmp2!=null){
+                if(tmp2.dest.equals(d)){
+                    res = true;
+                }
+                tmp2 = tmp2.suiv;
+            }
+        }
+        return res;
+    }
+    public boolean addEdge(String o, String d, double fiab, double dist, double dur) throws ExistEdgeException{
+        boolean status = true;
+        MaillonGrapheSec tmp2 = null;
         MaillonGraphe tmp = this.premier;
         while (!tmp.nom.equals(o)){
             tmp = tmp.suiv;
         }
+        if(tmp != null){
+            tmp2 = tmp.lVois;
+            while(tmp2!=null){
+                if(tmp2.dest.equals(d)){
+                    throw new ExistEdgeException("Impossible de faire des doublons !");
+                }
+                tmp2 = tmp2.suiv;
+            }
+        }
+        MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, d);
         nouv.suiv = tmp.lVois;
         tmp.lVois = nouv;
 
@@ -60,15 +89,15 @@ class LCGraphe {
         }
         nouv2.suiv = tmp.lVois;
         tmp.lVois = nouv2;
+        return status;
     }
     public String  toString(){
         String s = "";
         MaillonGraphe tmp = this.premier;
         while(tmp!=null){
-            s =s + tmp.nom + ":";
             MaillonGrapheSec  tmp2 = tmp.lVois;
             while(tmp2!=null){
-                s =s + tmp2.dest + "fiabilite " + tmp2.fiab + "diatance "+tmp2.dist + "duree " + tmp2.dur;
+                s += tmp2.dest + "fiabilite " + tmp2.fiab + "distance "+tmp2.dist + "durée " + tmp2.dur;
                 tmp2 = tmp2.suiv;
             }
             tmp = tmp.suiv;
@@ -89,13 +118,12 @@ class LCGraphe {
         return res;
     }
     public String trajet(){
-   String s = "";
+        String s = "";
         MaillonGraphe tmp = this.premier;
         while(tmp!=null){
-            s =s + "trajet de "+tmp.nom + ":";
             MaillonGrapheSec  tmp2 = tmp.lVois;
             while(tmp2!=null){
-                s =s + tmp2.dest + "fiabilite " + tmp2.fiab + "diatance "+tmp2.dist + "duree " + tmp2.dur;
+                s += tmp2.dest + "fiabilite " + tmp2.fiab + "distance "+tmp2.dist + "durée " + tmp2.dur;
                 tmp2 = tmp2.suiv;
             }
             tmp = tmp.suiv;
@@ -104,16 +132,15 @@ class LCGraphe {
         return s;
 }
     public String toutLesVoisins(String disp){
-      String s = "";
+        String s = "";
         MaillonGraphe tmp = this.premier;
         while(tmp!=null){
             if(tmp.nom.equals(disp)){
-            s =s + "voisin de "+tmp.nom + ":";
-            MaillonGrapheSec  tmp2 = tmp.lVois;
-            while(tmp2!=null){
-                s =s + tmp2.dest + "fiabilite " + tmp2.fiab + "diatance "+tmp2.dist + "duree " + tmp2.dur;
-                tmp2 = tmp2.suiv;
-            }
+                MaillonGrapheSec  tmp2 = tmp.lVois;
+                while(tmp2!=null){
+                    s =s + tmp2.dest + " [fiabilite=" + tmp2.fiab + ", distance="+tmp2.dist + ", durée=" + tmp2.dur+"]\n";
+                    tmp2 = tmp2.suiv;
+                }
             }
             tmp = tmp.suiv;
         }
