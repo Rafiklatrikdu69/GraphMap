@@ -97,7 +97,7 @@ class LCGraphe {
         while(tmp!=null){
             MaillonGrapheSec  tmp2 = tmp.lVois;
             while(tmp2!=null){
-                s += tmp2.dest + "fiabilite " + tmp2.fiab + "distance "+tmp2.dist + "durée " + tmp2.dur;
+                s += tmp.nom+"-"+tmp2.dest + " [fiabilite=" + tmp2.fiab + ", distance="+tmp2.dist + ", durée=" + tmp2.dur+"]\n";
                 tmp2 = tmp2.suiv;
             }
             tmp = tmp.suiv;
@@ -117,13 +117,13 @@ class LCGraphe {
         }
         return res;
     }
-    public String trajet(){
+    public String tousLesTrajets(){
         String s = "";
         MaillonGraphe tmp = this.premier;
         while(tmp!=null){
             MaillonGrapheSec  tmp2 = tmp.lVois;
             while(tmp2!=null){
-                s += tmp2.dest + "fiabilite " + tmp2.fiab + "distance "+tmp2.dist + "durée " + tmp2.dur;
+                s += tmp.nom+"-"+tmp2.dest + " [fiabilite=" + tmp2.fiab + ", distance="+tmp2.dist + ", durée=" + tmp2.dur+"]\n";
                 tmp2 = tmp2.suiv;
             }
             tmp = tmp.suiv;
@@ -131,7 +131,7 @@ class LCGraphe {
         s = s + "\n";
         return s;
 }
-    public String toutLesVoisins(String disp){
+    public String tousLesVoisins(String disp){
         String s = "";
         MaillonGraphe tmp = this.premier;
         while(tmp!=null){
