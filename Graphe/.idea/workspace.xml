@@ -8,9 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/LCGraphe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LCGraphe.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/LCGraphe$MaillonGraphe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LCGraphe$MaillonGraphe.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/LCGraphe$MaillonGrapheSec.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LCGraphe$MaillonGrapheSec.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/LCGraphe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LCGraphe.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
     </list>
@@ -68,7 +65,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1683275775123</updated>
-      <workItem from="1683275776068" duration="8895000" />
+      <workItem from="1683275776068" duration="9242000" />
     </task>
     <servers />
   </component>
