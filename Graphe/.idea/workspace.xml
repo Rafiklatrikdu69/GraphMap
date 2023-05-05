@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d99efb15-7d67-42af-a5b4-ff7c9cd77565" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/LCGraphe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LCGraphe.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/LCGraphe$MaillonGraphe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LCGraphe$MaillonGraphe.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/LCGraphe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LCGraphe.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
     </list>
@@ -67,7 +67,7 @@
       <option name="presentableId" value="Default" />
       <updated>1683275775123</updated>
       <workItem from="1683275776068" duration="9895000" />
-      <workItem from="1683285942399" duration="390000" />
+      <workItem from="1683285942399" duration="2114000" />
     </task>
     <servers />
   </component>
