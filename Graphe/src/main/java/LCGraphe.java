@@ -300,10 +300,10 @@ class LCGraphe {
         }
         return res.get(centre2);
     }
-    public TreeMap<String, Double> plusCourtCheminDijkstrat(String centre1, String centre2){
-        HashMap<String, TreeMap<String, Double>> res = new HashMap<>();
+    public LinkedHashMap<String, Double> plusCourtCheminDijkstrat(String centre1, String centre2){
+        HashMap<String, LinkedHashMap<String, Double>> res = new HashMap<>();
         HashMap<String, Boolean> marquage = new HashMap<String, Boolean>();
-        res.put(centre1, new TreeMap<>());
+        res.put(centre1, new LinkedHashMap<>());
         res.get(centre1).put(centre1, 0.0);
         this.getCentres().forEach(Centre -> {
             marquage.put(Centre.getNom(), false);
@@ -318,21 +318,18 @@ class LCGraphe {
                 String nomSucc = maillonGrapheSec.getDestination();
                 Double distance = maillonGrapheSec.getDistance();
                 if (!marquage.get(nomSucc)) {
-                    res.put(nomSucc, new TreeMap<String, Double>(res.get(centre)));
+                    res.put(nomSucc, new LinkedHashMap<String, Double>(res.get(centre)));
                     res.get(nomSucc).put(nomSucc, distance);
                     marquage.put(nomSucc, true);
                     newFile.enfiler(nomSucc);
                 }
             }
+            ///// FAUT TRIER newFile en fonction de la fiabilité
+
         }
         if(!(res.containsKey(centre2))){
             return null;
         }
-        Double distanceTotal = res.get(centre2).get(centre1);
-        for(Double distance : res.get(centre2).values()){
-            distanceTotal += distance;
-        }
-        System.out.println(distanceTotal);
         return res.get(centre2);
     }
 }
