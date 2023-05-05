@@ -23,24 +23,24 @@ class LCGraphe {
             dest = d;
             suiv = null;
         }
-        
+
         public String getDestination() {
             return dest;
         }
-        
+
         public double getDistance() {
             return dist;
         }
-        
+
         public double getDuree() {
             return dur;
         }
-        
+
         public double getFiabilite() {
             return fiab;
         }
-        
-        
+
+
     }
 
     class MaillonGraphe {
@@ -58,7 +58,7 @@ class LCGraphe {
             suiv = null;
             listed = false;
         }
-        
+
         public String getNom() {
             return nom;
         }
@@ -279,10 +279,10 @@ class LCGraphe {
         }
         s = s + "\n";
         return s;
-}
+    }
 
     public void LectureFichier(){
-        try (Scanner scanner = new Scanner(new File("test.txt"))) {
+        try (Scanner scanner = new Scanner(new File("src/test.txt"))) {
             // Lire la première ligne contenant l'en-tête
             String header = scanner.nextLine();
 
@@ -301,7 +301,7 @@ class LCGraphe {
     }
 
     public void chargementGraphe(String ligne) {
-       //decompose la chaine en sous chaines -> bloc
+        //decompose la chaine en sous chaines -> bloc
         String[] sousChaines = ligne.split(";");
 
         // je prends le nom et le type de la première sous-chaîne -> premier bloc
@@ -343,11 +343,4 @@ class LCGraphe {
         }
 
     }
-
-
-
-
-    }
-
-
-
+}
