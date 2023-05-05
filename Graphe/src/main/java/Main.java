@@ -7,8 +7,7 @@ public class Main extends Exception {
         newGraphe.chargementFichier();
 
         System.out.println(newGraphe.existeVoisin("S1", "S3"));
-        System.out.println();
-        newGraphe.affiche();
+        System.out.println(newGraphe);
 
     }
 }
