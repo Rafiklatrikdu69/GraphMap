@@ -79,12 +79,94 @@ class LCGraphe {
         premier = null;
     }
 
-    public void ajoutSommet(String nomSommet, String typeSommet){
-        MaillonGraphe nouv = new MaillonGraphe(nomSommet, typeSommet);
+    public void ajoutCentre(String nomCentre, String typeCentre){
+        MaillonGraphe nouv = new MaillonGraphe(nomCentre, typeCentre);
         nouv.suiv = this.premier;
         this.premier = nouv;
     }
+    public void ajoutVoisin(String nomCentre, String nomDestinataire, Double fiab, Double dist, Double dur){
+        MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, nomDestinataire);
+        MaillonGraphe tmp = this.premier;
+        while (!tmp.nom.equals(nomCentre)){
+            tmp = tmp.suiv;
+        }
+        nouv.suiv = tmp.lVois;
+        tmp.lVois = nouv;
 
+        MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, nomCentre);
+        tmp = this.premier;
+        while (!tmp.nom.equals(nomDestinataire)){
+            tmp = tmp.suiv;
+        }
+        nouv2.suiv = tmp.lVois;
+        tmp.lVois = nouv2;
+    }
+    public void modifVoisin(String nomCentre, String nomDestinataire, double fiab, double dist, double dur) throws ExistEdgeException, NotExistMainException {
+        MaillonGrapheSec tmp2 = null;
+        MaillonGraphe tmp = this.premier;
+        MaillonGraphe tmp3 = this.premier;
+        boolean check = false;
+        while (!tmp.nom.equals(nomCentre)){
+            tmp = tmp.suiv;
+            if(tmp == null){
+                throw new NotExistMainException("Le centre "+nomCentre+" n'existe pas!");
+            }
+        }
+        tmp2 = tmp.lVois;
+        while(!check && tmp2!=null){
+            if(tmp2.dest.equals(nomDestinataire)){
+                tmp2.dist = dist;
+                tmp2.dur = dur;
+                tmp2.fiab = fiab;
+                check = true;
+            } else {
+                tmp2 = tmp2.suiv;
+            }
+        }
+
+        if(tmp2 == null){
+            throw new ExistEdgeException("L'arete n'existe pas !");
+        } // regarde si l'arete existe
+
+        while(!tmp3.nom.equals(nomDestinataire)){
+            tmp3 = tmp3.suiv;
+            if(tmp3 == null){
+                throw new NotExistMainException("Le sommet "+nomDestinataire+" n'existe pas!");
+            }
+        } // Get le sommet dest
+        check = false;
+        tmp2 = tmp3.lVois;
+        while(!check && tmp2!=null){
+            if(tmp2.dest.equals(nomCentre)){
+                tmp2.dist = dist;
+                tmp2.dur = dur;
+                tmp2.fiab = fiab;
+                check = true;
+            }
+            tmp2 = tmp2.suiv;
+        }
+    }
+    public boolean existeVoisin(String nomCentre, String nomDestinataire){
+        boolean res = false;
+        MaillonGraphe tmp = this.premier;
+        MaillonGrapheSec tmp2 = null;
+        while(!tmp.nom.equals(nomCentre)){
+            tmp = tmp.suiv;
+        }
+        tmp2 = tmp.lVois;
+        while(!res && tmp2!=null){
+            if(tmp2.dest.equals(nomDestinataire)){
+                res = true;
+            }
+            tmp2 = tmp2.suiv;
+        }
+        return res;
+    }
+    public boolean existeCentre(String nomCentre){
+        boolean res = false;
+
+        return res;
+    }
     public String tousLesCentresToString(){
         String res  = "";
         MaillonGraphe tmp = this.premier;
@@ -116,87 +198,6 @@ class LCGraphe {
         }
         return res;
     }
-    public boolean existeVoisin(String o, String d){
-        boolean res = false;
-        MaillonGraphe tmp = this.premier;
-        MaillonGrapheSec tmp2 = null;
-        while(!tmp.nom.equals(o)){
-            tmp = tmp.suiv;
-        }
-        if(tmp != null){
-            tmp2 = tmp.lVois;
-            while(!res && tmp2!=null){
-                if(tmp2.dest.equals(d)){
-                    res = true;
-                }
-                tmp2 = tmp2.suiv;
-            }
-        }
-        return res;
-    }
-    public void ajoutVoisin(String o, String d, Double fiab, Double dist, Double dur){
-        //System.out.println(o+" : "+ d);
-        MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, d);
-        MaillonGraphe tmp = this.premier;
-        while (!tmp.nom.equals(o)){
-            tmp = tmp.suiv;
-        }
-        nouv.suiv = tmp.lVois;
-        tmp.lVois = nouv;
-
-        MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, o);
-        tmp = this.premier;
-        while (!tmp.nom.equals(d)){
-            tmp = tmp.suiv;
-        }
-        nouv2.suiv = tmp.lVois;
-        tmp.lVois = nouv2;
-    }
-    public void modifVoisin(String o, String d, double fiab, double dist, double dur) throws ExistEdgeException, NotExistMainException {
-        MaillonGrapheSec tmp2 = null;
-        MaillonGraphe tmp = this.premier;
-        MaillonGraphe tmp3 = this.premier;
-        boolean check = false;
-        while (!tmp.nom.equals(o)){
-            tmp = tmp.suiv;
-            if(tmp == null){
-                throw new NotExistMainException("Le sommet "+o+" n'existe pas!");
-            }
-        }
-        tmp2 = tmp.lVois;
-        while(!check && tmp2!=null){
-            if(tmp2.dest.equals(d)){
-                tmp2.dist = dist;
-                tmp2.dur = dur;
-                tmp2.fiab = fiab;
-                check = true;
-            } else {
-                tmp2 = tmp2.suiv;
-            }
-        }
-
-        if(tmp2 == null){
-            throw new ExistEdgeException("L'arete n'existe pas !");
-        } // regarde si l'arete existe
-
-        while(!tmp3.nom.equals(d)){
-            tmp3 = tmp3.suiv;
-            if(tmp3 == null){
-                throw new NotExistMainException("Le sommet "+d+" n'existe pas!");
-            }
-        } // Get le sommet dest
-        check = false;
-        tmp2 = tmp3.lVois;
-        while(!check && tmp2!=null){
-            if(tmp2.dest.equals(o)){
-                tmp2.dist = dist;
-                tmp2.dur = dur;
-                tmp2.fiab = fiab;
-                check = true;
-            }
-            tmp2 = tmp2.suiv;
-        }
-    }
     public void chargementFichier(){
         try {
             File file = new File("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
@@ -211,7 +212,7 @@ class LCGraphe {
 
                     String nom = parts[0]; // prends le nom du sommet
                     String type = parts[1];// prends le type du sommet
-                    ajoutSommet(nom, type); // et on ajoute le sommet au Graphe
+                    ajoutCentre(nom, type); // et on ajoute le sommet au Graphe
 
                     for (int i = 2; i < parts.length; i++) { // parcours toutes les arretes du sommet actuel
                         if(!parts[i].equals("0")){
@@ -249,5 +250,55 @@ class LCGraphe {
             tmp = tmp.suiv;
         }
     return res.toString();
+    }
+
+    private ArrayList<MaillonGraphe> getCentres(){
+        ArrayList<MaillonGraphe> res = new ArrayList<>();
+        MaillonGraphe tmp = this.premier;
+        while(tmp!=null){
+            res.add(tmp);
+            tmp = tmp.suiv;
+        }
+        return res;
+    }
+
+
+
+
+
+
+
+
+
+
+    public ArrayList<String> plusCourtCheminDijkstra(String centre1, String centre2){
+        HashMap<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>();
+        HashMap<String, Boolean> marquage = new HashMap<String, Boolean>();
+        List<MaillonGraphe> listCentres = this.getCentres();
+        res.put(centre1, new ArrayList<>());
+        res.get(centre1).add(centre1);
+        for (MaillonGraphe listCentre : listCentres) {
+            marquage.put(listCentre.getNom(), false);
+        }
+        marquage.put(centre1, true);
+        FileFIFO<String> newFile = new FileFIFO<>();
+        newFile.enfiler(centre1);
+        while(!newFile.estVide()){
+            String centre = newFile.defiler();
+            ArrayList<MaillonGrapheSec> succSom = this.getCentre(centre).getArrayVoisins();
+            for (MaillonGrapheSec maillonGrapheSec : succSom) {
+                String nomSucc = maillonGrapheSec.getDestination();
+                if (!marquage.get(nomSucc)) {
+                    res.put(nomSucc, new ArrayList<String>(res.get(centre)));
+                    res.get(nomSucc).add(nomSucc);
+                    marquage.put(nomSucc, true);
+                    newFile.enfiler(nomSucc);
+                }
+            }
+        }
+        if(!(res.containsKey(centre2))){
+            return null;
+        }
+        return res.get(centre2);
     }
 }
