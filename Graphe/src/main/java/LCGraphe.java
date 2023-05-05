@@ -200,7 +200,8 @@ class LCGraphe {
     }
     public void chargementFichier(){
         try {
-            File file = new File("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
+            //File file = new File("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
+            File file = new File("src/fichiersGraphe/jeuEssaietest.csv");
             Scanner scanner = new Scanner(file);
             int lineCounter = 0;
             HashMap<Integer, List> hashMapArreteTraite = new HashMap<>();
@@ -261,16 +262,7 @@ class LCGraphe {
         }
         return res;
     }
-
-
-
-
-
-
-
-
-
-
+    
     public ArrayList<String> plusCourtCheminDijkstra(String centre1, String centre2){
         HashMap<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>(); // res sera le chemin entre centre1 et centre2 (null si ya pas de chemin)
         HashMap<String, Boolean> marquage = new HashMap<String, Boolean>(); // permet de marquer les centres (Sommets traité en Graphe)
@@ -302,34 +294,39 @@ class LCGraphe {
     }
     public LinkedHashMap<String, Double> plusCourtCheminDijkstrat(String centre1, String centre2){
         HashMap<String, LinkedHashMap<String, Double>> res = new HashMap<>();
-        HashMap<String, Boolean> marquage = new HashMap<String, Boolean>();
+        HashMap<String, Boolean> marquage = new HashMap<>();
         res.put(centre1, new LinkedHashMap<>());
-        res.get(centre1).put(centre1, 0.0);
+        res.get(centre1).put(centre1, 1.0);
         this.getCentres().forEach(Centre -> {
             marquage.put(Centre.getNom(), false);
         });
         marquage.put(centre1, true);
-        FileFIFO<String> newFile = new FileFIFO<>();
-        newFile.enfiler(centre1);
-        while(!newFile.estVide()){
-            String centre = newFile.defiler();
-            ArrayList<MaillonGrapheSec> succSom = this.getCentre(centre).getArrayVoisins();
-            for (MaillonGrapheSec maillonGrapheSec : succSom) {
-                String nomSucc = maillonGrapheSec.getDestination();
-                Double distance = maillonGrapheSec.getDistance();
+
+        FileFIFO<String[]> fileAttente = new FileFIFO<>();
+        fileAttente.enfiler(new String[]{centre1, "1"});
+        while(!fileAttente.estVide()){
+            String[] donnee = fileAttente.defiler();
+            String centre = donnee[0];
+            Double fiab = Double.parseDouble(donnee[1]);
+
+            MaillonGrapheSec voisin = this.getCentre(centre).lVois;
+            while(voisin!=null){
+                String nomSucc = voisin.getDestination();
+                Double fiabTotale = (voisin.getFiabilite()/10) * fiab;
                 if (!marquage.get(nomSucc)) {
                     res.put(nomSucc, new LinkedHashMap<String, Double>(res.get(centre)));
-                    res.get(nomSucc).put(nomSucc, distance);
+                    res.get(nomSucc).put(nomSucc, fiabTotale);
                     marquage.put(nomSucc, true);
-                    newFile.enfiler(nomSucc);
+                    fileAttente.enfiler(new String[]{nomSucc, fiabTotale.toString()});
                 }
+                voisin = voisin.suiv;
             }
-            ///// FAUT TRIER newFile en fonction de la fiabilité
-
+            // FAUT TRIE fileAttente
         }
         if(!(res.containsKey(centre2))){
             return null;
         }
+        System.out.println(res);
         return res.get(centre2);
     }
 }
