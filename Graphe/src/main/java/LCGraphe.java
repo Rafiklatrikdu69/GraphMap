@@ -63,17 +63,16 @@ class LCGraphe {
             }
             return res;
         }
-        public String afficherVoisins() {
+        public String voisinsToString() {
             MaillonGrapheSec tmp = this.lVois;
             StringBuilder s = new StringBuilder();
             while(tmp!=null){
-                s.append(tmp.dest).append(" [fiabilite=").append(tmp.fiab).append(", distance=").append(tmp.dist).append(", durée=").append(tmp.dur).append("]\n");
+                s.append("Destination : ").append(tmp.dest).append(" [fiabilite=").append(tmp.fiab).append(", distance=").append(tmp.dist).append(", durée=").append(tmp.dur).append("]\n");
                 tmp = tmp.suiv;
             }
             return s.toString();
         }
     }
-
     private MaillonGraphe premier;
 
     public LCGraphe(){
@@ -86,7 +85,7 @@ class LCGraphe {
         this.premier = nouv;
     }
 
-    public String afficherTousLesCentres(){
+    public String tousLesCentresToString(){
         String res  = "";
         MaillonGraphe tmp = this.premier;
         while(tmp!=null){
@@ -95,17 +94,17 @@ class LCGraphe {
         }
         return res;
     }
-
-    public ArrayList<MaillonGraphe> getCentres(){
-        ArrayList<MaillonGraphe> res = new ArrayList<MaillonGraphe>();
+    public String tousLesBlocsToString(){
+        StringBuilder res  = new StringBuilder();
         MaillonGraphe tmp = this.premier;
         while(tmp!=null){
-            res.add(tmp);
+            if(tmp.type.equals("O")){
+                res.append(tmp.nom).append("\n");
+            }
             tmp = tmp.suiv;
         }
-        return res;
+        return res.toString();
     }
-
     public MaillonGraphe getCentre(String nomCentre){
         MaillonGraphe tmp = this.premier;
         MaillonGraphe res = null;
@@ -135,8 +134,7 @@ class LCGraphe {
         }
         return res;
     }
-
-    public void addEdge(String o, String d, Double fiab, Double dist, Double dur){
+    public void ajoutVoisin(String o, String d, Double fiab, Double dist, Double dur){
         //System.out.println(o+" : "+ d);
         MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, d);
         MaillonGraphe tmp = this.premier;
@@ -154,7 +152,6 @@ class LCGraphe {
         nouv2.suiv = tmp.lVois;
         tmp.lVois = nouv2;
     }
-
     public void modifVoisin(String o, String d, double fiab, double dist, double dur) throws ExistEdgeException, NotExistMainException {
         MaillonGrapheSec tmp2 = null;
         MaillonGraphe tmp = this.premier;
@@ -200,39 +197,11 @@ class LCGraphe {
             tmp2 = tmp2.suiv;
         }
     }
-
-    public ArrayList<MaillonGrapheSec> getVoisins(String o) throws NotExistMainException{
-        MaillonGraphe tmp = this.premier;
-        ArrayList<MaillonGrapheSec> res = new ArrayList<MaillonGrapheSec>();
-        while (!tmp.nom.equals(o)){
-            tmp = tmp.suiv;
-            if(tmp == null){
-                throw new NotExistMainException("Le sommet "+o+" n'existe pas!");
-            }
-        }
-        MaillonGrapheSec tmp2 = tmp.lVois;
-        while(tmp2!=null){
-            res.add(tmp2);
-            tmp2 = tmp2.suiv;
-        }
-        return res;
-    }
-    public String afficherTousLesBlocs(){
-        StringBuilder res  = new StringBuilder();
-        MaillonGraphe tmp = this.premier;
-        while(tmp!=null){
-            if(tmp.type.equals("O")){
-                res.append(tmp.nom).append("\n");
-            }
-            tmp = tmp.suiv;
-        }
-        return res.toString();
-    }
     public void chargementFichier(){
         try {
             File file = new File("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
             Scanner scanner = new Scanner(file);
-            Integer lineCounter = 0;
+            int lineCounter = 0;
             HashMap<Integer, List> hashMapArreteTraite = new HashMap<>();
             List<String> listArreteDonnee;
             while (scanner.hasNextLine()) {
@@ -248,7 +217,7 @@ class LCGraphe {
                         if(!parts[i].equals("0")){
                             listArreteDonnee = new LinkedList<>();
                             if(hashMapArreteTraite.containsKey(i)){ // cette ligne permet de voir si ya une arrete complete a été détecté
-                                addEdge(hashMapArreteTraite.get(i).get(0).toString(), "S"+(lineCounter - 4), Double.parseDouble((String) hashMapArreteTraite.get(i).get(1)) ,Double.parseDouble((String) hashMapArreteTraite.get(i).get(2)),Double.parseDouble((String) hashMapArreteTraite.get(i).get(3)));
+                                ajoutVoisin(hashMapArreteTraite.get(i).get(0).toString(), "S"+(lineCounter - 4), Double.parseDouble((String) hashMapArreteTraite.get(i).get(1)) ,Double.parseDouble((String) hashMapArreteTraite.get(i).get(2)),Double.parseDouble((String) hashMapArreteTraite.get(i).get(3)));
                                 hashMapArreteTraite.remove(i);
                             } else {
                                 String[] edgeValues = parts[i].split(",");
@@ -262,8 +231,6 @@ class LCGraphe {
                 }
                 lineCounter++;
             }
-
-            // Fermer le scanner
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
