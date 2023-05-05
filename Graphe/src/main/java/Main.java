@@ -5,7 +5,7 @@ public class Main extends Exception {
 
     public static void main(String[] args) throws NotExistMainException {
         newGraphe.chargementFichier();
-        System.out.println(newGraphe.plusCourtCheminDijkstra("S1", "S6"));
+        System.out.println(newGraphe.plusCourtCheminDijkstrat("S1", "S4"));
 
     }
 }
