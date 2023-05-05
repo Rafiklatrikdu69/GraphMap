@@ -217,20 +217,6 @@ class LCGraphe {
         }
         return res;
     }
-
-    public String toString(){
-        StringBuilder s = new StringBuilder();
-        MaillonGraphe tmp = this.premier;
-        while(tmp!=null){
-            MaillonGrapheSec  tmp2 = tmp.lVois;
-            while(tmp2!=null){
-                s.append(tmp.nom).append("-").append(tmp2.dest).append(" [fiabilite=").append(tmp2.fiab).append(", distance=").append(tmp2.dist).append(", durée=").append(tmp2.dur).append("]\n");
-                tmp2 = tmp2.suiv;
-            }
-            tmp = tmp.suiv;
-        }
-        return s.toString();
-    }
     public String afficherTousLesBlocs(){
         StringBuilder res  = new StringBuilder();
         MaillonGraphe tmp = this.premier;
@@ -283,17 +269,18 @@ class LCGraphe {
             e.printStackTrace();
         }
     }
-    public void affiche(){
+    public String toString(){
+        StringBuilder res = new StringBuilder();
         MaillonGraphe tmp = this.premier;
         while (tmp != null) {
-            System.out.println("Nom: " + tmp.nom + " | Type: " + tmp.type);
+            res.append("Nom: ").append(tmp.nom).append(" | Type: ").append(tmp.type).append("\n");
             MaillonGrapheSec tmp2 = tmp.lVois;
             while (tmp2 != null) {
-                System.out.println("Fiabilite: " + tmp2.fiab + " | Distance: " + tmp2.dist + " | Duree: " + tmp2.dur + " | Destination: " + tmp2.dest);
+                res.append("Fiabilité: ").append(tmp2.fiab).append(" | Distance: ").append(tmp2.dist).append(" | Durée: ").append(tmp2.dur).append(" | Destination: ").append(tmp2.dest).append("\n");
                 tmp2 = tmp2.suiv;
             }
             tmp = tmp.suiv;
         }
-
+    return res.toString();
     }
 }
