@@ -200,8 +200,8 @@ class LCGraphe {
     }
     public void chargementFichier(){
         try {
-            //File file = new File("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
-            File file = new File("src/fichiersGraphe/jeuEssaietest.csv");
+            File file = new File("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
+            //File file = new File("src/fichiersGraphe/jeuEssaietest.csv");
             Scanner scanner = new Scanner(file);
             int lineCounter = 0;
             HashMap<Integer, List> hashMapArreteTraite = new HashMap<>();
@@ -292,7 +292,7 @@ class LCGraphe {
         }
         return res.get(centre2);
     }
-    public LinkedHashMap<String, Double> plusCourtCheminDijkstrat(String centre1, String centre2){
+    public LinkedHashMap<String, Double> plusCourtCheminDijkstraFiabilite(String centre1, String centre2){
         HashMap<String, LinkedHashMap<String, Double>> res = new HashMap<>();
         HashMap<String, Boolean> marquage = new HashMap<>();
         res.put(centre1, new LinkedHashMap<>());
@@ -309,21 +309,16 @@ class LCGraphe {
             fileAttente.remove(fileAttente.size()-1);
             String centre = donnee[0];
             double fiab = Double.parseDouble(donnee[1]);
-            double maxiFiab = 0.0;
 
             MaillonGrapheSec voisin = this.getCentre(centre).lVois;
-            MaillonGraphe centreTraite = null;
             while(voisin!=null) {
                 String nomVoisin = voisin.getDestination();
-                if (voisin.getFiabilite() > maxiFiab && !marquage.get(nomVoisin)) {
-                    maxiFiab = voisin.getFiabilite();
-                    centreTraite = this.getCentre(nomVoisin);
-                }
                 if (!marquage.get(nomVoisin)) {
                     if (!res.containsKey(nomVoisin)) {
-                        res.put(nomVoisin, new LinkedHashMap<String, Double>(res.get(centre)));
+                        res.put(nomVoisin, new LinkedHashMap<>(res.get(centre)));
                         res.get(nomVoisin).put(nomVoisin, (voisin.getFiabilite() / 10) * fiab);
                         fileAttente.add(new String[]{nomVoisin, String.valueOf(voisin.getFiabilite() / 10)});
+
                     } else {
                         LinkedHashMap<String, Double> chemin = res.get(nomVoisin);
                         Double lastFiabCentreDansChemin = null;
@@ -351,21 +346,20 @@ class LCGraphe {
                 }
                 voisin = voisin.suiv;
             }
-            if(centreTraite!=null){
-                String nomCentreTraite = centreTraite.getNom();
-                fiab = fiab * (maxiFiab/10);
-                marquage.put(nomCentreTraite, true);
-                int i = 0;
+            if(fileAttente.size()>=2){
+                int i;
                 boolean check = false;
-                while(!check && i < fileAttente.size()){
-                    if (fileAttente.get(i)[0].equals(nomCentreTraite)){
-                        check = true;
-                        fileAttente.remove(i);
-                        fileAttente.add(new String[]{nomCentreTraite, String.valueOf(fiab)});
+                int maxiFiabIndice = 0;
+                for (i = 1; i < fileAttente.size(); i++) {
+                    if(Double.parseDouble(fileAttente.get(i)[1]) > Double.parseDouble(fileAttente.get(maxiFiabIndice)[1])){
+                        maxiFiabIndice = i;
                     }
-                    i++;
                 }
+                fileAttente.add(new String[]{fileAttente.get(maxiFiabIndice)[0], String.valueOf(fileAttente.get(maxiFiabIndice)[1])});
+                fileAttente.remove(maxiFiabIndice);
             }
+            System.out.println(res);
+
         }
         if(!(res.containsKey(centre2))){
             return null;
