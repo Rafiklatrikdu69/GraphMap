@@ -272,14 +272,42 @@ class LCGraphe {
 
 
     public ArrayList<String> plusCourtCheminDijkstra(String centre1, String centre2){
-        HashMap<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>();
-        HashMap<String, Boolean> marquage = new HashMap<String, Boolean>();
-        List<MaillonGraphe> listCentres = this.getCentres();
+        HashMap<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>(); // res sera le chemin entre centre1 et centre2 (null si ya pas de chemin)
+        HashMap<String, Boolean> marquage = new HashMap<String, Boolean>(); // permet de marquer les centres (Sommets traité en Graphe)
         res.put(centre1, new ArrayList<>());
         res.get(centre1).add(centre1);
-        for (MaillonGraphe listCentre : listCentres) {
-            marquage.put(listCentre.getNom(), false);
+        this.getCentres().forEach(Centre -> {
+            marquage.put(Centre.getNom(), false);
+        });
+        marquage.put(centre1, true); // Je marque le premier Centre (le premier sommet en Graphe)
+        FileFIFO<String> newFile = new FileFIFO<>(); // Permet de ralacher les successeurs
+        newFile.enfiler(centre1); // Ajoute le premier centre a traité
+        while(!newFile.estVide()){
+            String centre = newFile.defiler();
+            ArrayList<MaillonGrapheSec> succSom = this.getCentre(centre).getArrayVoisins(); // On récupère tous les voisins du sommet en cours de traitement
+            for (MaillonGrapheSec maillonGrapheSec : succSom) { // On parcours tous les voisins
+                String nomSucc = maillonGrapheSec.getDestination();
+                if (!marquage.get(nomSucc)) { // Regarde si le voisin n'est pas marqué
+                    res.put(nomSucc, new ArrayList<String>(res.get(centre))); // créer une nouvelle liste pour le sommet suivant et le met dans la hashmap
+                    res.get(nomSucc).add(nomSucc);
+                    marquage.put(nomSucc, true); // Marque le voisin (Comme sommet traité)
+                    newFile.enfiler(nomSucc); // Ajoute le voisin
+                }
+            }
         }
+        if(!(res.containsKey(centre2))){
+            return null;
+        }
+        return res.get(centre2);
+    }
+    public TreeMap<String, Double> plusCourtCheminDijkstrat(String centre1, String centre2){
+        HashMap<String, TreeMap<String, Double>> res = new HashMap<>();
+        HashMap<String, Boolean> marquage = new HashMap<String, Boolean>();
+        res.put(centre1, new TreeMap<>());
+        res.get(centre1).put(centre1, 0.0);
+        this.getCentres().forEach(Centre -> {
+            marquage.put(Centre.getNom(), false);
+        });
         marquage.put(centre1, true);
         FileFIFO<String> newFile = new FileFIFO<>();
         newFile.enfiler(centre1);
@@ -288,9 +316,10 @@ class LCGraphe {
             ArrayList<MaillonGrapheSec> succSom = this.getCentre(centre).getArrayVoisins();
             for (MaillonGrapheSec maillonGrapheSec : succSom) {
                 String nomSucc = maillonGrapheSec.getDestination();
+                Double distance = maillonGrapheSec.getDistance();
                 if (!marquage.get(nomSucc)) {
-                    res.put(nomSucc, new ArrayList<String>(res.get(centre)));
-                    res.get(nomSucc).add(nomSucc);
+                    res.put(nomSucc, new TreeMap<String, Double>(res.get(centre)));
+                    res.get(nomSucc).put(nomSucc, distance);
                     marquage.put(nomSucc, true);
                     newFile.enfiler(nomSucc);
                 }
@@ -299,6 +328,11 @@ class LCGraphe {
         if(!(res.containsKey(centre2))){
             return null;
         }
+        Double distanceTotal = res.get(centre2).get(centre1);
+        for(Double distance : res.get(centre2).values()){
+            distanceTotal += distance;
+        }
+        System.out.println(distanceTotal);
         return res.get(centre2);
     }
 }
