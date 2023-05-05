@@ -11,6 +11,7 @@ public class FileFIFO<T> {
         file.addLast(element);
     }
 
+
     public T defiler() {
         if (estVide()) {
             throw new IllegalStateException("La file est vide.");
@@ -18,18 +19,7 @@ public class FileFIFO<T> {
         return file.removeFirst();
     }
 
-    public T premier() {
-        if (estVide()) {
-            throw new IllegalStateException("La file est vide.");
-        }
-        return file.getFirst();
-    }
-
     public boolean estVide() {
         return file.isEmpty();
-    }
-
-    public int taille() {
-        return file.size();
     }
 }
