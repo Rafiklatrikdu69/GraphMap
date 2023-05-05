@@ -262,7 +262,7 @@ class LCGraphe {
         }
         return res;
     }
-    
+
     public ArrayList<String> plusCourtCheminDijkstra(String centre1, String centre2){
         HashMap<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>(); // res sera le chemin entre centre1 et centre2 (null si ya pas de chemin)
         HashMap<String, Boolean> marquage = new HashMap<String, Boolean>(); // permet de marquer les centres (Sommets traité en Graphe)
@@ -301,32 +301,75 @@ class LCGraphe {
             marquage.put(Centre.getNom(), false);
         });
         marquage.put(centre1, true);
-
-        FileFIFO<String[]> fileAttente = new FileFIFO<>();
-        fileAttente.enfiler(new String[]{centre1, "1"});
-        while(!fileAttente.estVide()){
-            String[] donnee = fileAttente.defiler();
+        ArrayList<String[]> fileAttente = new ArrayList<>();
+        fileAttente.add(new String[]{centre1, "1"});
+        String[] donnee;
+        while(!(fileAttente.isEmpty())){
+            donnee = fileAttente.get(fileAttente.size()-1);
+            fileAttente.remove(fileAttente.size()-1);
             String centre = donnee[0];
-            Double fiab = Double.parseDouble(donnee[1]);
+            double fiab = Double.parseDouble(donnee[1]);
+            double maxiFiab = 0.0;
 
             MaillonGrapheSec voisin = this.getCentre(centre).lVois;
-            while(voisin!=null){
-                String nomSucc = voisin.getDestination();
-                Double fiabTotale = (voisin.getFiabilite()/10) * fiab;
-                if (!marquage.get(nomSucc)) {
-                    res.put(nomSucc, new LinkedHashMap<String, Double>(res.get(centre)));
-                    res.get(nomSucc).put(nomSucc, fiabTotale);
-                    marquage.put(nomSucc, true);
-                    fileAttente.enfiler(new String[]{nomSucc, fiabTotale.toString()});
+            MaillonGraphe centreTraite = null;
+            while(voisin!=null) {
+                String nomVoisin = voisin.getDestination();
+                if (voisin.getFiabilite() > maxiFiab && !marquage.get(nomVoisin)) {
+                    maxiFiab = voisin.getFiabilite();
+                    centreTraite = this.getCentre(nomVoisin);
+                }
+                if (!marquage.get(nomVoisin)) {
+                    if (!res.containsKey(nomVoisin)) {
+                        res.put(nomVoisin, new LinkedHashMap<String, Double>(res.get(centre)));
+                        res.get(nomVoisin).put(nomVoisin, (voisin.getFiabilite() / 10) * fiab);
+                        fileAttente.add(new String[]{nomVoisin, String.valueOf(voisin.getFiabilite() / 10)});
+                    } else {
+                        LinkedHashMap<String, Double> chemin = res.get(nomVoisin);
+                        Double lastFiabCentreDansChemin = null;
+                        String lastNomCentreDansChemin = null;
+                        for (Map.Entry<String, Double> centreChemin : chemin.entrySet()) {
+                            lastNomCentreDansChemin = centreChemin.getKey();
+                            lastFiabCentreDansChemin = centreChemin.getValue();
+                        }
+                        if (lastFiabCentreDansChemin < (voisin.getFiabilite() / 10) * fiab) {
+
+                            res.put(nomVoisin, new LinkedHashMap<>(res.get(donnee[0])));
+                            res.get(nomVoisin).put(lastNomCentreDansChemin, (voisin.getFiabilite() / 10) * fiab);
+                            int i = 0;
+                            boolean check = false;
+                            while(!check && i < fileAttente.size()){
+                                if (fileAttente.get(i)[0].equals(nomVoisin)){
+                                     check = true;
+                                     fileAttente.remove(i);
+                                     fileAttente.add(new String[]{nomVoisin, String.valueOf(voisin.getFiabilite() / 10)});
+                                }
+                                i++;
+                            }
+                        }
+                    }
                 }
                 voisin = voisin.suiv;
             }
-            // FAUT TRIE fileAttente
+            if(centreTraite!=null){
+                String nomCentreTraite = centreTraite.getNom();
+                fiab = fiab * (maxiFiab/10);
+                marquage.put(nomCentreTraite, true);
+                int i = 0;
+                boolean check = false;
+                while(!check && i < fileAttente.size()){
+                    if (fileAttente.get(i)[0].equals(nomCentreTraite)){
+                        check = true;
+                        fileAttente.remove(i);
+                        fileAttente.add(new String[]{nomCentreTraite, String.valueOf(fiab)});
+                    }
+                    i++;
+                }
+            }
         }
         if(!(res.containsKey(centre2))){
             return null;
         }
-        System.out.println(res);
         return res.get(centre2);
     }
 }
