@@ -25,7 +25,7 @@ class LCGraphe {
             suiv = null;
         }
 /**
- * 
+ *
  * @return String: destination
  */
         public String getDestination() {
@@ -59,7 +59,6 @@ class LCGraphe {
         public void setDestination(String dest) {
             this.dest = dest;
         }
-
         /**
          *
          * @param dist
@@ -67,7 +66,6 @@ class LCGraphe {
         public void setDistance(double dist) {
             this.dist = dist;
         }
-
         /**
          *
          * @param duree
@@ -75,13 +73,17 @@ class LCGraphe {
         public void setDuree(double duree) {
             this.dur = duree;
         }
-
         /**
          *
          * @param fiab
          */
         public void setFiabilite(double fiab) {
             this.fiab = fiab;
+        }
+        public String toString(){
+            StringBuilder res = new StringBuilder();
+            res.append(this.dest).append(" [Fiabilité : ").append(this.fiab*10).append("%, Distance : ").append(this.dist).append("Km, Durée : ").append(this.dur).append(" minutes]");
+            return res.toString();
         }
     }
 
@@ -131,6 +133,28 @@ class LCGraphe {
             MaillonGrapheSec tmp = this.lVois;
             while(tmp!=null){
                 res.add(tmp);
+                tmp = tmp.suiv;
+            }
+            return res;
+        }
+        public MaillonGrapheSec getVoisin(String nomVoisin){
+            MaillonGrapheSec res = null;
+            MaillonGrapheSec tmp = this.lVois;
+            while(res == null && tmp!=null){
+                if(tmp.getDestination().equals(nomVoisin)){
+                    res = tmp;
+                }
+                tmp = tmp.suiv;
+            }
+            return res;
+        }
+        public boolean estVoisin(String nomVoisin){
+            boolean res = false;
+            MaillonGrapheSec tmp = this.lVois;
+            while(!res && tmp!=null){
+                if(tmp.getDestination().equals(nomVoisin)){
+                    res = true;
+                }
                 tmp = tmp.suiv;
             }
             return res;
@@ -304,6 +328,20 @@ class LCGraphe {
         MaillonGraphe tmp = this.premier;
         while(tmp!=null){
             res.add(tmp);
+            tmp = tmp.suiv;
+        }
+        return res;
+    }
+    public LinkedList<MaillonGrapheSec> toutesLesAretesToList(){
+        LinkedList<MaillonGrapheSec> res = new LinkedList<>();
+        MaillonGraphe tmp = this.premier;
+        MaillonGrapheSec tmp2 = null;
+        while (tmp!=null) {
+            tmp2 = tmp.lVois;
+            while (tmp2 != null) {
+                if (res.contains(tmp2))
+                tmp2 = tmp2.suiv;
+            }
             tmp = tmp.suiv;
         }
         return res;

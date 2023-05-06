@@ -6,7 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="d99efb15-7d67-42af-a5b4-ff7c9cd77565" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LCGraphe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LCGraphe.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/MenuConsoleGraphe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MenuConsoleGraphe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/InterfaceGraphe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/InterfaceGraphe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/LCGraphe$MaillonGraphe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LCGraphe$MaillonGraphe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/LCGraphe$MaillonGrapheSec.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LCGraphe$MaillonGrapheSec.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/LCGraphe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LCGraphe.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/MenuConsoleGraphe$ConsoleColors.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuConsoleGraphe$ConsoleColors.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/MenuConsoleGraphe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuConsoleGraphe.class" afterDir="false" />
     </list>
@@ -73,6 +78,8 @@
       <workItem from="1683359617133" duration="13160000" />
       <workItem from="1683385117862" duration="2175000" />
       <workItem from="1683390307462" duration="517000" />
+      <workItem from="1683397375141" duration="5877000" />
+      <workItem from="1683405605552" duration="3000" />
     </task>
     <servers />
   </component>
