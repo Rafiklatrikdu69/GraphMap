@@ -294,13 +294,13 @@ class LCGraphe {
     }
     public LinkedHashMap<String, Double> plusCourtCheminDijkstraFiabilite(String centre1, String centre2){
         HashMap<String, LinkedHashMap<String, Double>> res = new HashMap<>();
-        HashMap<String, Boolean> marquage = new HashMap<>();
+        HashMap<String, Boolean> sommetsTraites = new HashMap<>();
         res.put(centre1, new LinkedHashMap<>());
         res.get(centre1).put(centre1, 1.0);
         this.getCentres().forEach(Centre -> {
-            marquage.put(Centre.getNom(), false);
+            sommetsTraites.put(Centre.getNom(), false);
         });
-        marquage.put(centre1, true);
+        sommetsTraites.put(centre1, true);
         ArrayList<String[]> fileAttente = new ArrayList<>();
         fileAttente.add(new String[]{centre1, "1"});
         String[] donnee;
@@ -313,11 +313,11 @@ class LCGraphe {
             MaillonGrapheSec voisin = this.getCentre(centre).lVois;
             while(voisin!=null) {
                 String nomVoisin = voisin.getDestination();
-                if (!marquage.get(nomVoisin)) {
+                if (!sommetsTraites.get(nomVoisin)) {
                     if (!res.containsKey(nomVoisin)) {
                         res.put(nomVoisin, new LinkedHashMap<>(res.get(centre)));
                         res.get(nomVoisin).put(nomVoisin, (voisin.getFiabilite() / 10) * fiab);
-                        fileAttente.add(new String[]{nomVoisin, String.valueOf(voisin.getFiabilite() / 10)});
+                        fileAttente.add(new String[]{nomVoisin, String.valueOf((voisin.getFiabilite() / 10) * fiab)});
 
                     } else {
                         LinkedHashMap<String, Double> chemin = res.get(nomVoisin);
@@ -331,13 +331,14 @@ class LCGraphe {
 
                             res.put(nomVoisin, new LinkedHashMap<>(res.get(donnee[0])));
                             res.get(nomVoisin).put(lastNomCentreDansChemin, (voisin.getFiabilite() / 10) * fiab);
+
                             int i = 0;
                             boolean check = false;
                             while(!check && i < fileAttente.size()){
                                 if (fileAttente.get(i)[0].equals(nomVoisin)){
                                      check = true;
                                      fileAttente.remove(i);
-                                     fileAttente.add(new String[]{nomVoisin, String.valueOf(voisin.getFiabilite() / 10)});
+                                     fileAttente.add(new String[]{nomVoisin, String.valueOf((voisin.getFiabilite() / 10) * fiab)});
                                 }
                                 i++;
                             }
@@ -347,19 +348,34 @@ class LCGraphe {
                 voisin = voisin.suiv;
             }
             if(fileAttente.size()>=2){
-                int i;
-                boolean check = false;
                 int maxiFiabIndice = 0;
-                for (i = 1; i < fileAttente.size(); i++) {
+                for (int i = 1; i < fileAttente.size(); i++) {
                     if(Double.parseDouble(fileAttente.get(i)[1]) > Double.parseDouble(fileAttente.get(maxiFiabIndice)[1])){
                         maxiFiabIndice = i;
+                    } else if (Double.parseDouble(fileAttente.get(i)[1]) == Double.parseDouble(fileAttente.get(maxiFiabIndice)[1])) {
+                        String[] listNomCentre = fileAttente.get(i)[0].split("");
+                        String[] listMaxiNomCentre = fileAttente.get(maxiFiabIndice)[0].split("");
+                        int nombre;
+                        int maxiNombre;
+                        if(listNomCentre.length == 2){
+                            nombre = Integer.parseInt(listNomCentre[1]);
+                        } else {
+                            nombre = Integer.parseInt(listNomCentre[1]+listNomCentre[2]);
+                        }
+                        if(listMaxiNomCentre.length == 2){
+                            maxiNombre = Integer.parseInt(listMaxiNomCentre[1]);
+                        } else {
+                            maxiNombre = Integer.parseInt(listMaxiNomCentre[1]+ listMaxiNomCentre[2]);
+                        }
+                        if (maxiNombre > nombre){
+                            maxiFiabIndice = i;
+                        }
                     }
                 }
+                sommetsTraites.put(fileAttente.get(maxiFiabIndice)[0], true);
                 fileAttente.add(new String[]{fileAttente.get(maxiFiabIndice)[0], String.valueOf(fileAttente.get(maxiFiabIndice)[1])});
                 fileAttente.remove(maxiFiabIndice);
             }
-            System.out.println(res);
-
         }
         if(!(res.containsKey(centre2))){
             return null;
