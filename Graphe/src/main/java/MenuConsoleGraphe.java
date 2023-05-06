@@ -3,7 +3,7 @@ import java.lang.String;
 import java.util.*;
 import java.util.Scanner;
 
-public class MenuConsoleGraphe extends Exception {
+public class MenuConsoleGraphe{
     private static LCGraphe newGraphe = new LCGraphe();
 
     public static void main(String[] args){
