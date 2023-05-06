@@ -8,7 +8,11 @@ public class MenuConsoleGraphe{
     private static LCGraphe newGraphe = new LCGraphe();
 
     public static void main(String[] args){
+        InterfaceGraphe interfaceGraphe = new InterfaceGraphe();
+        
         newGraphe.chargementFichier();
+      
+       
 
         Scanner scanner = new Scanner(System.in);
         int option;
