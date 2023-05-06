@@ -1,4 +1,3 @@
-
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.io.File;
@@ -302,7 +301,7 @@ class LCGraphe {
     }
 
     public List<MaillonGraphe> tousLesCentresToList() {
-        LinkedList<MaillonGraphe> res = new LinkedList<>();
+        List<MaillonGraphe> res = new LinkedList<>();
         MaillonGraphe tmp = this.premier;
         while (tmp != null) {
             res.add(tmp);
