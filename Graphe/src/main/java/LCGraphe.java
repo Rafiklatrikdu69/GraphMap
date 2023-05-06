@@ -144,7 +144,7 @@ class LCGraphe {
             MaillonGrapheSec tmp = this.lVois;
             StringBuilder s = new StringBuilder();
             while (tmp != null) {
-                s.append("Destination : ").append(tmp.dest).append(" [fiabilite=").append(tmp.fiab).append(", distance=").append(tmp.dist).append(", durée=").append(tmp.dur).append("]\n");
+                s.append("Destination : ").append(tmp.dest).append(" [Fiabilité : ").append(tmp.fiab*10).append("%, Distance : ").append(tmp.dist).append("Km, Durée : ").append(tmp.dur).append(" minutes]\n");
                 tmp = tmp.suiv;
             }
             return s.toString();
