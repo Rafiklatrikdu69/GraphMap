@@ -164,7 +164,7 @@ class LCGraphe {
     }
     public boolean existeCentre(String nomCentre){
         boolean res = false;
-
+        // En cours...
         return res;
     }
     public String tousLesCentresToString(){
@@ -201,7 +201,7 @@ class LCGraphe {
     public void chargementFichier(){
         try {
             File file = new File("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
-            //File file = new File("src/fichiersGraphe/jeuEssaietest.csv");
+            //File file = new File("src/fichiersGraphe/jeuEssaie test.csv");
             Scanner scanner = new Scanner(file);
             int lineCounter = 0;
             HashMap<Integer, List> hashMapArreteTraite = new HashMap<>();
@@ -213,13 +213,13 @@ class LCGraphe {
 
                     String nom = parts[0]; // prends le nom du sommet
                     String type = parts[1];// prends le type du sommet
-                    ajoutCentre(nom, type); // et on ajoute le sommet au Graphe
+                    this.ajoutCentre(nom, type); // et on ajoute le sommet au Graphe
 
                     for (int i = 2; i < parts.length; i++) { // parcours toutes les arretes du sommet actuel
                         if(!parts[i].equals("0")){
                             listArreteDonnee = new LinkedList<>();
                             if(hashMapArreteTraite.containsKey(i)){ // cette ligne permet de voir si ya une arrete complete a été détecté
-                                ajoutVoisin(hashMapArreteTraite.get(i).get(0).toString(), "S"+(lineCounter - 4), Double.parseDouble((String) hashMapArreteTraite.get(i).get(1)) ,Double.parseDouble((String) hashMapArreteTraite.get(i).get(2)),Double.parseDouble((String) hashMapArreteTraite.get(i).get(3)));
+                                this.ajoutVoisin(hashMapArreteTraite.get(i).get(0).toString(), "S"+(lineCounter - 4), Double.parseDouble((String) hashMapArreteTraite.get(i).get(1)) ,Double.parseDouble((String) hashMapArreteTraite.get(i).get(2)),Double.parseDouble((String) hashMapArreteTraite.get(i).get(3)));
                                 hashMapArreteTraite.remove(i);
                             } else {
                                 String[] edgeValues = parts[i].split(",");
