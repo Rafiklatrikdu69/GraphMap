@@ -9,132 +9,127 @@ public class MenuConsoleGraphe extends Exception {
     public static void main(String[] args){
         newGraphe.chargementFichier();
 
-        System.out.println(newGraphe.plusCourtCheminDijkstraFiabilite("S1", "S30"));
         Scanner scanner = new Scanner(System.in);
         int option;
         boolean sortie = false;
             do {
-            clearScreen();
-            System.out.println("=============================================");
-            System.out.println("|          MENU PRINCIPAL DU PROGRAMME      |");
-            System.out.println("=============================================");
-            System.out.println("|  " + ConsoleColors.YELLOW_BOLD + "1. " + ConsoleColors.RESET + "Afficher tous les dispensaires      " + ConsoleColors.RESET + "|");
-            System.out.println("|  " + ConsoleColors.PURPLE_BOLD + "2. " + ConsoleColors.RESET + "Sélectionner un dispensaire         " + ConsoleColors.RESET + "|");
-            System.out.println("|  " + ConsoleColors.GREEN_BOLD + "3. " + ConsoleColors.RESET + "Option 3                            " + ConsoleColors.RESET + "|");
-            System.out.println("|  " + ConsoleColors.BLUE_BOLD + "4. " + ConsoleColors.RESET + "Option 4                            " + ConsoleColors.RESET + "|");
-            System.out.println("|  " + ConsoleColors.CYAN_BOLD + "5. " + ConsoleColors.RESET + "Option 5                            " + ConsoleColors.RESET + "|");
-            System.out.println("|  " + ConsoleColors.RED_BOLD + "6. " + ConsoleColors.RESET + "Option 6                            " + ConsoleColors.RESET + "|");
-            System.out.println("|  " + ConsoleColors.GRAY_BOLD + "7. " + ConsoleColors.RESET + "Quitter                              " + ConsoleColors.RESET + "|");
-            System.out.println("=============================================");
-            System.out.print("Saisir votre choix : ");
+                clearScreen();
+                System.out.println("=============================================");
+                System.out.println("|          MENU PRINCIPAL DU PROGRAMME      |");
+                System.out.println("=============================================");
+                System.out.println("|  " + ConsoleColors.YELLOW_BOLD + "1. " + ConsoleColors.RESET + "Afficher tous les dispensaires      " + ConsoleColors.RESET + "|");
+                System.out.println("|  " + ConsoleColors.PURPLE_BOLD + "2. " + ConsoleColors.RESET + "Sélectionner un dispensaire         " + ConsoleColors.RESET + "|");
+                System.out.println("|  " + ConsoleColors.GREEN_BOLD + "3. " + ConsoleColors.RESET + "Option 3                            " + ConsoleColors.RESET + "|");
+                System.out.println("|  " + ConsoleColors.BLUE_BOLD + "4. " + ConsoleColors.RESET + "Option 4                            " + ConsoleColors.RESET + "|");
+                System.out.println("|  " + ConsoleColors.CYAN_BOLD + "5. " + ConsoleColors.RESET + "Option 5                            " + ConsoleColors.RESET + "|");
+                System.out.println("|  " + ConsoleColors.RED_BOLD + "6. " + ConsoleColors.RESET + "Option 6                            " + ConsoleColors.RESET + "|");
+                System.out.println("|  " + ConsoleColors.GRAY_BOLD + "7. " + ConsoleColors.RESET + "Quitter                             " + ConsoleColors.RESET + "|");
+                System.out.println("=============================================");
+                System.out.print("Saisir votre choix : ");
 
-            if (scanner.hasNextInt()) {
-                option = scanner.nextInt();
-                scanner.nextLine();
-                switch (option) {
-                    case 1:
-                        LinkedList<LCGraphe.MaillonGraphe> tousLesCentresList = newGraphe.tousLesCentresToList();
-                        tousLesCentresList.forEach(Centre -> {
-                            StringBuilder stringVoisin = new StringBuilder();
-                            LinkedList<LCGraphe.MaillonGrapheSec> voisinsCentre = Centre.voisinsToList();
-                            stringVoisin.append("[");
-                            for (int i = 0; i < voisinsCentre.size(); i++) {
-                                if (i == voisinsCentre.size() - 1) {
-                                    stringVoisin.append(voisinsCentre.get(i).getDestination());
-                                } else {
-                                    stringVoisin.append(voisinsCentre.get(i).getDestination() + ",");
-                                }
-                            }
-                            stringVoisin.append("]");
-                            System.out.println(Centre.getNom() + " [" + Centre.getType() + "], Voisins : " + stringVoisin.toString());
-                        });
-                        pressEnterToContinue(scanner);
-                        break;
-                    case 2:
-                        System.out.println("Veillez saisir un dispensaire sous la forme SX ou SXX (entre 1 et 30)");
-                        String optionDispensaire;
-                        Scanner scannerDispensaire = new Scanner(System.in);
-                        optionDispensaire = scannerDispensaire.next();
-                        scannerDispensaire.nextLine();
-                        boolean sortieAnnexe = false;
-
-                        if (!newGraphe.existeCentre(optionDispensaire)){
-                            System.out.println("Le dispensaire "+optionDispensaire+" n'existe pas !");
-                        } else {
-                            LCGraphe.MaillonGraphe dispensaire = newGraphe.getCentre(optionDispensaire);
-                            int optionFonctionDispensaire;
-                            Scanner scannerFonctionDispensaire = new Scanner(System.in);
-                            do {
-                                clearScreen();
-                                System.out.println("=============================================");
-                                System.out.println("|          Dispensaire "+optionDispensaire+"              |");
-                                System.out.println("=============================================");
-                                System.out.println("|  " + ConsoleColors.YELLOW_BOLD + "1. " + ConsoleColors.RESET + "Afficher le type de dispensaire    " + ConsoleColors.RESET + "|");
-                                System.out.println("|  " + ConsoleColors.PURPLE_BOLD + "2. " + ConsoleColors.RESET + "Afficher ses voisins direct        " + ConsoleColors.RESET + "|");
-                                System.out.println("|  " + ConsoleColors.GREEN_BOLD + "3. " + ConsoleColors.RESET + "Afficher un voisin direct           " + ConsoleColors.RESET + "|");
-                                System.out.println("|  " + ConsoleColors.GRAY_BOLD + "4. " + ConsoleColors.RESET + "Retourner au menu principal          " + ConsoleColors.RESET + "|");
-                                System.out.println("=============================================");
-                                System.out.print("Saisir votre choix : ");
-                                if (scannerFonctionDispensaire.hasNextInt()) {
-                                    optionFonctionDispensaire = scannerFonctionDispensaire.nextInt();
-                                    scannerFonctionDispensaire.nextLine();
-                                    switch (optionFonctionDispensaire){
-                                        case 1:
-                                            System.out.println("Type : "+dispensaire.getType());
-                                            pressEnterToContinue(scanner);
-                                            break;
-                                        case 2:
-
-                                            pressEnterToContinue(scanner);
-                                            break;
-                                        case 3:
-                                            pressEnterToContinue(scanner);
-                                            break;
-                                        case 4:
-                                            sortieAnnexe = true;
-                                            break;
+                if (scanner.hasNextInt()) {
+                    option = scanner.nextInt();
+                    scanner.nextLine();
+                    switch (option) {
+                        case 1 -> {
+                            LinkedList<LCGraphe.MaillonGraphe> tousLesCentresList = newGraphe.tousLesCentresToList();
+                            tousLesCentresList.forEach(Centre -> {
+                                StringBuilder stringVoisin = new StringBuilder();
+                                LinkedList<LCGraphe.MaillonGrapheSec> voisinsCentre = Centre.voisinsToList();
+                                stringVoisin.append("[");
+                                for (int i = 0; i < voisinsCentre.size(); i++) {
+                                    if (i == voisinsCentre.size() - 1) {
+                                        stringVoisin.append(voisinsCentre.get(i).getDestination());
+                                    } else {
+                                        stringVoisin.append(voisinsCentre.get(i).getDestination()).append(",");
                                     }
                                 }
-                            } while(!sortieAnnexe);
+                                stringVoisin.append("]");
+                                System.out.println(Centre.getNom() + " [" + Centre.getType() + "], Voisins : " + stringVoisin.toString());
+                            });
+                            pressEnterToContinue(scanner);
                         }
-
-
-                        pressEnterToContinue(scanner);
-                        break;
-                    case 3:
-                        System.out.println("Vous avez choisi l'option 3");
-                        // Insérer ici le code pour l'option 3
-                        pressEnterToContinue(scanner);
-                        break;
-                    case 4:
-                        System.out.println("Vous avez choisi l'option 4");
-                        // Insérer ici le code pour l'option 4
-                        pressEnterToContinue(scanner);
-                        break;
-                    case 5:
-                        System.out.println("Vous avez choisi l'option 5");
-                        // Insérer ici le code pour l'option 5
-                        pressEnterToContinue(scanner);
-                        break;
-                    case 6:
-                        System.out.println("Vous avez choisi l'option 6");
-                        // Insérer ici le code pour l'option 6
-                        pressEnterToContinue(scanner);
-                        break;
-                    case 7:
-                        System.out.println("Merci d'avoir utilisé notre programme !");
-                        sortie = true;
-                        break;
-                    default:
-                        System.out.println(ConsoleColors.RED_BOLD + "Erreur : choix invalide" + ConsoleColors.RESET);
-                        pressEnterToContinue(scanner);
-                        break;
+                        case 2 -> {
+                            System.out.println("Veillez saisir un dispensaire sous la forme SX ou SXX (entre 1 et 30)");
+                            String optionDispensaire;
+                            Scanner scannerDispensaire = new Scanner(System.in);
+                            optionDispensaire = scannerDispensaire.next();
+                            scannerDispensaire.nextLine();
+                            boolean sortieAnnexe = false;
+                            if (!newGraphe.existeCentre(optionDispensaire)) {
+                                System.out.println("Le dispensaire " + optionDispensaire + " n'existe pas !");
+                            } else {
+                                LCGraphe.MaillonGraphe dispensaire = newGraphe.getCentre(optionDispensaire);
+                                int optionFonctionDispensaire;
+                                Scanner scannerFonctionDispensaire = new Scanner(System.in);
+                                do {
+                                    clearScreen();
+                                    System.out.println("============================================");
+                                    System.out.println("|              Dispensaire " + optionDispensaire + "              |");
+                                    System.out.println("=============================================");
+                                    System.out.println("|  " + ConsoleColors.YELLOW_BOLD + "1. " + ConsoleColors.RESET + "Afficher le type de dispensaire      " + ConsoleColors.RESET + "|");
+                                    System.out.println("|  " + ConsoleColors.PURPLE_BOLD + "2. " + ConsoleColors.RESET + "Afficher ses voisins direct          " + ConsoleColors.RESET + "|");
+                                    System.out.println("|  " + ConsoleColors.GREEN_BOLD + "3. " + ConsoleColors.RESET + "Afficher un voisin direct            " + ConsoleColors.RESET + "|");
+                                    System.out.println("|  " + ConsoleColors.GRAY_BOLD + "4. " + ConsoleColors.RESET + "Retourner au menu principal          " + ConsoleColors.RESET + "|");
+                                    System.out.println("=============================================");
+                                    System.out.print("Saisir votre choix : ");
+                                    if (scannerFonctionDispensaire.hasNextInt()) {
+                                        optionFonctionDispensaire = scannerFonctionDispensaire.nextInt();
+                                        scannerFonctionDispensaire.nextLine();
+                                        switch (optionFonctionDispensaire) {
+                                            case 1 -> {
+                                                System.out.println("\nType : " + dispensaire.getType() + "\n");
+                                                pressEnterToContinue(scanner);
+                                            }
+                                            case 2 -> {
+                                                System.out.println("\n" + dispensaire.voisinsToString());
+                                                pressEnterToContinue(scanner);
+                                            }
+                                            case 3 -> pressEnterToContinue(scanner);
+                                            case 4 -> sortieAnnexe = true;
+                                        }
+                                    } else {
+                                        scannerFonctionDispensaire.nextLine();
+                                        System.out.println(ConsoleColors.RED_BOLD + "Erreur : entrée invalide" + ConsoleColors.RESET);
+                                        pressEnterToContinue(scannerFonctionDispensaire);
+                                    }
+                                } while (!sortieAnnexe);
+                            }
+                        }
+                        case 3 -> {
+                            System.out.println("Vous avez choisi l'option 3");
+                            // Insérer ici le code pour l'option 3
+                            pressEnterToContinue(scanner);
+                        }
+                        case 4 -> {
+                            System.out.println("Vous avez choisi l'option 4");
+                            // Insérer ici le code pour l'option 4
+                            pressEnterToContinue(scanner);
+                        }
+                        case 5 -> {
+                            System.out.println("Vous avez choisi l'option 5");
+                            // Insérer ici le code pour l'option 5
+                            pressEnterToContinue(scanner);
+                        }
+                        case 6 -> {
+                            System.out.println("Vous avez choisi l'option 6");
+                            // Insérer ici le code pour l'option 6
+                            pressEnterToContinue(scanner);
+                        }
+                        case 7 -> {
+                            System.out.println("Merci d'avoir utilisé notre programme !");
+                            sortie = true;
+                        }
+                        default -> {
+                            System.out.println(ConsoleColors.RED_BOLD + "Erreur : choix invalide" + ConsoleColors.RESET);
+                            pressEnterToContinue(scanner);
+                        }
+                    }
+                } else {
+                    scanner.nextLine();
+                    System.out.println(ConsoleColors.RED_BOLD + "Erreur : entrée invalide" + ConsoleColors.RESET);
+                    pressEnterToContinue(scanner);
                 }
-            } else {
-                scanner.nextLine();
-                System.out.println(ConsoleColors.RED_BOLD + "Erreur : entrée invalide" + ConsoleColors.RESET);
-                pressEnterToContinue(scanner);
-            }
         } while (!sortie);
     }
     public static void clearScreen() {
