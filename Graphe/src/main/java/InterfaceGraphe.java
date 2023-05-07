@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 
 public class InterfaceGraphe extends JFrame {
 
+    private static LCGraphe Graphe = new LCGraphe();
+
     private JMenuBar menu;
     private JMenu j;
     private JMenuItem option1,option2,option3;
@@ -18,6 +20,7 @@ public class InterfaceGraphe extends JFrame {
 
     public InterfaceGraphe() {
         super();
+        Graphe.chargementFichier();
         initComponents();
         initEventListeners();
         setTitle("Graphe");
