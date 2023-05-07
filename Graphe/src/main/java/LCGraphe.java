@@ -3,8 +3,9 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.io.File;
 import java.lang.String;
+
 /**
- * 
+ *
  * @author Rafik Bouchenna et Emmanuel Ardoin
  */
 class LCGraphe {
@@ -24,34 +25,39 @@ class LCGraphe {
             dest = d;
             suiv = null;
         }
-/**
- *
- * @return String: destination
- */
+
+        /**
+         *
+         * @return String: destination
+         */
         public String getDestination() {
             return dest;
         }
-/**
- * 
- * @return double : distance
- */
+
+        /**
+         *
+         * @return double : distance
+         */
         public double getDistance() {
             return dist;
         }
-/**
- * 
- * @return double : duree
- */
+
+        /**
+         *
+         * @return double : duree
+         */
         public double getDuree() {
             return dur;
         }
-/**
- * 
- * @return double : fiabilite
- */
+
+        /**
+         *
+         * @return double : fiabilite
+         */
         public double getFiabilite() {
             return fiab;
         }
+
         /**
          *
          * @param dest
@@ -59,6 +65,7 @@ class LCGraphe {
         public void setDestination(String dest) {
             this.dest = dest;
         }
+
         /**
          *
          * @param dist
@@ -66,6 +73,7 @@ class LCGraphe {
         public void setDistance(double dist) {
             this.dist = dist;
         }
+
         /**
          *
          * @param duree
@@ -73,6 +81,7 @@ class LCGraphe {
         public void setDuree(double duree) {
             this.dur = duree;
         }
+
         /**
          *
          * @param fiab
@@ -80,14 +89,16 @@ class LCGraphe {
         public void setFiabilite(double fiab) {
             this.fiab = fiab;
         }
-        public String toString(){
+
+        public String toString() {
             StringBuilder res = new StringBuilder();
-            res.append(this.dest).append(" [Fiabilité : ").append(this.fiab*10).append("%, Distance : ").append(this.dist).append("Km, Durée : ").append(this.dur).append(" minutes]");
+            res.append(this.dest).append(" [Fiabilité : ").append(this.fiab * 10).append("%, Distance : ").append(this.dist).append("Km, Durée : ").append(this.dur).append(" minutes]");
             return res.toString();
         }
     }
 
     class MaillonGraphe {
+
         private String nom;
         private String type;
         private MaillonGrapheSec lVois;
@@ -101,103 +112,151 @@ class LCGraphe {
             suiv = null;
             listed = false;
         }
-/**
- * 
- * @return String :  nom du sommet
- */
+
+        /**
+         *
+         * @return String : nom du sommet
+         */
         public String getNom() {
             return nom;
         }
-/**
- * 
- * @return String : type de sommet
- */
+
+        /**
+         *
+         * @return String : type de sommet
+         */
         public String getType() {
             return type;
         }
-/**
- * 
- * @return boolean : listed
- */
+
+        /**
+         *
+         * @return boolean : listed
+         */
         private boolean estVide() {
             return !listed;
         }
-/**
- * Cette methode renvoie une liste de voisin 
- * 
- * @return LinkedList<MaillonGrapheSec>
- * 
- */
-        public LinkedList<MaillonGrapheSec> voisinsToList(){
+
+        /**
+         * Cette methode renvoie une liste de voisin
+         *
+         * @return LinkedList<MaillonGrapheSec>
+         *
+         */
+        public LinkedList<MaillonGrapheSec> voisinsToList() {
             LinkedList<MaillonGrapheSec> res = new LinkedList<>();
             MaillonGrapheSec tmp = this.lVois;
-            while(tmp!=null){
+            while (tmp != null) {
                 res.add(tmp);
                 tmp = tmp.suiv;
             }
             return res;
         }
-        public MaillonGrapheSec getVoisin(String nomVoisin){
+
+        public MaillonGrapheSec getVoisin(String nomVoisin) {
             MaillonGrapheSec res = null;
             MaillonGrapheSec tmp = this.lVois;
-            while(res == null && tmp!=null){
-                if(tmp.getDestination().equals(nomVoisin)){
+            while (res == null && tmp != null) {
+                if (tmp.getDestination().equals(nomVoisin)) {
                     res = tmp;
                 }
                 tmp = tmp.suiv;
             }
             return res;
         }
-        public boolean estVoisin(String nomVoisin){
+
+        public boolean estVoisin(String nomVoisin) {
             boolean res = false;
             MaillonGrapheSec tmp = this.lVois;
-            while(!res && tmp!=null){
-                if(tmp.getDestination().equals(nomVoisin)){
+            while (!res && tmp != null) {
+                if (tmp.getDestination().equals(nomVoisin)) {
                     res = true;
                 }
                 tmp = tmp.suiv;
             }
             return res;
         }
-/**
- * Renvoie une chaine contenant les voisins
- *  
- * @return  String : res 
- */
+
+        /**
+         * Renvoie une chaine contenant les voisins
+         *
+         * @return String : res
+         */
         public String voisinsToString() {
             MaillonGrapheSec tmp = this.lVois;
             StringBuilder s = new StringBuilder();
             while (tmp != null) {
-                s.append("Destination : ").append(tmp.dest).append(" [Fiabilité : ").append(tmp.fiab*10).append("%, Distance : ").append(tmp.dist).append("Km, Durée : ").append(tmp.dur).append(" minutes]\n");
+                s.append("Destination : ").append(tmp.dest).append(" [Fiabilité : ").append(tmp.fiab * 10).append("%, Distance : ").append(tmp.dist).append("Km, Durée : ").append(tmp.dur).append(" minutes]\n");
                 tmp = tmp.suiv;
+
             }
             return s.toString();
         }
+
     }
     private MaillonGraphe premier;
+
     public LCGraphe() {
         premier = null;
     }
-/**
- * Cette methode ajoute au debut de la liste le sommet avec les parametres
- * 
- * @param nomCentre
- * @param typeCentre 
- */
+
+    /**
+     * Cette methode ajoute au debut de la liste le sommet avec les parametres
+     *
+     * @param nomCentre
+     * @param typeCentre
+     */
     public void ajoutCentre(String nomCentre, String typeCentre) {
         MaillonGraphe nouv = new MaillonGraphe(nomCentre, typeCentre);
         nouv.suiv = this.premier;
         this.premier = nouv;
     }
-/**
- * Cette methode ajoute les Voisins(Arretes) avec les parametres 
- * 
- * @param nomCentre
- * @param nomDestinataire
- * @param fiab
- * @param dist
- * @param dur 
- */
+
+    public void voisinsVoisinsToString(String centre) {
+
+        List<String> voisins = new ArrayList<>();
+        MaillonGraphe maillonCentre = chercherMaillon(centre);
+
+        // Récupérer la liste des voisins du sommet centre
+        MaillonGrapheSec tmp1 = maillonCentre.lVois;
+        while (tmp1 != null) {
+            voisins.add(tmp1.dest);
+            tmp1 = tmp1.suiv;
+        }
+
+        // Parcourir les voisins de centre, et afficher leurs voisins respectifs
+        for (String voisin : voisins) {
+            MaillonGraphe maillonVoisin = chercherMaillon(voisin);
+            System.out.println("Les voisins de " + maillonVoisin.nom + " sont :");
+
+            MaillonGrapheSec tmp2 = maillonVoisin.lVois;
+            while (tmp2 != null) {
+                System.out.println(tmp2.dest);
+                tmp2 = tmp2.suiv;
+            }
+        }
+    }
+
+    public MaillonGraphe chercherMaillon(String nomMaillon) {
+        MaillonGraphe courant = this.premier;
+        while (courant != null) {
+            if (courant.nom.equals(nomMaillon)) {
+                return courant;
+            }
+            courant = courant.suiv;
+        }
+        return null; // Le maillon n'a pas été trouvé dans la liste chaînée
+    }
+
+    /**
+     * Cette methode ajoute les Voisins(Arretes) avec les parametres
+     *
+     * @param nomCentre
+     * @param nomDestinataire
+     * @param fiab
+     * @param dist
+     * @param dur
+     */
     public void ajoutVoisin(String nomCentre, String nomDestinataire, Double fiab, Double dist, Double dur) {
         MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, nomDestinataire);
         MaillonGraphe tmp = this.premier;
@@ -215,17 +274,18 @@ class LCGraphe {
         nouv2.suiv = tmp.lVois;
         tmp.lVois = nouv2;
     }
-/**
- * Cette methode permet de modifier les donnee d'un voisin(Arrete)
- * 
- * @param nomCentre
- * @param nomDestinataire
- * @param fiab
- * @param dist
- * @param dur
- * @throws ExistEdgeException
- * @throws NotExistMainException 
- */
+
+    /**
+     * Cette methode permet de modifier les donnee d'un voisin(Arrete)
+     *
+     * @param nomCentre
+     * @param nomDestinataire
+     * @param fiab
+     * @param dist
+     * @param dur
+     * @throws ExistEdgeException
+     * @throws NotExistMainException
+     */
     public void modifVoisin(String nomCentre, String nomDestinataire, double fiab, double dist, double dur) throws ExistEdgeException, NotExistMainException {
         MaillonGrapheSec tmp2 = null;
         MaillonGraphe tmp = this.premier;
@@ -240,7 +300,7 @@ class LCGraphe {
         tmp2 = tmp.lVois;
         while (!check && tmp2 != null) {
             if (tmp2.dest.equals(nomDestinataire)) {
-              tmp2.setDistance(dist);
+                tmp2.setDistance(dist);
                 tmp2.setDuree(dur);
                 tmp2.setFiabilite(fiab);
                 check = true;
@@ -258,7 +318,7 @@ class LCGraphe {
             if (tmp3 == null) {
                 throw new NotExistMainException("Le sommet " + nomDestinataire + " n'existe pas!");
             }
-        } 
+        }
         check = false;
         tmp2 = tmp3.lVois;
         while (!check && tmp2 != null) {
@@ -271,13 +331,15 @@ class LCGraphe {
             tmp2 = tmp2.suiv;
         }
     }
-/**
- * Cette methode renvoie true si il existe une arrete sinon elle renvoie false
- * 
- * @param nomCentre
- * @param nomDestinataire
- * @return boolean:  res
- */
+
+    /**
+     * Cette methode renvoie true si il existe une arrete sinon elle renvoie
+     * false
+     *
+     * @param nomCentre
+     * @param nomDestinataire
+     * @return boolean: res
+     */
     public boolean existeVoisin(String nomCentre, String nomDestinataire) {
         boolean res = false;
         MaillonGraphe tmp = this.premier;
@@ -294,25 +356,27 @@ class LCGraphe {
         }
         return res;
     }
-/**
- * Cette methode renvoie true si le centre(sommet) existe sinon elle renvoie false 
- * 
- * @param nomCentre
- * @return  boolean : res 
- */
+
+    /**
+     * Cette methode renvoie true si le centre(sommet) existe sinon elle renvoie
+     * false
+     *
+     * @param nomCentre
+     * @return boolean : res
+     */
     public boolean existeCentre(String nomCentre) {
-       MaillonGraphe tmp = this.premier;
+        MaillonGraphe tmp = this.premier;
         while (tmp != null && !tmp.getNom().equals(nomCentre)) {
             tmp = tmp.suiv;
         }
         return (tmp != null);
     }
 
-/**
- * Cette methode renvoie tout les sommet en les affichant 
- * 
- * @return String : res
- */
+    /**
+     * Cette methode renvoie tout les sommet en les affichant
+     *
+     * @return String : res
+     */
     public String tousLesCentresToString() {
         StringBuilder res = new StringBuilder();
         MaillonGraphe tmp = this.premier;
@@ -323,24 +387,26 @@ class LCGraphe {
         return res.toString();
     }
 
-    public LinkedList<MaillonGraphe> tousLesCentresToList(){
+    public LinkedList<MaillonGraphe> tousLesCentresToList() {
         LinkedList<MaillonGraphe> res = new LinkedList<>();
         MaillonGraphe tmp = this.premier;
-        while(tmp!=null){
+        while (tmp != null) {
             res.add(tmp);
             tmp = tmp.suiv;
         }
         return res;
     }
-    public LinkedList<MaillonGrapheSec> toutesLesAretesToList(){
+
+    public LinkedList<MaillonGrapheSec> toutesLesAretesToList() {
         LinkedList<MaillonGrapheSec> res = new LinkedList<>();
         MaillonGraphe tmp = this.premier;
         MaillonGrapheSec tmp2 = null;
-        while (tmp!=null) {
+        while (tmp != null) {
             tmp2 = tmp.lVois;
             while (tmp2 != null) {
-                if (res.contains(tmp2))
-                tmp2 = tmp2.suiv;
+                if (res.contains(tmp2)) {
+                    tmp2 = tmp2.suiv;
+                }
             }
             tmp = tmp.suiv;
         }
@@ -358,12 +424,13 @@ class LCGraphe {
         }
         return res.toString();
     }
-/**
- * Cette methode recupere le centre avec son nom en parametre
- * 
- * @param nomCentre
- * @return MaillonGraphe : res
- */
+
+    /**
+     * Cette methode recupere le centre avec son nom en parametre
+     *
+     * @param nomCentre
+     * @return MaillonGraphe : res
+     */
     public MaillonGraphe getCentre(String nomCentre) {
         MaillonGraphe tmp = this.premier;
         MaillonGraphe res = null;
@@ -431,7 +498,6 @@ class LCGraphe {
         }
         return res.toString();
     }
-
 
     public List<String> plusCourtCheminDijkstra(String centre1, String centre2) {
         Map<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>(); // res sera le chemin entre centre1 et centre2 (null si ya pas de chemin)
