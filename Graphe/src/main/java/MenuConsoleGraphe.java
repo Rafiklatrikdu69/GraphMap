@@ -147,7 +147,7 @@ public class MenuConsoleGraphe{
                                                 pressEnterToContinue(scannerFonctionDispensaire);
                                             }
                                             case 5 -> {
-                                                   newGraphe.voisinsVoisinsToString(dispensaire.getNom());
+                                                   newGraphe.voisinsVoisinsToString("S1","S2");
                                             }
                                             case 6 -> sortieAnnexe = true;
                                         }
