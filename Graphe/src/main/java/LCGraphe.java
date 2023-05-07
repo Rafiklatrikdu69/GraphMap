@@ -211,7 +211,11 @@ class LCGraphe {
         nouv.suiv = this.premier;
         this.premier = nouv;
     }
-
+/**
+ * 
+ * @param centre1
+ * @param centre2 
+ */
   public void voisinsVoisinsToString(String centre1, String centre2) {
     List<String> voisins1 = new LinkedList<>();
     List<String> voisins2 = new LinkedList<>();
@@ -257,7 +261,11 @@ class LCGraphe {
     }
 }
 
-
+/**
+ * 
+ * @param nomMaillon
+ * @return 
+ */
     public MaillonGraphe chercherMaillon(String nomMaillon) {
         MaillonGraphe courant = this.premier;
         while (courant != null) {
@@ -407,7 +415,10 @@ class LCGraphe {
         }
         return res.toString();
     }
-
+/**
+ * 
+ * @return 
+ */
     public LinkedList<MaillonGraphe> tousLesCentresToList() {
         LinkedList<MaillonGraphe> res = new LinkedList<>();
         MaillonGraphe tmp = this.premier;
@@ -417,7 +428,10 @@ class LCGraphe {
         }
         return res;
     }
-
+/**
+ * 
+ * @return 
+ */
     public LinkedList<MaillonGrapheSec> toutesLesAretesToList() {
         LinkedList<MaillonGrapheSec> res = new LinkedList<>();
         MaillonGraphe tmp = this.premier;
@@ -433,7 +447,10 @@ class LCGraphe {
         }
         return res;
     }
-
+/**
+ * 
+ * @return 
+ */
     public String tousLesBlocsToString() {
         StringBuilder res = new StringBuilder();
         MaillonGraphe tmp = this.premier;
@@ -463,7 +480,9 @@ class LCGraphe {
         }
         return res;
     }
-
+/**
+ * 
+ */
     public void chargementFichier() {
         try {
             File file = new File("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
@@ -504,7 +523,10 @@ class LCGraphe {
             e.printStackTrace();
         }
     }
-
+/**
+ * 
+ * @return 
+ */
     public String toString() {
         StringBuilder res = new StringBuilder();
         MaillonGraphe tmp = this.premier;
@@ -519,7 +541,12 @@ class LCGraphe {
         }
         return res.toString();
     }
-
+/**
+ * 
+ * @param centre1
+ * @param centre2
+ * @return 
+ */
     public List<String> plusCourtCheminDijkstra(String centre1, String centre2) {
         Map<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>(); // res sera le chemin entre centre1 et centre2 (null si ya pas de chemin)
         Map<String, Boolean> marquage = new HashMap<String, Boolean>(); // permet de marquer les centres (Sommets traité en Graphe)
