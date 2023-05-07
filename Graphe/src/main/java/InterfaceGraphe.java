@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Color;
@@ -6,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,91 +13,105 @@ import javax.swing.JPanel;
 public class InterfaceGraphe extends JFrame {
 
     private static LCGraphe Graphe = new LCGraphe();
-    
+    private LinkedList<JLabel> labels = new LinkedList<>();
+
     private JMenuBar menu;
     private JMenu j;
     private JMenuItem option1, option2, option3;
-    private JPanel panel, cp;
+    private JPanel cp;
 
     public InterfaceGraphe() {
         super();
         Graphe.chargementFichier();
         Graphe.toString();
         initComponents();
-        //initEventListeners();
         setTitle("Graphe");
         setSize(1280, 720);
         setPreferredSize(new Dimension(1280, 720));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
-
         pack();
     }
 
     private void initComponents() {
         cp = (JPanel) getContentPane();
         System.out.println("test");
-       
+
         menu = new JMenuBar();
-        j = new JMenu("menu");
+        j = new JMenu("Options");
         option1 = new JMenuItem("Afficher tous les dispensaires");
         option2 = new JMenuItem("Sélectionner un dispensaire");
         option3 = new JMenuItem("option 3");
         j.add(option1);
         j.add(option2);
         j.add(option3);
+        for (JLabel label : labels) {
+            JMenuItem menuItem = new JMenuItem(label.getText());
+            j.add(menuItem);
+        }
         menu.add(j);
-        setJMenuBar(menu);
-        cp.add(menu);
-        DessinGraphe dessin = new DessinGraphe(30, 100);
 
-        // Ajout de l'objet DessinGraphe au JPanel cp
-      
-        
+        cp.add(menu, BorderLayout.NORTH);
+        DessinGraphe dessinGraphe = new DessinGraphe(Graphe);
+        cp.add(dessinGraphe, BorderLayout.CENTER);
     }
 
-    
+    public class DessinGraphe extends JPanel {
 
-    class DessinGraphe extends LCGraphe {
+        private LCGraphe graphe;
+        private HashMap<LCGraphe.MaillonGraphe, Point> sommets;
 
-        private double x;
-        private double y;
-
-        private LCGraphe.MaillonGraphe premier;
-        private LCGraphe.MaillonGraphe suiv=null;
-
-        DessinGraphe(double axeX, double axeY) {
+        DessinGraphe(LCGraphe graphe) {
             super();
-            this.x = axeX;
-            this.y = axeY;
-            premier = null;
+            this.graphe = graphe;
+            sommets = new HashMap<>();
+            labels = new LinkedList<>();
+            setPreferredSize(new Dimension(1280, 720));
+        }
+
+        private void dessinerSommet(Graphics2D g2d, LCGraphe.MaillonGraphe sommet) {
+            int rayon = 40;
+            Point p = sommets.get(sommet);
+            g2d.setColor(Color.RED);
+            g2d.fillOval(p.x - rayon / 2, p.y - rayon / 2, rayon, rayon);
+            g2d.setColor(Color.WHITE);
+            g2d.drawOval(p.x - rayon / 2, p.y - rayon / 2, rayon, rayon);
+            JLabel label = new JLabel(sommet.getNom());
+            label.setBounds(p.x - rayon / 2, p.y - rayon / 2, rayon, rayon);
+            labels.add(label);
+        }
+
+        private void dessinerArete(Graphics2D g2d, LCGraphe.MaillonGraphe depart, LCGraphe.MaillonGraphe arrivee) {
+            Point p1 = sommets.get(depart);
+            Point p2 = sommets.get(arrivee);
+            g2d.setColor(Color.WHITE);
+            g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+        }
+
+        private void dessinerGraphe(Graphics2D g2d) {
+            LCGraphe.MaillonGraphe sommet = graphe.premier;
+            while (sommet != null) {
+                int x = (int) (Math.random() * getWidth());
+                int y = (int) (Math.random() * getHeight());
+                sommets.put(sommet, new Point(x, y));
+                dessinerSommet(g2d, sommet);
+                //LCGraphe.MaillonGrapheSec tmp = graphe.lVois;
+                sommet = sommet.suiv;
+            }
+            Iterator<LCGraphe.MaillonGraphe> sommetsIterator = sommets.keySet().iterator();
 
         }
 
-   public void dessinerSommet(Graphics2D g2d, MaillonGraphe sommet) {
-    int rayon = 20; // rayon du cercle représentant le sommet
-    int x = (int) (this.x);
-    int y = (int) (this.y);
-
-    g2d.setColor(Color.BLUE);
-    g2d.fillOval(x - rayon / 2, y - rayon / 2, rayon, rayon); // dessin du cercle
-    g2d.setColor(Color.BLACK);
-    g2d.drawOval(x - rayon / 2, y - rayon / 2, rayon, rayon); // contour du cercle
-}
-
-
-
-public void dessin(JPanel panel) {
-    Graphics2D g2d = (Graphics2D) panel.getGraphics();
-    LCGraphe.MaillonGraphe tmp = this.premier;
-    while (tmp != null) {
-        System.out.println(tmp);
-        dessinerSommet(g2d, tmp);
-        tmp = tmp.suiv;
-    }
-}
-
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g;
+            dessinerGraphe(g2d);
+            for (JLabel label : labels) {
+                add(label);
+            }
+        }
     }
 
 }
