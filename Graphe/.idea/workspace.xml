@@ -7,9 +7,9 @@
     <list default="true" id="d99efb15-7d67-42af-a5b4-ff7c9cd77565" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/InterfaceGraphe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/InterfaceGraphe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/InterfaceGraphe.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MenuConsoleGraphe$ConsoleColors.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MenuConsoleGraphe.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/MenuConsoleGraphe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MenuConsoleGraphe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MenuConsoleGraphe$ConsoleColors.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuConsoleGraphe$ConsoleColors.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MenuConsoleGraphe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuConsoleGraphe.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +82,8 @@
       <workItem from="1683447773407" duration="96000" />
       <workItem from="1683447892797" duration="59000" />
       <workItem from="1683447978803" duration="143000" />
-      <workItem from="1683448178307" duration="698000" />
+      <workItem from="1683448178307" duration="942000" />
+      <workItem from="1683449184048" duration="170000" />
     </task>
     <servers />
   </component>
