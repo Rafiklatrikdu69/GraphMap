@@ -212,30 +212,51 @@ class LCGraphe {
         this.premier = nouv;
     }
 
-    public void voisinsVoisinsToString(String centre) {
+  public void voisinsVoisinsToString(String centre1, String centre2) {
+    List<String> voisins1 = new LinkedList<>();
+    List<String> voisins2 = new LinkedList<>();
+    MaillonGraphe maillonCentre1 = chercherMaillon(centre1);
+    MaillonGraphe maillonCentre2 = chercherMaillon(centre2);
 
-        List<String> voisins = new ArrayList<>();
-        MaillonGraphe maillonCentre = chercherMaillon(centre);
+  
+    MaillonGrapheSec tmp1 = maillonCentre1.lVois;
+    while (tmp1 != null) {
+        voisins1.add(tmp1.dest);
+        tmp1 = tmp1.suiv;
+    }
 
-        // Récupérer la liste des voisins du sommet centre
-        MaillonGrapheSec tmp1 = maillonCentre.lVois;
-        while (tmp1 != null) {
-            voisins.add(tmp1.dest);
-            tmp1 = tmp1.suiv;
-        }
+    MaillonGrapheSec tmp2 = maillonCentre2.lVois;
+    while (tmp2 != null) {
+        voisins2.add(tmp2.dest);
+        tmp2 = tmp2.suiv;
+    }
 
-        // Parcourir les voisins de centre, et afficher leurs voisins respectifs
-        for (String voisin : voisins) {
-            MaillonGraphe maillonVoisin = chercherMaillon(voisin);
-            System.out.println("Les voisins de " + maillonVoisin.nom + " sont :");
+ 
+    List<String> voisinsCommuns = new ArrayList<>(voisins1);
+    voisinsCommuns.retainAll(voisins2);//ne retiens que les elements communs au deux liste
 
-            MaillonGrapheSec tmp2 = maillonVoisin.lVois;
-            while (tmp2 != null) {
-                System.out.println(tmp2.dest);
-                tmp2 = tmp2.suiv;
+    boolean distance2 = false;
+
+    for (String voisin : voisinsCommuns) {
+        MaillonGraphe maillonVoisin = chercherMaillon(voisin);
+        MaillonGrapheSec tmp3 = maillonVoisin.lVois;
+        while (tmp3 != null) {
+            if (voisins1.contains(tmp3.dest) && voisins2.contains(tmp3.dest)) {
+                System.out.println("Les sommets " + centre1 + " et " + centre2 + " sont à une distance de 2.");
+                distance2 = true;
+                break;
             }
+            tmp3 = tmp3.suiv;
+        }
+        if (distance2) {
+            break;
         }
     }
+    if (!distance2) {
+        System.out.println("Les sommets " + centre1 + " et " + centre2 + " ne sont pas à une distance de 2.");
+    }
+}
+
 
     public MaillonGraphe chercherMaillon(String nomMaillon) {
         MaillonGraphe courant = this.premier;
