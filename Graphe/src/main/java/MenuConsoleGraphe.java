@@ -80,7 +80,8 @@ public class MenuConsoleGraphe{
                                     System.out.println("|  " + ConsoleColors.PURPLE_BOLD + "2. " + ConsoleColors.RESET + "Afficher ses voisins direct          " + ConsoleColors.RESET + "|");
                                     System.out.println("|  " + ConsoleColors.GREEN_BOLD + "3. " + ConsoleColors.RESET + "Afficher un voisin direct            " + ConsoleColors.RESET + "|");
                                     System.out.println("|  " + ConsoleColors.BLUE_BOLD + "4. " + ConsoleColors.RESET + "Afficher le chemin le plus fiable    " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.GRAY_BOLD + "5. " + ConsoleColors.RESET + "Retourner au menu principal          " + ConsoleColors.RESET + "|");
+                                    System.out.println("|  " + ConsoleColors.GRAY_BOLD + "5. " + ConsoleColors.RESET + "Afficher les voisins à 2 distances           " + ConsoleColors.RESET + "|");
+                                    System.out.println("|  " + ConsoleColors.GRAY_BOLD + "6. " + ConsoleColors.RESET + "Retourner au menu principal          " + ConsoleColors.RESET + "|");
                                     System.out.println("=============================================");
                                     System.out.print("Saisir votre choix : ");
                                     if (scannerFonctionDispensaire.hasNextInt()) {
@@ -93,6 +94,7 @@ public class MenuConsoleGraphe{
                                             }
                                             case 2 -> {
                                                 System.out.println("\n" + dispensaire.voisinsToString());
+                                            
                                                 pressEnterToContinue(scannerFonctionDispensaire);
                                             }
                                             case 3 -> {
@@ -103,10 +105,12 @@ public class MenuConsoleGraphe{
                                                 scannerDispensaire2.nextLine();
                                                 if (!newGraphe.existeCentre(optionDispensaire2)) {
                                                     System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
-                                                } else if (dispensaire.estVoisin(optionDispensaire2)) {
+                                                } 
+                                                else if (dispensaire.estVoisin(optionDispensaire2)) {
                                                     LCGraphe.MaillonGrapheSec voisinOfDispensaire = dispensaire.getVoisin(optionDispensaire2);
                                                     System.out.println(dispensaire.getNom()+"-"+voisinOfDispensaire.toString());
-                                                } else {
+                                                } 
+                                                else {
                                                     System.out.println(dispensaire.getNom()+" n'est pas voisin avec "+ optionDispensaire2);
                                                 }
                                                 pressEnterToContinue(scannerFonctionDispensaire);
@@ -142,7 +146,10 @@ public class MenuConsoleGraphe{
                                                 }
                                                 pressEnterToContinue(scannerFonctionDispensaire);
                                             }
-                                            case 5 -> sortieAnnexe = true;
+                                            case 5 -> {
+                                                   newGraphe.voisinsVoisinsToString(dispensaire.getNom());
+                                            }
+                                            case 6 -> sortieAnnexe = true;
                                         }
                                     } else {
                                         scannerFonctionDispensaire.nextLine();
