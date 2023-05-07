@@ -9,22 +9,28 @@ import java.util.LinkedList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class InterfaceGraphe extends LCGraphe {
+public class InterfaceGraphe extends JFrame {
 
     private JMenuBar menu;
     private JMenu j;
     private JMenuItem option1,option2,option3;
+    private JPanel panel, cp;
 
     public InterfaceGraphe() {
-        JFrame frame = new JFrame("Graphe");
-          JPanel panel = new JPanel();
+        super();
         initComponents();
-        frame.setVisible(true);
+        initEventListeners();
+        setTitle("Graphe");
+        setSize(1280,720);
+        setPreferredSize(new Dimension(1280, 720));
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+        pack();
     }
 
-    public void initComponents() {
-        
-        JPanel cp = (JPanel)getContentPane();
+    private void initComponents() {
+        cp = (JPanel) getContentPane();
         cp.setLayout(new FlowLayout());
         menu = new JMenuBar();
         j = new JMenu("menu");
@@ -36,13 +42,11 @@ public class InterfaceGraphe extends LCGraphe {
         j.add(option3);
         menu.add(j);
         setJMenuBar(menu);
-        setPreferredSize(new Dimension(800, 600));
-        setTitle("Menu d'accueil");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        setLocationRelativeTo(null); // centrage de la fenêtre à l'écran
     }
-    
+    private void initEventListeners(){
+
+    }
+
     class DessinGraphe extends LCGraphe {
         private double x ;
         private double y;
