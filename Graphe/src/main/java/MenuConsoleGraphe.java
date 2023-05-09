@@ -15,7 +15,7 @@ public class MenuConsoleGraphe{
         Scanner scanner = new Scanner(System.in);
         int option;
         boolean sortie = false;
-            do {
+            do {    
                 clearScreen();
                 System.out.println("===========================================");
                 System.out.println("|              MENU PRINCIPAL             |");

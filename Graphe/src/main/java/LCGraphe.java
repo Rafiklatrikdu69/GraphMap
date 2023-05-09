@@ -113,6 +113,10 @@ class LCGraphe {
             listed = false;
         }
 
+        public MaillonGraphe getSuivant() {
+            return this.suiv;
+        }
+
         /**
          *
          * @return String : nom du sommet
@@ -206,6 +210,9 @@ class LCGraphe {
 
     public LCGraphe() {
         premier = null;
+    }
+    public MaillonGraphe getPremier(){
+        return this.premier;
     }
 
     /**

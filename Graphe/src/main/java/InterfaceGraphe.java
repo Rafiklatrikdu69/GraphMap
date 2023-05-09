@@ -99,6 +99,7 @@ public class InterfaceGraphe extends JFrame {
             }
         }
 
+<<<<<<< HEAD
         private int compteSommet() {
             int nbSommet = 0;
             LCGraphe.MaillonGraphe tmp = graphe.premier;
@@ -109,6 +110,17 @@ public class InterfaceGraphe extends JFrame {
             return nbSommet;
         }
 
+=======
+private int  compteSommet() {
+    int nbSommet= 0;
+   LCGraphe.MaillonGraphe tmp =  graphe.getPremier();
+   while(tmp!= null){
+       nbSommet++;
+       tmp = tmp.getSuivant();
+   }
+   return nbSommet;
+}
+>>>>>>> 283f6fa6fb654184ea079f4a8f97990957bb5f50
         private void dessinerGraphe(Graphics2D g2d) {
             // Calcul de la taille du cadre
             int tailleCadre = (int) (Math.sqrt(compteSommet()) * 100);
@@ -118,7 +130,7 @@ public class InterfaceGraphe extends JFrame {
             int yCentre = getHeight() / 2;
             int i = 1;
             // Placement des sommets dans le cadre
-            LCGraphe.MaillonGraphe sommet = graphe.premier;
+            LCGraphe.MaillonGraphe sommet = graphe.getPremier();
             while (sommet != null) {
                 // Calcul de l'angle entre le sommet et l'axe horizontal
                 double angle = 2 * Math.PI * i / compteSommet();
@@ -134,8 +146,13 @@ public class InterfaceGraphe extends JFrame {
                 dessinerSommet(g2d, sommet);
 
                 // Passage au sommet suivant
+<<<<<<< HEAD
                 sommet = sommet.suiv;
 
+=======
+                sommet = sommet.getSuivant();
+                
+>>>>>>> 283f6fa6fb654184ea079f4a8f97990957bb5f50
                 i++;
             }
             dessinerAretes(g2d);
