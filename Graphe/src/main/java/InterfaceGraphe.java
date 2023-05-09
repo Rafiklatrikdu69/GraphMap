@@ -136,7 +136,7 @@ public class InterfaceGraphe extends JFrame {
                 dessinerSommet(g2d, sommet);
 
                 // Passage au sommet suivant
-                sommet = sommet.suiv;
+               // sommet = sommet.suiv;
 
                 sommet = sommet.getSuivant();
 
