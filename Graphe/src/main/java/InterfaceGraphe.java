@@ -101,10 +101,10 @@ private JScrollPane scroll;
 
 private int  compteSommet() {
     int nbSommet= 0;
-   LCGraphe.MaillonGraphe tmp =  graphe.premier;
+   LCGraphe.MaillonGraphe tmp =  graphe.getPremier();
    while(tmp!= null){
        nbSommet++;
-       tmp = tmp.suiv;
+       tmp = tmp.getSuivant();
    }
    return nbSommet;
 }
@@ -117,7 +117,7 @@ private int  compteSommet() {
             int yCentre = getHeight() / 2;
             int i = 1;
             // Placement des sommets dans le cadre
-            LCGraphe.MaillonGraphe sommet = graphe.premier;
+            LCGraphe.MaillonGraphe sommet = graphe.getPremier();
             while (sommet != null) {
                 // Calcul de l'angle entre le sommet et l'axe horizontal
                 double angle = 2 * Math.PI * i / compteSommet();
@@ -133,7 +133,7 @@ private int  compteSommet() {
                 dessinerSommet(g2d, sommet);
 
                 // Passage au sommet suivant
-                sommet = sommet.suiv;
+                sommet = sommet.getSuivant();
                 
                 i++;
             }
