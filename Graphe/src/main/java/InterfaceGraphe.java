@@ -15,7 +15,7 @@ public class InterfaceGraphe extends JFrame {
 
     private static LCGraphe Graphe = new LCGraphe();
     private LinkedList<JLabel> labels = new LinkedList<>();
-private JScrollPane scroll;
+    //private JScrollPane scroll;
     private JMenuBar menu;
     private JMenu j;
     private JMenuItem option1, option2, option3;
@@ -56,7 +56,7 @@ private JScrollPane scroll;
         cp.add(menu, BorderLayout.NORTH);
         DessinGraphe dessinGraphe = new DessinGraphe(Graphe);
         cp.add(dessinGraphe, BorderLayout.CENTER);
-       scroll = new JScrollPane(cp);
+      //  scroll = new JScrollPane(cp);
     }
 
     public class DessinGraphe extends JPanel {
@@ -73,7 +73,7 @@ private JScrollPane scroll;
         }
 
         private void dessinerSommet(Graphics2D g2d, LCGraphe.MaillonGraphe sommet) {
-            int rayon = 60;
+            int rayon = 45;
             Point p = sommets.get(sommet);
             g2d.setColor(Color.RED);
             g2d.fillOval(p.x - rayon / 2, p.y - rayon / 2, rayon, rayon);
@@ -84,33 +84,34 @@ private JScrollPane scroll;
             labels.add(label);
         }
 
-  private void dessinerAretes(Graphics2D g2d) {
-    g2d.setColor(Color.BLACK);
-    for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
-        Point p1 = sommets.get(sommet1);
-        for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
-            Point p2 = sommets.get(sommet2);
-            if (sommet1.estVoisin(sommet2.getNom())) {
-                  g2d.fillOval(p1.x, p1.y, 10, 10);
-                   g2d.fillOval(p2.x, p2.y, 10, 10);
-                g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+        private void dessinerAretes(Graphics2D g2d) {
+            g2d.setColor(Color.BLACK);
+            for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
+                Point p1 = sommets.get(sommet1);
+                for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
+                    Point p2 = sommets.get(sommet2);
+                    if (sommet1.estVoisin(sommet2.getNom())) {
+                        g2d.fillOval(p1.x, p1.y, 10, 10);
+                        g2d.fillOval(p2.x, p2.y, 10, 10);
+                        g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+                    }
+                }
             }
         }
-    }
-}
 
-private int  compteSommet() {
-    int nbSommet= 0;
-   LCGraphe.MaillonGraphe tmp =  graphe.premier;
-   while(tmp!= null){
-       nbSommet++;
-       tmp = tmp.suiv;
-   }
-   return nbSommet;
-}
+        private int compteSommet() {
+            int nbSommet = 0;
+            LCGraphe.MaillonGraphe tmp = graphe.premier;
+            while (tmp != null) {
+                nbSommet++;
+                tmp = tmp.suiv;
+            }
+            return nbSommet;
+        }
+
         private void dessinerGraphe(Graphics2D g2d) {
             // Calcul de la taille du cadre
-            int tailleCadre = (int) (Math.sqrt(compteSommet()) * 200);
+            int tailleCadre = (int) (Math.sqrt(compteSommet()) * 100);
 
             // Calcul du centre du cadre
             int xCentre = getWidth() / 2;
@@ -134,14 +135,12 @@ private int  compteSommet() {
 
                 // Passage au sommet suivant
                 sommet = sommet.suiv;
-                
+
                 i++;
             }
-dessinerAretes(g2d);
+            dessinerAretes(g2d);
 
         }
-
-
 
         @Override
         public void paintComponent(Graphics g) {

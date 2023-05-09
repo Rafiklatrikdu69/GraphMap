@@ -16,7 +16,7 @@ class LCGraphe {
         private double dist;
         private double dur;
         private String dest;
-        private MaillonGrapheSec suiv;
+        public MaillonGrapheSec suiv;
 
         private MaillonGrapheSec(double fiabilite, double distance, double duree, String d) {
             fiab = fiabilite;
@@ -101,8 +101,8 @@ class LCGraphe {
 
         private String nom;
         private String type;
-        private MaillonGrapheSec lVois;
-        private MaillonGraphe suiv;
+        public MaillonGrapheSec lVois;
+        public MaillonGraphe suiv;
         private boolean listed;
 
         MaillonGraphe(String n, String t) {
@@ -152,7 +152,11 @@ class LCGraphe {
             }
             return res;
         }
-
+/**
+ * 
+ * @param nomVoisin
+ * @return 
+ */
         public MaillonGrapheSec getVoisin(String nomVoisin) {
             MaillonGrapheSec res = null;
             MaillonGrapheSec tmp = this.lVois;
@@ -164,7 +168,11 @@ class LCGraphe {
             }
             return res;
         }
-
+/**
+ * 
+ * @param nomVoisin
+ * @return 
+ */
         public boolean estVoisin(String nomVoisin) {
             boolean res = false;
             MaillonGrapheSec tmp = this.lVois;
@@ -194,7 +202,7 @@ class LCGraphe {
         }
 
     }
-    private MaillonGraphe premier;
+    public MaillonGraphe premier;
 
     public LCGraphe() {
         premier = null;
@@ -417,7 +425,7 @@ class LCGraphe {
     }
 /**
  * 
- * @return 
+ * @return res : LinkedList<MaillonGraphe>
  */
     public LinkedList<MaillonGraphe> tousLesCentresToList() {
         LinkedList<MaillonGraphe> res = new LinkedList<>();
@@ -449,7 +457,7 @@ class LCGraphe {
     }
 /**
  * 
- * @return 
+ * @return String : res
  */
     public String tousLesBlocsToString() {
         StringBuilder res = new StringBuilder();
