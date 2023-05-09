@@ -56,7 +56,7 @@ public class InterfaceGraphe extends JFrame {
         cp.add(menu, BorderLayout.NORTH);
         DessinGraphe dessinGraphe = new DessinGraphe(Graphe);
         cp.add(dessinGraphe, BorderLayout.CENTER);
-      //  scroll = new JScrollPane(cp);
+        //  scroll = new JScrollPane(cp);
     }
 
     public class DessinGraphe extends JPanel {
@@ -99,7 +99,6 @@ public class InterfaceGraphe extends JFrame {
             }
         }
 
-<<<<<<< HEAD
         private int compteSommet() {
             int nbSommet = 0;
             LCGraphe.MaillonGraphe tmp = graphe.premier;
@@ -110,17 +109,8 @@ public class InterfaceGraphe extends JFrame {
             return nbSommet;
         }
 
-=======
-private int  compteSommet() {
-    int nbSommet= 0;
-   LCGraphe.MaillonGraphe tmp =  graphe.getPremier();
-   while(tmp!= null){
-       nbSommet++;
-       tmp = tmp.getSuivant();
-   }
-   return nbSommet;
-}
->>>>>>> 283f6fa6fb654184ea079f4a8f97990957bb5f50
+    
+
         private void dessinerGraphe(Graphics2D g2d) {
             // Calcul de la taille du cadre
             int tailleCadre = (int) (Math.sqrt(compteSommet()) * 100);
@@ -146,13 +136,10 @@ private int  compteSommet() {
                 dessinerSommet(g2d, sommet);
 
                 // Passage au sommet suivant
-<<<<<<< HEAD
                 sommet = sommet.suiv;
 
-=======
                 sommet = sommet.getSuivant();
-                
->>>>>>> 283f6fa6fb654184ea079f4a8f97990957bb5f50
+
                 i++;
             }
             dessinerAretes(g2d);
