@@ -498,9 +498,9 @@ class LCGraphe {
 /**
  * 
  */
-    public void chargementFichier() {
+    public void chargementFichier(String nomFichierChoisi) {
         try {
-            File file = new File("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
+            File file = new File(nomFichierChoisi);
             //File file = new File("src/fichiersGraphe/jeuEssaietest.csv");
             Scanner scanner = new Scanner(file);
             int lineCounter = 0;

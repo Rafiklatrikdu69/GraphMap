@@ -7,9 +7,15 @@ import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Iterator;
-
+import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class InterfaceGraphe extends JFrame {
 
@@ -20,11 +26,13 @@ public class InterfaceGraphe extends JFrame {
     private JMenu j;
     private JMenuItem option1, option2, option3;
     private JPanel cp;
+    private String nomFichier;
 
     public InterfaceGraphe() {
+
         super();
-        Graphe.chargementFichier();
-        Graphe.toString();
+
+        //Graphe.toString();
         initComponents();
         setTitle("Graphe");
         setSize(1280, 720);
@@ -36,14 +44,15 @@ public class InterfaceGraphe extends JFrame {
     }
 
     private void initComponents() {
+
         cp = (JPanel) getContentPane();
         System.out.println("test");
 
         menu = new JMenuBar();
-        j = new JMenu("Options");
-        option1 = new JMenuItem("Afficher tous les dispensaires");
+        j = new JMenu("Menu");
+        option1 = new JMenuItem("Choisir le fichier pour le graphe");
         option2 = new JMenuItem("Sélectionner un dispensaire");
-        option3 = new JMenuItem("option 3");
+        option3 = new JMenuItem("Modifier le Graphe");
         j.add(option1);
         j.add(option2);
         j.add(option3);
@@ -54,9 +63,52 @@ public class InterfaceGraphe extends JFrame {
         menu.add(j);
 
         cp.add(menu, BorderLayout.NORTH);
-        DessinGraphe dessinGraphe = new DessinGraphe(Graphe);
-        cp.add(dessinGraphe, BorderLayout.CENTER);
-        //  scroll = new JScrollPane(cp);
+        initEventListeners();
+        pack();
+
+        // scroll = new JScrollPane(cp);
+    }
+
+    public String getNomFichier() {
+        return this.nomFichier;
+    }
+
+    public void initEventListeners() {
+
+        option1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fenetreOuvertureFichier = new JFileChooser(new File("."));
+                File fichier;
+                if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { // Si un fichier est sélectionné dans la fenêtre ouverte grâce à fenetreOuvertureFichier.showOpenDialog(null)
+                    fichier = fenetreOuvertureFichier.getSelectedFile(); // Récupérer le fichier
+                    System.out.println(fichier.getPath());
+
+                    Graphe.chargementFichier(fichier.getPath());
+                    DessinGraphe dessinGraphe = new DessinGraphe(Graphe);
+                    cp.add(dessinGraphe, BorderLayout.CENTER);
+                    cp.validate();
+
+                }
+
+            }
+        });
+             option3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JPanel p = new JPanel();
+                
+                JLabel j = new JLabel("Modification du graphe :");
+                p.add(j);
+                 JTable jt= new  JTable(5,6); 
+                   jt.setBounds( 30 , 40 , 200 , 300 );   
+                   p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+                   p.add(jt);
+                   cp.add(p);
+                   
+
+            }
+        });
     }
 
     public class DessinGraphe extends JPanel {
@@ -93,6 +145,8 @@ public class InterfaceGraphe extends JFrame {
                     if (sommet1.estVoisin(sommet2.getNom())) {
                         g2d.fillOval(p1.x, p1.y, 10, 10);
                         g2d.fillOval(p2.x, p2.y, 10, 10);
+                        g2d.setStroke(new BasicStroke(3));
+
                         g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
                     }
                 }
@@ -108,8 +162,6 @@ public class InterfaceGraphe extends JFrame {
             }
             return nbSommet;
         }
-
-    
 
         private void dessinerGraphe(Graphics2D g2d) {
             // Calcul de la taille du cadre
@@ -136,8 +188,7 @@ public class InterfaceGraphe extends JFrame {
                 dessinerSommet(g2d, sommet);
 
                 // Passage au sommet suivant
-               // sommet = sommet.suiv;
-
+                // sommet = sommet.suiv;
                 sommet = sommet.getSuivant();
 
                 i++;

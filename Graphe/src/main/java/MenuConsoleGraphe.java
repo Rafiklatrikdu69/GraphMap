@@ -9,7 +9,7 @@ public class MenuConsoleGraphe{
 
     public static void main(String[] args){
 
-        newGraphe.chargementFichier();
+       // newGraphe.chargementFichier();
         
 
         Scanner scanner = new Scanner(System.in);
