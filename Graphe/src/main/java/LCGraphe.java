@@ -447,8 +447,8 @@ class LCGraphe {
  * 
  * @return 
  */
-    public LinkedList<MaillonGrapheSec> toutesLesAretesToList() {
-        LinkedList<MaillonGrapheSec> res = new LinkedList<>();
+    public List<MaillonGrapheSec> toutesLesAretesToList() {
+        List<MaillonGrapheSec> res = new LinkedList<>();
         MaillonGraphe tmp = this.premier;
         MaillonGrapheSec tmp2 = null;
         while (tmp != null) {
@@ -571,7 +571,7 @@ class LCGraphe {
             marquage.put(Centre.getNom(), false);//marque tout les sommet en les mettant a false 
         });
         marquage.put(centre1, true); // Je marque le premier Centre (le premier sommet en Graphe)
-        FileFIFO<String> newFile = new FileFIFO<>(); // Permet de rex§lacher les successeurs
+        FileFIFO<String> newFile = new FileFIFO<>(); // Permet de relacher les successeurs
         newFile.enfiler(centre1); // Ajoute le premier centre a traité
         while (!newFile.estVide()) {
             String centre = newFile.defiler();
