@@ -44,6 +44,9 @@ public class InterfaceGraphe extends JFrame {
         pack();
     }
 
+    /**
+     *
+     */
     private void initComponents() {
 
         cp = (JPanel) getContentPane();
@@ -74,10 +77,17 @@ public class InterfaceGraphe extends JFrame {
         // scroll = new JScrollPane(cp);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNomFichier() {
         return this.nomFichier;
     }
 
+    /**
+     *
+     */
     public void initEventListeners() {
 
         option1.addActionListener(new ActionListener() {
@@ -138,6 +148,11 @@ public class InterfaceGraphe extends JFrame {
             setPreferredSize(new Dimension(1280, 720));
         }
 
+        /**
+         *
+         * @param g2d
+         * @param sommet
+         */
         private void dessinerSommet(Graphics2D g2d, LCGraphe.MaillonGraphe sommet) {
             int rayon = 45;
             Point p = sommets.get(sommet);
@@ -150,6 +165,10 @@ public class InterfaceGraphe extends JFrame {
             labels.add(label);
         }
 
+        /**
+         *
+         * @param g2d
+         */
         private void dessinerAretes(Graphics2D g2d) {
             g2d.setColor(Color.BLACK);
             for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
@@ -167,6 +186,10 @@ public class InterfaceGraphe extends JFrame {
             }
         }
 
+        /**
+         *
+         * @return
+         */
         private int compteSommet() {
             int nbSommet = 0;
             LCGraphe.MaillonGraphe tmp = graphe.premier;
@@ -177,6 +200,10 @@ public class InterfaceGraphe extends JFrame {
             return nbSommet;
         }
 
+        /**
+         * 
+         * @param g2d
+         */
         private void dessinerGraphe(Graphics2D g2d) {
             // Calcul de la taille du cadre
             int tailleCadre = (int) (Math.sqrt(compteSommet()) * 100);
