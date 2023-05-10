@@ -20,6 +20,7 @@ import java.awt.event.*;
 public class InterfaceGraphe extends JFrame {
 
     private static LCGraphe Graphe = new LCGraphe();
+    private JButton btnRetour;
     private LinkedList<JLabel> labels = new LinkedList<>();
     //private JScrollPane scroll;
     private JMenuBar menu;
@@ -46,6 +47,9 @@ public class InterfaceGraphe extends JFrame {
     private void initComponents() {
 
         cp = (JPanel) getContentPane();
+        JPanel panelBoutons = new JPanel();
+        this.btnRetour = new JButton("Retour Menu Principale");
+        panelBoutons.add(btnRetour);
         System.out.println("test");
 
         menu = new JMenuBar();
@@ -63,6 +67,7 @@ public class InterfaceGraphe extends JFrame {
         menu.add(j);
 
         cp.add(menu, BorderLayout.NORTH);
+        cp.add(panelBoutons,BorderLayout.PAGE_END);
         initEventListeners();
         pack();
 
@@ -87,7 +92,8 @@ public class InterfaceGraphe extends JFrame {
                     Graphe.chargementFichier(fichier.getPath());
                     DessinGraphe dessinGraphe = new DessinGraphe(Graphe);
                     cp.add(dessinGraphe, BorderLayout.CENTER);
-                    cp.validate();
+                    cp.revalidate();
+                    //cp.repaint();
 
                 }
 
@@ -105,7 +111,15 @@ public class InterfaceGraphe extends JFrame {
                    p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
                    p.add(jt);
                    cp.add(p);
+
                    
+
+            }
+        });
+        btnRetour.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cp.repaint();
 
             }
         });
