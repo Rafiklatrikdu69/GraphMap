@@ -154,6 +154,7 @@ class LCGraphe {
                 res.add(tmp);
                 tmp = tmp.suiv;
             }
+            assert res!=null;
             return res;
         }
 /**

@@ -6,17 +6,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Iterator;
 import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
-
 public class InterfaceGraphe extends JFrame {
 
     private static LCGraphe Graphe = new LCGraphe();
