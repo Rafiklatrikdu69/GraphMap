@@ -717,4 +717,110 @@ class LCGraphe {
         }
         return res.get(centre2);
     }
+
+    /**
+     *
+     * @return
+     */
+    public double[][] floydWarshall(){
+        MaillonGraphe tmp = this.premier;
+        int cpt = 0;//taille de la matrice
+
+
+        while (tmp!= null){
+            cpt++;
+            tmp = tmp.suiv;
+        }
+        double [][] matrice = new double[cpt][cpt];
+        //System.out.println(cpt);
+
+        for (int i = 0;i<cpt;i++){
+            for (int j = 0;j<cpt;j++){
+                    if(i==j){
+                        matrice[i][j] = 0;//diagonale de 0
+                    }else {
+                        matrice[i][j] = Double.MAX_VALUE;
+                    }
+            }
+        }
+
+        HashMap<String, Integer> IndexSommet = new HashMap<>(); // Création de la HashMap
+
+        tmp = this.premier;
+        int index = 0;
+        while (tmp != null) {
+            String NomSommet = tmp.nom;
+            IndexSommet.put(NomSommet, index);
+            index++;
+            tmp = tmp.suiv;
+        }
+
+        tmp = this.premier;
+        while (tmp != null) {
+            String source = tmp.nom;
+            MaillonGrapheSec voisins = tmp.lVois;
+
+            while (voisins != null) {
+                String destination = voisins.getDestination();
+                double distance = voisins.dist;
+
+                int indexSource = getIndice(source, IndexSommet);
+                int indexDestination = getIndice(destination, IndexSommet);
+
+                matrice[indexSource][indexDestination] = distance;
+
+                voisins = voisins.suiv;
+            }
+
+            tmp = tmp.suiv;
+        }
+
+        for (int i = 0; i < cpt; i++) {
+            for (int j = 0; j < cpt; j++) {
+                System.out.print(matrice[i][j] + " | ");
+            }
+            System.out.println();
+        }
+        /*int[][] predecesseurs = new int[cpt][cpt];
+        for (int i = 0; i < cpt; i++) {
+            for (int j = 0; j < cpt; j++) {
+                predecesseurs[i][j] = i;
+            }
+        }*/
+        int i,j,k = 0;
+        for (k = 0; k < cpt; k++) {
+            for (i = 0; i < cpt; i++) {
+                for (j = 0; j < cpt; j++) {
+                    if (matrice[i][k] + matrice[k][j] < matrice[i][j])
+                        matrice[i][j] = matrice[i][k] + matrice[k][j];
+
+                }
+            }
+        }
+        System.out.println();
+        System.out.println();
+        for ( i = 0; i < cpt; i++) {
+            for ( j = 0; j < cpt; j++) {
+                System.out.print(matrice[i][j] + " | ");
+            }
+            System.out.println();
+        }
+
+        return matrice;
+    }
+
+    /**
+     *
+     * @param NomSommet
+     * @param IndiceSommet
+     * @return
+     */
+    private int getIndice(String NomSommet, HashMap<String, Integer> IndiceSommet) {
+        Integer index = IndiceSommet.get(NomSommet);
+        if (index != null) {
+            return index;
+        }
+        throw new IllegalArgumentException("Probleme  " + NomSommet);
+    }
+
 }
