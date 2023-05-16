@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.event.*;
+import java.util.List;
+
 public class InterfaceGraphe extends JFrame {
 
     private static LCGraphe Graphe = new LCGraphe();
@@ -133,12 +135,13 @@ public class InterfaceGraphe extends JFrame {
     public class DessinGraphe extends JPanel {
 
         private LCGraphe graphe;
-        private HashMap<LCGraphe.MaillonGraphe, Point> sommets;
+        private HashMap<LCGraphe.MaillonGraphe, JLabel> sommets;
+        private  JLabel label;
 
         DessinGraphe(LCGraphe graphe) {
             super();
             this.graphe = graphe;
-            sommets = new HashMap<>();
+            sommets = new HashMap<LCGraphe.MaillonGraphe, JLabel>();
             labels = new LinkedList<>();
             setPreferredSize(new Dimension(1280, 720));
         }
@@ -150,15 +153,24 @@ public class InterfaceGraphe extends JFrame {
          */
         private void dessinerSommet(Graphics2D g2d, LCGraphe.MaillonGraphe sommet) {
             int rayon = 45;
-            Point p = sommets.get(sommet);
+            JLabel p = sommets.get(sommet);
             g2d.setColor(Color.RED);
-            g2d.fillOval(p.x - rayon / 2, p.y - rayon / 2, rayon, rayon);
+            g2d.fillOval(p.getX() - rayon / 2, p.getY() - rayon / 2, rayon, rayon);
             g2d.setColor(Color.BLACK);
-            g2d.drawOval(p.x - rayon / 2, p.y - rayon / 2, rayon, rayon);
+            g2d.drawOval(p.getX() - rayon / 2, p.getY() - rayon / 2, rayon, rayon);
             JLabel label = new JLabel(sommet.getNom());
-            label.setBounds(p.x - rayon / 2, p.y - rayon / 2, rayon, rayon);
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.setVerticalAlignment(SwingConstants.CENTER);
+            label.setBounds(p.getX() - rayon / 2, p.getY() - rayon / 2, rayon, rayon);
+            sommets.put(sommet, label);
             labels.add(label);
+            cp.add(label);
+
+// Appeler setHorizontalAlignment après l'ajout du label au conteneur
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.setVerticalAlignment(SwingConstants.CENTER);
         }
+
 
         /**
          *
@@ -167,15 +179,15 @@ public class InterfaceGraphe extends JFrame {
         private void dessinerAretes(Graphics2D g2d) {
             g2d.setColor(Color.BLACK);
             for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
-                Point p1 = sommets.get(sommet1);
+                JLabel p1 = sommets.get(sommet1);
                 for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
-                    Point p2 = sommets.get(sommet2);
+                    JLabel p2 = sommets.get(sommet2);
                     if (sommet1.estVoisin(sommet2.getNom())) {
-                        g2d.fillOval(p1.x, p1.y, 10, 10);
-                        g2d.fillOval(p2.x, p2.y, 10, 10);
+                        g2d.fillOval(p1.getX(), p1.getY(), 10, 10);
+                        g2d.fillOval(p2.getX(), p2.getY(), 10, 10);
                         g2d.setStroke(new BasicStroke(3));
 
-                        g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+                        g2d.drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
                     }
                 }
             }
@@ -218,7 +230,7 @@ public class InterfaceGraphe extends JFrame {
                 int y = yCentre + (int) (tailleCadre / 2 * Math.sin(angle));
 
                 // Ajout du sommet à la liste
-                sommets.put(sommet, new Point(x, y));
+                sommets.put(sommet, new JLabel(""+x + y));
 
                 // Dessin du sommet
                 dessinerSommet(g2d, sommet);
@@ -243,6 +255,19 @@ public class InterfaceGraphe extends JFrame {
                 add(label);
             }
         }
+        //
+        public void addInventList(List<JLabel> listeLabels){
+            for(JLabel l : listeLabels){
+                l.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        super.mouseClicked(e);
+                    }
+                });
+
+            }
+        }
+
     }
 
 }
