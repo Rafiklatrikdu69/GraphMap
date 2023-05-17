@@ -754,6 +754,12 @@ class LCGraphe {
         return predecesseurs;
     }
 
+    /**
+     *
+     * @param predecesseurs
+     * @param distances
+     * @param indexSommet
+     */
     public void afficherPlusCourtsChemins(double[][] predecesseurs, double[][] distances, Map<String, Integer> indexSommet) {
         int taille = predecesseurs.length;
 
@@ -771,6 +777,13 @@ class LCGraphe {
         }
     }
 
+    /**
+     *
+     * @param source
+     * @param destination
+     * @param predecesseurs
+     * @param indexSommet
+     */
     public void afficherChemin(int source, int destination, double[][] predecesseurs, Map<String, Integer> indexSommet) {
         if (predecesseurs[source][destination] == -1) {
             System.out.println("Aucun chemin trouvé de " + getNomSommet(source, indexSommet) + " à " + getNomSommet(destination, indexSommet));
