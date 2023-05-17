@@ -9,14 +9,10 @@ public class MenuConsoleGraphe{
 
     public static void main(String[] args){
 
-        newGraphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
-
-       // newGraphe.floydWarshall();
+        newGraphe.chargementFichier("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
 
         double[][] predecesseurs = newGraphe.floydWarshall();
-        System.out.println(newGraphe.plusCourtCheminDijkstra("S1","S8"));
-
-
+        System.out.println(newGraphe.plusCourtCheminDijkstraFiabilite("S1","S8"));
 
         Scanner scanner = new Scanner(System.in);
         int option;
@@ -151,7 +147,17 @@ public class MenuConsoleGraphe{
                                                 pressEnterToContinue(scannerFonctionDispensaire);
                                             }
                                             case 5 -> {
-                                                   newGraphe.voisinsVoisinsToString("S1","S2");
+                                                System.out.print("Veillez saisir un autre dispensaire (entre S1 et S30) : ");
+                                                String optionDispensaire2;
+                                                Scanner scannerDispensaire2 = new Scanner(System.in);
+                                                optionDispensaire2 = scannerDispensaire2.next();
+                                                scannerDispensaire2.nextLine();
+                                                if (!newGraphe.existeCentre(optionDispensaire2)) {
+                                                    System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
+                                                } else {
+                                                    System.out.println(newGraphe.voisinsVoisinsToString(dispensaire.getNom(),optionDispensaire2));
+                                                }
+                                                pressEnterToContinue(scannerFonctionDispensaire);
                                             }
                                             case 6 -> sortieAnnexe = true;
                                         }
@@ -211,8 +217,7 @@ public class MenuConsoleGraphe{
         System.out.print("Appuyez sur Entrée pour continuer...");
         scanner.nextLine();
     }
-
-public static class ConsoleColors {
+    public static class ConsoleColors {
     // Définir les codes de couleurs pour les messages de la console
     public static final String RESET = "\033[0m";
     public static final String BLACK = "\033[0;30m";
