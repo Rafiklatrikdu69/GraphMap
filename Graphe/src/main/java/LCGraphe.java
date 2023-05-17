@@ -101,7 +101,7 @@ class LCGraphe {
         }
     }
 
-    class MaillonGraphe {
+     class MaillonGraphe {
 
         private String nom;
         private String type;
@@ -241,7 +241,7 @@ class LCGraphe {
  * @param centre1
  * @param centre2 
  */
-    public String voisinsVoisinsToString(String centre1, String centre2) {
+        public String voisinsVoisinsToString(String centre1, String centre2) {
         StringBuilder res = new StringBuilder();
         List<String> voisins1 = new LinkedList<>();
         List<String> voisins2 = new LinkedList<>();
@@ -411,6 +411,7 @@ class LCGraphe {
 
     /**
      * Cette methode renvoie true si le centre(sommet) existe sinon elle renvoie
+     *
      * false
      *
      * @param nomCentre
@@ -567,8 +568,10 @@ class LCGraphe {
 
     /**
      *
-     * @param centre1
-     * @param centre2
+     * Cette methode trouve le chemin le plus fiable pour aller d'un SXX a un sommet SXX
+     *
+     * @param centre1 : String
+     * @param centre2 : String
      * @return
      */
     public LinkedHashMap<String, Double> plusCourtCheminDijkstraFiabilite(String centre1, String centre2) {
