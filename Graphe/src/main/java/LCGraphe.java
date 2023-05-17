@@ -804,7 +804,7 @@ class LCGraphe {
     }
 
     /**
-     * 
+     *
      * @param source
      * @param destination
      * @param predecesseurs
