@@ -803,6 +803,13 @@ class LCGraphe {
         System.out.print(" -> " + getNomSommet(destination, indexSommet));
     }
 
+    /**
+     * 
+     * @param source
+     * @param destination
+     * @param predecesseurs
+     * @param chemin
+     */
     private void construireChemin(int source, int destination, double[][] predecesseurs, List<Integer> chemin) {
         int predecesseur = (int) predecesseurs[source][destination];
         if (predecesseur != source) {
@@ -811,6 +818,12 @@ class LCGraphe {
         chemin.add(predecesseur);
     }
 
+    /**
+     *
+     * @param index
+     * @param indexSommet
+     * @return
+     */
     public String getNomSommet(int index, Map<String, Integer> indexSommet) {
         for (Map.Entry<String, Integer> entry : indexSommet.entrySet()) {
             if (entry.getValue() == index) {
@@ -820,7 +833,12 @@ class LCGraphe {
         return "";
     }
 
-
+    /**
+     *
+     * @param nomSommet
+     * @param indexSommet
+     * @return
+     */
     public int getIndice(String nomSommet, Map<String, Integer> indexSommet) {
         Integer index = indexSommet.get(nomSommet);
         if (index != null) {
