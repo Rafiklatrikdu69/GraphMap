@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.io.File;
 import java.lang.String;
+import Exception.*;
 
 /**
  *
@@ -332,10 +333,10 @@ class LCGraphe {
      * @param fiab
      * @param dist
      * @param dur
-     * @throws ExistEdgeException
-     * @throws NotExistMainException
+     * @throws VoisinException
+     * @throws CentreException
      */
-    public void modifVoisin(String nomCentre, String nomDestinataire, double fiab, double dist, double dur) throws ExistEdgeException, NotExistMainException {
+    public void modifVoisin(String nomCentre, String nomDestinataire, double fiab, double dist, double dur) throws VoisinException, CentreException {
         MaillonGrapheSec tmp2 = null;
         MaillonGraphe tmp = this.premier;
         MaillonGraphe tmp3 = this.premier;
@@ -343,7 +344,7 @@ class LCGraphe {
         while (!tmp.nom.equals(nomCentre)) {
             tmp = tmp.suiv;
             if (tmp == null) {
-                throw new NotExistMainException("Le centre " + nomCentre + " n'existe pas!");
+                throw new CentreException("Le centre " + nomCentre + " n'existe pas!");
             }
         }
         tmp2 = tmp.lVois;
@@ -359,13 +360,13 @@ class LCGraphe {
         }
 
         if (tmp2 == null) {
-            throw new ExistEdgeException("L'arete n'existe pas !");
+            throw new VoisinException("L'arete n'existe pas !");
         } // regarde si l'arete existe
 
         while (!tmp3.nom.equals(nomDestinataire)) {
             tmp3 = tmp3.suiv;
             if (tmp3 == null) {
-                throw new NotExistMainException("Le sommet " + nomDestinataire + " n'existe pas!");
+                throw new CentreException("Le sommet " + nomDestinataire + " n'existe pas!");
             }
         }
         check = false;
