@@ -725,7 +725,6 @@ class LCGraphe {
     }
 
     /**
-     *
      * @return
      */
     public double[][] floydWarshall() {
@@ -744,12 +743,12 @@ class LCGraphe {
                 if (i == j) {
                     matrice[i][j] = 0;
                 } else {
-                    matrice[i][j] = Double.MAX_VALUE;
+                    matrice[i][j] = Double.POSITIVE_INFINITY;
                 }
             }
         }
 
-        HashMap<String, Integer> indexSommet = new HashMap<>();
+        Map<String, Integer> indexSommet = new TreeMap<>();
 
         tmp = this.premier;
         int index = 0;
@@ -764,7 +763,6 @@ class LCGraphe {
         while (tmp != null) {
             String source = tmp.nom;
             MaillonGrapheSec voisins = tmp.lVois;
-
             while (voisins != null) {
                 String destination = voisins.getDestination();
                 double distance = voisins.getDistance();
@@ -780,90 +778,93 @@ class LCGraphe {
             tmp = tmp.suiv;
         }
 
+        double[][] distances = matrice.clone();
         double[][] predecesseurs = new double[cpt][cpt];
 
         for (int i = 0; i < cpt; i++) {
             for (int j = 0; j < cpt; j++) {
-                if (i != j && matrice[i][j] != Double.MAX_VALUE) {
+                if (i != j && matrice[i][j] != Double.POSITIVE_INFINITY) {
                     predecesseurs[i][j] = i;
                 } else {
-                    predecesseurs[i][j] = 0;
+                    predecesseurs[i][j] = -1;
                 }
             }
         }
 
-        int k;
-
-
-
-
-
-        for (k = 0; k < cpt; k++) {
+        for (int k = 0; k < cpt; k++) {
             for (int i = 0; i < cpt; i++) {
                 for (int j = 0; j < cpt; j++) {
-                    if (matrice[i][k] + matrice[k][j] < matrice[i][j]) {
-                        matrice[i][j] = matrice[i][k] + matrice[k][j];
+                    if (distances[i][k] + distances[k][j] < distances[i][j]) {
+                        distances[i][j] = distances[i][k] + distances[k][j];
                         predecesseurs[i][j] = predecesseurs[k][j];
                     }
                 }
             }
         }
 
+        afficherPlusCourtsChemins(predecesseurs, distances, indexSommet);
 
-
-//
-        afficherPlusCourtsChemins(predecesseurs,indexSommet);
         return predecesseurs;
     }
-    /**
-     *
-     * @param NomSommet
-     * @param IndiceSommet
-     * @return
-     */
-    public int getIndice(String NomSommet, HashMap<String, Integer> IndiceSommet) {
-        Integer index = IndiceSommet.get(NomSommet);
-        if (index != null) {
-            return index;
-        }
-        throw new IllegalArgumentException("Probleme  " + NomSommet);
-    }
-    public void afficherPlusCourtsChemins(double[][] predecesseurs, HashMap<String, Integer> indexSommet) {
+
+
+
+    public void afficherPlusCourtsChemins(double[][] predecesseurs, double[][] distances, Map<String, Integer> indexSommet) {
         int taille = predecesseurs.length;
 
-        // Parcours de chaque paire de sommets pour afficher les chemins
+        // Parcours de chaque paire de sommets pour afficher les chemins et les distances
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 if (i != j) {
                     System.out.println("Plus court chemin de " + getNomSommet(i, indexSommet) + " à " + getNomSommet(j, indexSommet) + ":");
                     afficherChemin(i, j, predecesseurs, indexSommet);
                     System.out.println();
+                    System.out.println("Distance : " + distances[i][j]);
+                    System.out.println();
                 }
             }
         }
     }
 
-    public void afficherChemin(double source, double destination, double[][] predecesseurs, HashMap<String, Integer> indexSommet) {
-        double predecesseur =  predecesseurs[(int) source][(int) destination];
-
-        if (predecesseur == source) {
-            System.out.print("  "+getNomSommet(source, indexSommet) + " -> "+ predecesseur);
-        } else {
-            afficherChemin(source, predecesseur, predecesseurs, indexSommet);
-            System.out.print("  "+getNomSommet(predecesseur, indexSommet) + " -> "+ predecesseur);
+    public void afficherChemin(int source, int destination, double[][] predecesseurs, Map<String, Integer> indexSommet) {
+        if (predecesseurs[source][destination] == -1) {
+            System.out.println("Aucun chemin trouvé de " + getNomSommet(source, indexSommet) + " à " + getNomSommet(destination, indexSommet));
+            return;
         }
 
-        System.out.print(getNomSommet(destination, indexSommet));
+        List<Integer> chemin = new ArrayList<>();
+        construireChemin(source, destination, predecesseurs, chemin);
+
+        System.out.print("  " + getNomSommet(source, indexSommet));
+        for (int i = 0; i < chemin.size(); i++) {
+            System.out.print(" -> " + getNomSommet(chemin.get(i), indexSommet));
+        }
     }
 
-    public String getNomSommet(double index, HashMap<String, Integer> indexSommet) {
+    private void construireChemin(int source, int destination, double[][] predecesseurs, List<Integer> chemin) {
+        int predecesseur = (int) predecesseurs[source][destination];
+        if (predecesseur != source) {
+            construireChemin(source, predecesseur, predecesseurs, chemin);
+        }
+        chemin.add(predecesseur);
+    }
+
+    public String getNomSommet(int index, Map<String, Integer> indexSommet) {
         for (Map.Entry<String, Integer> entry : indexSommet.entrySet()) {
             if (entry.getValue() == index) {
                 return entry.getKey();
             }
         }
-
         return "";
+    }
+
+
+    public int getIndice(String nomSommet, Map<String, Integer> indexSommet) {
+        Integer index = indexSommet.get(nomSommet);
+        if (index != null) {
+            return index;
+        }
+        throw new IllegalArgumentException("Problème : " + nomSommet);
     }
 
 

@@ -14,7 +14,7 @@ public class MenuConsoleGraphe{
        // newGraphe.floydWarshall();
 
         double[][] predecesseurs = newGraphe.floydWarshall();
-        System.out.println(newGraphe.plusCourtCheminDijkstra("S1","S11"));
+        System.out.println(newGraphe.plusCourtCheminDijkstra("S1","S8"));
 
 
 
