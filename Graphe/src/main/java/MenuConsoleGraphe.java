@@ -1,22 +1,17 @@
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.String;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Scanner;
 
-public class MenuConsoleGraphe {
+public class MenuConsoleGraphe{
     private static LCGraphe newGraphe = new LCGraphe();
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args){
 
         newGraphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
-        newGraphe.existeCentre("S33");
-        double[][] predecesseurs = newGraphe.floydWarshall();
-        System.out.println(newGraphe.plusCourtCheminDijkstraFiabilite("S1", "S8"));
-
-
+        System.out.println(newGraphe.plusCourtCheminDijkstraFiabilite("S1","S30"));
+        newGraphe.floydWarshall();
 
         Scanner scanner = new Scanner(System.in);
         int option;
@@ -28,7 +23,7 @@ public class MenuConsoleGraphe {
             System.out.println("============================================");
             System.out.println("|  " + ConsoleColors.YELLOW_BOLD + "1. Afficher le contenu du graphe       " + ConsoleColors.RESET + "|");
             System.out.println("|  " + ConsoleColors.PURPLE_BOLD + "2. Afficher toutes les arêtes          " + ConsoleColors.RESET + "|");
-            System.out.println("|  " + ConsoleColors.GREEN_BOLD + "3. Sélectionner un dispensaire         " + ConsoleColors.RESET + "|");
+            System.out.println("|  " + ConsoleColors.GREEN_BOLD + "3. Sélectionner un dispensaire         " + ConsoleColors.RESET +"|");
             System.out.println("|  " + ConsoleColors.BLUE_BOLD + "4. Option 4                            " + ConsoleColors.RESET + "|");
             System.out.println("|  " + ConsoleColors.CYAN_BOLD + "5. Option 5                            " + ConsoleColors.RESET + "|");
             System.out.println("|  " + ConsoleColors.RED_BOLD + "6. Option 6                            " + ConsoleColors.RESET + "|");
@@ -52,7 +47,6 @@ public class MenuConsoleGraphe {
                                 } else {
                                     stringVoisin.append(voisinsCentre.get(i).getDestination()).append(",");
                                 }
-
                             }
                             stringVoisin.append("]");
                             System.out.println(Centre.getNom() + " [" + Centre.getType() + "], Voisins : " + stringVoisin.toString());
@@ -103,18 +97,20 @@ public class MenuConsoleGraphe {
                                             pressEnterToContinue(scannerFonctionDispensaire);
                                         }
                                         case 3 -> {
-                                            System.out.print("Veillez saisir un dispensaire qui est voisin à " + dispensaire.getNom() + " (entre S1 et S30) : ");
+                                            System.out.print("Veillez saisir un dispensaire qui est voisin à "+dispensaire.getNom()+" (entre S1 et S30) : ");
                                             String optionDispensaire2;
                                             Scanner scannerDispensaire2 = new Scanner(System.in);
                                             optionDispensaire2 = scannerDispensaire2.next();
                                             scannerDispensaire2.nextLine();
                                             if (!newGraphe.existeCentre(optionDispensaire2)) {
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
-                                            } else if (dispensaire.estVoisin(optionDispensaire2)) {
+                                            }
+                                            else if (dispensaire.estVoisin(optionDispensaire2)) {
                                                 LCGraphe.MaillonGrapheSec voisinOfDispensaire = dispensaire.getVoisin(optionDispensaire2);
-                                                System.out.println(dispensaire.getNom() + "-" + voisinOfDispensaire.toString());
-                                            } else {
-                                                System.out.println(dispensaire.getNom() + " n'est pas voisin avec " + optionDispensaire2);
+                                                System.out.println(dispensaire.getNom()+"-"+voisinOfDispensaire.toString());
+                                            }
+                                            else {
+                                                System.out.println(dispensaire.getNom()+" n'est pas voisin avec "+ optionDispensaire2);
                                             }
                                             pressEnterToContinue(scannerFonctionDispensaire);
                                         }
@@ -127,15 +123,15 @@ public class MenuConsoleGraphe {
                                             if (!newGraphe.existeCentre(optionDispensaire2)) {
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
                                             } else {
-                                                LinkedHashMap<String, Double> plusCourtChemin = newGraphe.plusCourtCheminDijkstraFiabilite(dispensaire.getNom(), optionDispensaire2);
+                                                LinkedHashMap<String, Double> plusCourtChemin = newGraphe.plusCourtCheminDijkstraFiabilite(dispensaire.getNom(),optionDispensaire2);
                                                 StringBuilder affichage = new StringBuilder();
                                                 affichage.append("\n");
                                                 int compteur = 0;
                                                 for (Map.Entry<String, Double> entry : plusCourtChemin.entrySet()) {
-                                                    if (compteur == plusCourtChemin.size() - 1) {
+                                                    if (compteur == plusCourtChemin.size()-1){
                                                         affichage.append(entry.getKey());
                                                         affichage.append("\nLe chemin a une fiabilité de ");
-                                                        double fiab = entry.getValue() * 100;
+                                                        double fiab = entry.getValue()*100;
                                                         DecimalFormat df = new DecimalFormat("#.##");
                                                         double nombreArrondi = Double.parseDouble(df.format(fiab).replace(",", "."));
                                                         affichage.append(nombreArrondi).append("%");
@@ -150,17 +146,7 @@ public class MenuConsoleGraphe {
                                             pressEnterToContinue(scannerFonctionDispensaire);
                                         }
                                         case 5 -> {
-                                            System.out.print("Veillez saisir un autre dispensaire (entre S1 et S30) : ");
-                                            String optionDispensaire2;
-                                            Scanner scannerDispensaire2 = new Scanner(System.in);
-                                            optionDispensaire2 = scannerDispensaire2.next();
-                                            scannerDispensaire2.nextLine();
-                                            if (!newGraphe.existeCentre(optionDispensaire2)) {
-                                                System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
-                                            } else {
-                                                System.out.println(newGraphe.voisinsVoisinsToString(dispensaire.getNom(), optionDispensaire2));
-                                            }
-                                            pressEnterToContinue(scannerFonctionDispensaire);
+                                            newGraphe.voisinsVoisinsToString("S1","S2");
                                         }
                                         case 6 -> sortieAnnexe = true;
                                     }
@@ -170,149 +156,6 @@ public class MenuConsoleGraphe {
                                     pressEnterToContinue(scannerFonctionDispensaire);
                                 }
                             } while (!sortieAnnexe);
-
-
-                        }
-                            pressEnterToContinue(scanner);
-                        }
-                        case 2 -> {
-                            System.out.println(newGraphe);
-                            pressEnterToContinue(scanner);
-                        }
-                        case 3 -> {
-                            System.out.print("Veillez saisir un dispensaire (entre S1 et S30) : ");
-                            String optionDispensaire;
-                            Scanner scannerDispensaire = new Scanner(System.in);
-                            optionDispensaire = scannerDispensaire.next();
-                            scannerDispensaire.nextLine();
-                            boolean sortieAnnexe = false;
-                            //if (!newGraphe.existeCentre(optionDispensaire)) {
-                               // System.out.println("Le dispensaire " + optionDispensaire + " n'existe pas !");
-                          // } else {
-                                LCGraphe.MaillonGraphe dispensaire = newGraphe.getCentre(optionDispensaire);
-                                int optionFonctionDispensaire;
-                                Scanner scannerFonctionDispensaire = new Scanner(System.in);
-                                do {
-                                    clearScreen();
-                                    System.out.println("============================================");
-                                    System.out.println("|              Dispensaire " + optionDispensaire + "              |");
-                                    System.out.println("=============================================");
-                                    System.out.println("|  " + ConsoleColors.YELLOW_BOLD + "1. " + ConsoleColors.RESET + "Afficher le type de dispensaire      " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.PURPLE_BOLD + "2. " + ConsoleColors.RESET + "Afficher ses voisins direct          " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.GREEN_BOLD + "3. " + ConsoleColors.RESET + "Afficher un voisin direct            " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.BLUE_BOLD + "4. " + ConsoleColors.RESET + "Afficher le chemin le plus fiable    " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.GRAY_BOLD + "5. " + ConsoleColors.RESET + "Afficher les voisins à 2 distances           " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.GRAY_BOLD + "6. " + ConsoleColors.RESET + "Retourner au menu principal          " + ConsoleColors.RESET + "|");
-                                    System.out.println("=============================================");
-                                    System.out.print("Saisir votre choix : ");
-                                    if (scannerFonctionDispensaire.hasNextInt()) {
-                                        optionFonctionDispensaire = scannerFonctionDispensaire.nextInt();
-                                        scannerFonctionDispensaire.nextLine();
-                                        switch (optionFonctionDispensaire) {
-                                            case 1 -> {
-                                                System.out.println("\nType : " + dispensaire.getType() + "\n");
-                                                pressEnterToContinue(scannerFonctionDispensaire);
-                                            }
-                                            case 2 -> {
-                                                System.out.println("\n" + dispensaire.voisinsToString());
-                                            
-                                                pressEnterToContinue(scannerFonctionDispensaire);
-                                            }
-                                            case 3 -> {
-                                                System.out.print("Veillez saisir un dispensaire qui est voisin à "+dispensaire.getNom()+" (entre S1 et S30) : ");
-                                                String optionDispensaire2;
-                                                Scanner scannerDispensaire2 = new Scanner(System.in);
-                                                optionDispensaire2 = scannerDispensaire2.next();
-                                                scannerDispensaire2.nextLine();
-                                               /* if (!newGraphe.existeCentre(optionDispensaire2)) {
-                                                    System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
-                                                } */
-                                               // else if (dispensaire.estVoisin(optionDispensaire2)) {
-                                                    LCGraphe.MaillonGrapheSec voisinOfDispensaire = dispensaire.getVoisin(optionDispensaire2);
-                                                    System.out.println(dispensaire.getNom()+"-"+voisinOfDispensaire.toString());
-                                               // }
-                                               // else {
-                                                    System.out.println(dispensaire.getNom()+" n'est pas voisin avec "+ optionDispensaire2);
-                                                //}
-                                                pressEnterToContinue(scannerFonctionDispensaire);
-                                            }
-                                            case 4 -> {
-                                                System.out.print("Veillez saisir un autre dispensaire (entre S1 et S30) : ");
-                                                String optionDispensaire2;
-                                                Scanner scannerDispensaire2 = new Scanner(System.in);
-                                                optionDispensaire2 = scannerDispensaire2.next();
-                                                scannerDispensaire2.nextLine();
-                                               // if (!newGraphe.existeCentre(optionDispensaire2)) {
-                                                    System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
-                                               // } else {
-                                                    LinkedHashMap<String, Double> plusCourtChemin = newGraphe.plusCourtCheminDijkstraFiabilite(dispensaire.getNom(),optionDispensaire2);
-                                                    StringBuilder affichage = new StringBuilder();
-                                                    affichage.append("\n");
-                                                    int compteur = 0;
-                                                    for (Map.Entry<String, Double> entry : plusCourtChemin.entrySet()) {
-                                                        if (compteur == plusCourtChemin.size()-1){
-                                                            affichage.append(entry.getKey());
-                                                            affichage.append("\nLe chemin a une fiabilité de ");
-                                                            double fiab = entry.getValue()*100;
-                                                            DecimalFormat df = new DecimalFormat("#.##");
-                                                            double nombreArrondi = Double.parseDouble(df.format(fiab).replace(",", "."));
-                                                            affichage.append(nombreArrondi).append("%");
-                                                        } else {
-                                                            affichage.append(entry.getKey()).append(" -> ");
-                                                        }
-                                                        compteur++;
-                                                    }
-                                                    affichage.append("\n");
-                                                    System.out.println(affichage.toString());
-                                               // }
-                                                pressEnterToContinue(scannerFonctionDispensaire);
-                                            }
-                                            case 5 -> {
-                                                System.out.print("Veillez saisir un autre dispensaire (entre S1 et S30) : ");
-                                                String optionDispensaire2;
-                                                Scanner scannerDispensaire2 = new Scanner(System.in);
-                                                optionDispensaire2 = scannerDispensaire2.next();
-                                                scannerDispensaire2.nextLine();
-                                              //  if (!newGraphe.existeCentre(optionDispensaire2)) {
-                                                    System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
-                                              //  } else {
-                                                    System.out.println(newGraphe.voisinsVoisinsToString(dispensaire.getNom(),optionDispensaire2));
-                                               // }
-                                                pressEnterToContinue(scannerFonctionDispensaire);
-                                            }
-                                            case 6 -> sortieAnnexe = true;
-                                        }
-                                    } else {
-                                        scannerFonctionDispensaire.nextLine();
-                                        System.out.println(ConsoleColors.RED_BOLD + "Erreur : entrée invalide" + ConsoleColors.RESET);
-                                        pressEnterToContinue(scannerFonctionDispensaire);
-                                    }
-                                } while (!sortieAnnexe);
-                           // }
-                        }
-                        case 4 -> {
-                            System.out.println("Vous avez choisi l'option 4");
-                            // Insérer ici le code pour l'option 4
-                            pressEnterToContinue(scanner);
-                        }
-                        case 5 -> {
-                            System.out.println("Vous avez choisi l'option 5");
-                            // Insérer ici le code pour l'option 5
-                            pressEnterToContinue(scanner);
-                        }
-                        case 6 -> {
-                            System.out.println("Vous avez choisi l'option 6");
-                            // Insérer ici le code pour l'option 6
-                            pressEnterToContinue(scanner);
-                        }
-                        case 7 -> {
-                            System.out.println("Merci d'avoir utilisé notre programme !");
-                            sortie = true;
-                        }
-                        default -> {
-                            System.out.println(ConsoleColors.RED_BOLD + "Erreur : choix invalide" + ConsoleColors.RESET);
-                            pressEnterToContinue(scanner);
-
                         }
                     }
                     case 4 -> {
@@ -346,7 +189,6 @@ public class MenuConsoleGraphe {
             }
         } while (!sortie);
     }
-
     public static void clearScreen() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
@@ -403,5 +245,3 @@ public class MenuConsoleGraphe {
         public static final String GRAY_BOLD = "\033[1;90m";
     }
 }
-
-
