@@ -563,58 +563,6 @@ class LCGraphe {
         }
         return res.toString();
     }
-/**
- * 
- * @param centre1
- * @param centre2
- * @return 
- */
-    public List<String> plusCourtCheminDijkstra(String centre1, String centre2) {
-        Map<String, ArrayList<String>> res = new HashMap<String, ArrayList<String>>(); // res sera le chemin entre centre1 et centre2 (null si ya pas de chemin)
-        Map<String, Boolean> marquage = new HashMap<String, Boolean>(); // permet de marquer les centres (Sommets traité en Graphe)
-        res.put(centre1, new ArrayList<>());
-        res.get(centre1).add(centre1);
-        this.tousLesCentresToList().forEach(Centre -> {
-            marquage.put(Centre.getNom(), false);//marque tout les sommet en les mettant a false 
-        });
-        marquage.put(centre1, true); // Je marque le premier Centre (le premier sommet en Graphe)
-        FileFIFO<String> newFile = new FileFIFO<>(); // Permet de relacher les successeurs
-        newFile.enfiler(centre1); // Ajoute le premier centre a traité
-        while (!newFile.estVide()) {
-            String centre = newFile.defiler();
-            List<MaillonGrapheSec> succSom = this.getCentre(centre).voisinsToList(); // On récupère tous les voisins du sommet en cours de traitement
-            for (MaillonGrapheSec maillonGrapheSec : succSom) { // On parcours tous les voisins
-                String nomSucc = maillonGrapheSec.getDestination();
-                if (!marquage.get(nomSucc)) { // Regarde si le voisin n'est pas marqué
-                    res.put(nomSucc, new ArrayList<String>(res.get(centre))); // créer une nouvelle liste pour le sommet suivant et le met dans la hashmap
-                    res.get(nomSucc).add(nomSucc);
-                    marquage.put(nomSucc, true); // Marque le voisin (Comme sommet traité)
-                    newFile.enfiler(nomSucc); // Ajoute le voisin
-                }
-            }
-        }
-
-        if (!(res.containsKey(centre2))) {
-            return null;
-        }
-        List<String> chemin = res.get(centre2);
-
-        double distanceTotale = 0; // Initialisation de la distance totale
-        for (int i = 0; i < chemin.size() - 1; i++) {
-            String centreActuel = chemin.get(i);//recupere le centre a l'indice i 
-            String centreSuivant = chemin.get(i + 1);//recupere le centre suivant  l'indice i +1
-            MaillonGraphe centre = this.getCentre(centreActuel);
-            for (MaillonGrapheSec voisin : centre.voisinsToList()) {
-                if (voisin.getDestination().equals(centreSuivant)) {
-                    distanceTotale += voisin.getDistance(); // Ajout de la distance entre chaque centre et son prédécesseur pour calculer la distance totale
-                    break;
-                }
-            }
-        }
-        System.out.println("Distance totale : " + distanceTotale); // Affichage de la distance totale
-        return chemin;
-
-    }
 
     /**
      *
@@ -806,9 +754,6 @@ class LCGraphe {
 
         return predecesseurs;
     }
-
-
-
     public void afficherPlusCourtsChemins(double[][] predecesseurs, double[][] distances, Map<String, Integer> indexSommet) {
         int taille = predecesseurs.length;
 
