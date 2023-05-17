@@ -1,2 +1,2 @@
-Graphe/.idea/
-Graphe/target/
+Graphe/.idea/*.xml
+Graphe/target/classes/*.class
