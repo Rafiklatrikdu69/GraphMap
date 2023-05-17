@@ -9,10 +9,17 @@ public class MenuConsoleGraphe {
 
     public static void main(String[] args) {
 
+<<<<<<< HEAD
         newGraphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
         newGraphe.existeCentre("S33");
         double[][] predecesseurs = newGraphe.floydWarshall();
         System.out.println(newGraphe.plusCourtCheminDijkstraFiabilite("S1", "S8"));
+=======
+        newGraphe.chargementFichier("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
+
+        double[][] predecesseurs = newGraphe.floydWarshall();
+        System.out.println(newGraphe.plusCourtCheminDijkstraDuree("S1","S30"));
+>>>>>>> ef3963b4d852c64ef141d08ce15c6c36515a5c2d
 
         Scanner scanner = new Scanner(System.in);
         int option;
