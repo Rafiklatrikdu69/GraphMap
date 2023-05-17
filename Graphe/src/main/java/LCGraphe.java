@@ -238,50 +238,48 @@ class LCGraphe {
  * @param centre1
  * @param centre2 
  */
-  public void voisinsVoisinsToString(String centre1, String centre2) {
-    List<String> voisins1 = new LinkedList<>();
-    List<String> voisins2 = new LinkedList<>();
-    MaillonGraphe maillonCentre1 = chercherMaillon(centre1);
-    MaillonGraphe maillonCentre2 = chercherMaillon(centre2);
+    public String voisinsVoisinsToString(String centre1, String centre2) {
+        StringBuilder res = new StringBuilder();
+        List<String> voisins1 = new LinkedList<>();
+        List<String> voisins2 = new LinkedList<>();
+        MaillonGraphe maillonCentre1 = chercherMaillon(centre1);
+        MaillonGraphe maillonCentre2 = chercherMaillon(centre2);
 
-  
-    MaillonGrapheSec tmp1 = maillonCentre1.lVois;
-    while (tmp1 != null) {
-        voisins1.add(tmp1.dest);
-        tmp1 = tmp1.suiv;
-    }
+        MaillonGrapheSec tmp1 = maillonCentre1.lVois;
+        while (tmp1 != null) {
+            voisins1.add(tmp1.dest);
+            tmp1 = tmp1.suiv;
+        }
+        MaillonGrapheSec tmp2 = maillonCentre2.lVois;
+        while (tmp2 != null) {
+            voisins2.add(tmp2.dest);
+            tmp2 = tmp2.suiv;
+        }
+        List<String> voisinsCommuns = new ArrayList<>(voisins1);
+        voisinsCommuns.retainAll(voisins2);//ne retiens que les elements communs au deux liste
 
-    MaillonGrapheSec tmp2 = maillonCentre2.lVois;
-    while (tmp2 != null) {
-        voisins2.add(tmp2.dest);
-        tmp2 = tmp2.suiv;
-    }
+        boolean distance2 = false;
 
- 
-    List<String> voisinsCommuns = new ArrayList<>(voisins1);
-    voisinsCommuns.retainAll(voisins2);//ne retiens que les elements communs au deux liste
-
-    boolean distance2 = false;
-
-    for (String voisin : voisinsCommuns) {
-        MaillonGraphe maillonVoisin = chercherMaillon(voisin);
-        MaillonGrapheSec tmp3 = maillonVoisin.lVois;
-        while (tmp3 != null) {
-            if (voisins1.contains(tmp3.dest) && voisins2.contains(tmp3.dest)) {
-                System.out.println("Les sommets " + centre1 + " et " + centre2 + " sont à une distance de 2.");
-                distance2 = true;
+        for (String voisin : voisinsCommuns) {
+            MaillonGraphe maillonVoisin = chercherMaillon(voisin);
+            MaillonGrapheSec tmp3 = maillonVoisin.lVois;
+            while (tmp3 != null) {
+                if (voisins1.contains(tmp3.dest) && voisins2.contains(tmp3.dest)) {
+                    res.append("Les sommets " + centre1 + " et " + centre2 + " sont à une distance de 2.");
+                    distance2 = true;
+                    break;
+                }
+                tmp3 = tmp3.suiv;
+            }
+            if (distance2) {
                 break;
             }
-            tmp3 = tmp3.suiv;
         }
-        if (distance2) {
-            break;
+        if (!distance2) {
+            res.append("Les sommets " + centre1 + " et " + centre2 + " ne sont pas à une distance de 2.");
         }
+        return res.toString();
     }
-    if (!distance2) {
-        System.out.println("Les sommets " + centre1 + " et " + centre2 + " ne sont pas à une distance de 2.");
-    }
-}
 
 /**
  * 
