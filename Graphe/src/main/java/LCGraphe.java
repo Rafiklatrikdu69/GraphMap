@@ -796,9 +796,11 @@ class LCGraphe {
         construireChemin(source, destination, predecesseurs, chemin);
 
         System.out.print("  " + getNomSommet(source, indexSommet));
-        for (int i = 0; i < chemin.size(); i++) {
+        int i = 0;
+        for ( i = 0; i < chemin.size(); i++) {
             System.out.print(" -> " + getNomSommet(chemin.get(i), indexSommet));
         }
+        System.out.print(" -> " + getNomSommet(destination, indexSommet));
     }
 
     private void construireChemin(int source, int destination, double[][] predecesseurs, List<Integer> chemin) {
