@@ -101,7 +101,7 @@ class LCGraphe {
         }
     }
 
-    class MaillonGraphe {
+     class MaillonGraphe {
 
         private String nom;
         private String type;
@@ -241,7 +241,7 @@ class LCGraphe {
  * @param centre1
  * @param centre2 
  */
-    public String voisinsVoisinsToString(String centre1, String centre2) {
+        public String voisinsVoisinsToString(String centre1, String centre2) {
         StringBuilder res = new StringBuilder();
         List<String> voisins1 = new LinkedList<>();
         List<String> voisins2 = new LinkedList<>();
@@ -411,6 +411,7 @@ class LCGraphe {
 
     /**
      * Cette methode renvoie true si le centre(sommet) existe sinon elle renvoie
+     *
      * false
      *
      * @param nomCentre
@@ -567,8 +568,10 @@ class LCGraphe {
 
     /**
      *
-     * @param centre1
-     * @param centre2
+     * Cette methode trouve le chemin le plus fiable pour aller d'un SXX a un sommet SXX
+     *
+     * @param centre1 : String
+     * @param centre2 : String
      * @return
      */
     public LinkedHashMap<String, Double> plusCourtCheminDijkstraFiabilite(String centre1, String centre2) {
@@ -998,11 +1001,20 @@ class LCGraphe {
         construireChemin(source, destination, predecesseurs, chemin);
 
         System.out.print("  " + getNomSommet(source, indexSommet));
-        for (int i = 0; i < chemin.size(); i++) {
+        int i = 0;
+        for ( i = 0; i < chemin.size(); i++) {
             System.out.print(" -> " + getNomSommet(chemin.get(i), indexSommet));
         }
+        System.out.print(" -> " + getNomSommet(destination, indexSommet));
     }
 
+    /**
+     *
+     * @param source
+     * @param destination
+     * @param predecesseurs
+     * @param chemin
+     */
     private void construireChemin(int source, int destination, double[][] predecesseurs, List<Integer> chemin) {
         int predecesseur = (int) predecesseurs[source][destination];
         if (predecesseur != source) {
@@ -1011,6 +1023,12 @@ class LCGraphe {
         chemin.add(predecesseur);
     }
 
+    /**
+     *
+     * @param index
+     * @param indexSommet
+     * @return
+     */
     public String getNomSommet(int index, Map<String, Integer> indexSommet) {
         for (Map.Entry<String, Integer> entry : indexSommet.entrySet()) {
             if (entry.getValue() == index) {
@@ -1020,7 +1038,12 @@ class LCGraphe {
         return "";
     }
 
-
+    /**
+     *
+     * @param nomSommet
+     * @param indexSommet
+     * @return
+     */
     public int getIndice(String nomSommet, Map<String, Integer> indexSommet) {
         Integer index = indexSommet.get(nomSommet);
         if (index != null) {

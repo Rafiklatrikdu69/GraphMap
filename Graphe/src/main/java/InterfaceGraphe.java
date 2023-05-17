@@ -228,9 +228,11 @@ public class InterfaceGraphe extends JFrame {
                 // Calcul des coordonnées du sommet dans le cadre
                 int x = xCentre + (int) (tailleCadre / 2 * Math.cos(angle));
                 int y = yCentre + (int) (tailleCadre / 2 * Math.sin(angle));
-
+               JLabel l  =  new JLabel("");
                 // Ajout du sommet à la liste
-                sommets.put(sommet, new JLabel(""+x + y));
+                l.setLocation(x,y);
+                sommets.put(sommet,l);
+
 
                 // Dessin du sommet
                 dessinerSommet(g2d, sommet);
@@ -245,6 +247,10 @@ public class InterfaceGraphe extends JFrame {
 
         }
 
+        /**
+         *
+         * @param g the <code>Graphics</code> object to protect
+         */
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -255,7 +261,11 @@ public class InterfaceGraphe extends JFrame {
                 add(label);
             }
         }
-        //
+
+        /**
+         *
+         * @param listeLabels
+         */
         public void addInventList(List<JLabel> listeLabels){
             for(JLabel l : listeLabels){
                 l.addMouseListener(new MouseAdapter() {
