@@ -936,7 +936,7 @@ class LCGraphe {
         for (int i = 0; i < cpt; i++) {
             for (int j = 0; j < cpt; j++) {
 
-                distances[i][j] = matrice[i][j];
+                distances[i][j] = matrice[i][j];//initialisation
 
             }
         }
