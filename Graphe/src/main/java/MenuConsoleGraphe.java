@@ -76,14 +76,14 @@ public class MenuConsoleGraphe{
                                     System.out.println("======================================================");
                                     System.out.println("|                   Dispensaire " + optionDispensaire + "                   |");
                                     System.out.println("=======================================================");
-                                    System.out.println("|  " + ConsoleColors.PURPLE_BOLD + "1. Afficher le type de dispensaire                " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.BLUE_BOLD + "2. Afficher ses voisins direct                    " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.CYAN_BOLD + "3. Afficher un voisin direct                      " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.GREEN_BOLD + "4. Afficher les voisins à 2 distances             " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.YELLOW_BOLD + "5. Afficher le chemin le plus fiable              " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.RED_BOLD + "6. Afficher le chemin le plus court en distance   " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.WHITE_BOLD + "7. Afficher le chemin le plus court en durée      " + ConsoleColors.RESET + "|");
-                                    System.out.println("|  " + ConsoleColors.GRAY_BOLD + "8. Retourner au menu principal                    " + ConsoleColors.RESET + "|");
+                                    System.out.println("| " + ConsoleColors.PURPLE_BOLD + "1. Afficher le type de dispensaire                 " + ConsoleColors.RESET + "|");
+                                    System.out.println("| " + ConsoleColors.BLUE_BOLD + "2. Afficher ses voisins direct                     " + ConsoleColors.RESET + "|");
+                                    System.out.println("| " + ConsoleColors.CYAN_BOLD + "3. Afficher un voisin direct                       " + ConsoleColors.RESET + "|");
+                                    System.out.println("| " + ConsoleColors.GREEN_BOLD + "4. Afficher les voisins à 2 distances              " + ConsoleColors.RESET + "|");
+                                    System.out.println("| " + ConsoleColors.YELLOW_BOLD + "5. Afficher le chemin le plus fiable               " + ConsoleColors.RESET + "|");
+                                    System.out.println("| " + ConsoleColors.RED_BOLD    + "6. Afficher le chemin avec la plus petite distance " + ConsoleColors.RESET + "|");
+                                    System.out.println("| " + ConsoleColors.WHITE_BOLD  + "7. Afficher le chemin avec la plus petite durée    " + ConsoleColors.RESET + "|");
+                                    System.out.println("| " + ConsoleColors.GRAY_BOLD + "8. Retourner au menu principal                     " + ConsoleColors.RESET + "|");
                                     System.out.println("=======================================================");
                                     System.out.print("Saisir votre choix : ");
                                     if (scannerFonctionDispensaire.hasNextInt()) {
