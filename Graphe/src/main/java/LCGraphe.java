@@ -9,7 +9,6 @@ import java.util.*;
 //import org.Assert.assertEquals;
 
 /**
- *
  * @author Rafik Bouchenna et Emmanuel Ardoin
  */
 class LCGraphe {
@@ -31,7 +30,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @return String: destination
          */
         public String getDestination() {
@@ -39,7 +37,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @return double : distance
          */
         public double getDistance() {
@@ -47,7 +44,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @return double : duree
          */
         public double getDuree() {
@@ -55,7 +51,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @return double : fiabilite
          */
         public double getFiabilite() {
@@ -63,7 +58,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @param dest
          */
         public void setDestination(String dest) {
@@ -71,7 +65,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @param dist
          */
         public void setDistance(double dist) {
@@ -79,7 +72,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @param duree
          */
         public void setDuree(double duree) {
@@ -87,7 +79,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @param fiab
          */
         public void setFiabilite(double fiab) {
@@ -101,7 +92,7 @@ class LCGraphe {
         }
     }
 
-     class MaillonGraphe {
+    class MaillonGraphe {
 
         private String nom;
         private String type;
@@ -125,7 +116,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @return String : nom du sommet
          */
         public String getNom() {
@@ -133,7 +123,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @return String : type de sommet
          */
         public String getType() {
@@ -141,7 +130,6 @@ class LCGraphe {
         }
 
         /**
-         *
          * @return boolean : listed
          */
         private boolean estVide() {
@@ -152,7 +140,6 @@ class LCGraphe {
          * Cette methode renvoie une liste de voisin
          *
          * @return LinkedList<MaillonGrapheSec>
-         *
          */
         public LinkedList<MaillonGrapheSec> voisinsToList() {
             LinkedList<MaillonGrapheSec> res = new LinkedList<>();
@@ -161,14 +148,14 @@ class LCGraphe {
                 res.add(tmp);
                 tmp = tmp.suiv;
             }
-            assert res!=null;
+            assert res != null;
             return res;
         }
-/**
- * 
- * @param nomVoisin
- * @return 
- */
+
+        /**
+         * @param nomVoisin
+         * @return
+         */
         public MaillonGrapheSec getVoisin(String nomVoisin) {
             MaillonGrapheSec res = null;
             MaillonGrapheSec tmp = this.lVois;
@@ -180,11 +167,11 @@ class LCGraphe {
             }
             return res;
         }
-/**
- * 
- * @param nomVoisin
- * @return 
- */
+
+        /**
+         * @param nomVoisin
+         * @return
+         */
         public boolean estVoisin(String nomVoisin) {
             boolean res = false;
             MaillonGrapheSec tmp = this.lVois;
@@ -214,12 +201,14 @@ class LCGraphe {
         }
 
     }
+
     public MaillonGraphe premier;
 
     public LCGraphe() {
         premier = null;
     }
-    public MaillonGraphe getPremier(){
+
+    public MaillonGraphe getPremier() {
         return this.premier;
     }
 
@@ -236,12 +225,12 @@ class LCGraphe {
         this.premier = nouv;
 
     }
-/**
- * 
- * @param centre1
- * @param centre2 
- */
-        public String voisinsVoisinsToString(String centre1, String centre2) {
+
+    /**
+     * @param centre1
+     * @param centre2
+     */
+    public String voisinsVoisinsToString(String centre1, String centre2) {
         StringBuilder res = new StringBuilder();
         List<String> voisins1 = new LinkedList<>();
         List<String> voisins2 = new LinkedList<>();
@@ -284,11 +273,10 @@ class LCGraphe {
         return res.toString();
     }
 
-/**
- * 
- * @param nomMaillon
- * @return 
- */
+    /**
+     * @param nomMaillon
+     * @return
+     */
     public MaillonGraphe chercherMaillon(String nomMaillon) {
         MaillonGraphe courant = this.premier;
         while (courant != null) {
@@ -411,7 +399,7 @@ class LCGraphe {
 
     /**
      * Cette methode renvoie true si le centre(sommet) existe sinon elle renvoie
-     *
+     * <p>
      * false
      *
      * @param nomCentre
@@ -439,10 +427,10 @@ class LCGraphe {
         }
         return res.toString();
     }
-/**
- * 
- * @return res : LinkedList<MaillonGraphe>
- */
+
+    /**
+     * @return res : LinkedList<MaillonGraphe>
+     */
     public LinkedList<MaillonGraphe> tousLesCentresToList() {
         LinkedList<MaillonGraphe> res = new LinkedList<>();
         MaillonGraphe tmp = this.premier;
@@ -452,10 +440,10 @@ class LCGraphe {
         }
         return res;
     }
-/**
- * 
- * @return 
- */
+
+    /**
+     * @return
+     */
     public List<MaillonGrapheSec> toutesLesAretesToList() {
         List<MaillonGrapheSec> res = new LinkedList<>();
         MaillonGraphe tmp = this.premier;
@@ -471,10 +459,10 @@ class LCGraphe {
         }
         return res;
     }
-/**
- * 
- * @return String : res
- */
+
+    /**
+     * @return String : res
+     */
     public String tousLesBlocsToString() {
         StringBuilder res = new StringBuilder();
         MaillonGraphe tmp = this.premier;
@@ -504,9 +492,10 @@ class LCGraphe {
         }
         return res;
     }
-/**
- * 
- */
+
+    /**
+     *
+     */
     public void chargementFichier(String nomFichierChoisi) {
         try {
             File file = new File(nomFichierChoisi);
@@ -547,10 +536,10 @@ class LCGraphe {
             e.printStackTrace();
         }
     }
-/**
- * 
- * @return 
- */
+
+    /**
+     * @return
+     */
     public String toString() {
         StringBuilder res = new StringBuilder();
         MaillonGraphe tmp = this.premier;
@@ -567,7 +556,6 @@ class LCGraphe {
     }
 
     /**
-     *
      * Cette methode trouve le chemin le plus fiable pour aller d'un SXX a un sommet SXX
      *
      * @param centre1 : String
@@ -675,6 +663,7 @@ class LCGraphe {
         }
         return res.get(centre2);
     }
+
     public LinkedHashMap<String, Double> plusCourtCheminDijkstraDistance(String centre1, String centre2) {
         Map<String, LinkedHashMap<String, Double>> res = new HashMap<>();//Hash map qui permet de stocker les chemins les plus courts
         Map<String, Boolean> sommetsTraites = new HashMap<>();//Hash map permettant de marquer les sommet traiter
@@ -878,6 +867,7 @@ class LCGraphe {
         }
         return res.get(centre2);
     }
+
     /**
      * @return
      */
@@ -891,7 +881,7 @@ class LCGraphe {
         }
 
         double[][] matrice = new double[cpt][cpt];
-
+//initialisation de la matrice ,sur la diagonale on ne met que des 0 sinon la valeur infinie
         for (int i = 0; i < cpt; i++) {
             for (int j = 0; j < cpt; j++) {
                 if (i == j) {
@@ -901,7 +891,7 @@ class LCGraphe {
                 }
             }
         }
-
+//affectation des sommets a un indice pour la matrice
         Map<String, Integer> indexSommet = new TreeMap<>();
 
         tmp = this.premier;
@@ -915,24 +905,41 @@ class LCGraphe {
 
         tmp = this.premier;
         while (tmp != null) {
+            //recupere le maillon de la liste principale
             String source = tmp.nom;
             MaillonGrapheSec voisins = tmp.lVois;
             while (voisins != null) {
-                String destination = voisins.getDestination();
-                double distance = voisins.getDistance();
+                //recupere le maillon de la liste des voisins
+                /*
+               S1 -> S2 ->S3.S1 est le maillon principale et les autre maillons sont les voisins de S1
+               S2-> S2 -S5
+               matrice :
+               S1[0,S2,S3,S4]
+               S2[S1,0,S4,S5]
+               etc...
+                */
+                String destination = voisins.getDestination();//recupere le voisin qui est relié au sommet principale
+                double distance = voisins.getDistance();//recupere la distance
 
-                int indexSource = getIndice(source, indexSommet);
-                int indexDestination = getIndice(destination, indexSommet);
+                int indexSource = getIndice(source, indexSommet);//recupere l'indice du sommet de la liste principale
+                int indexDestination = getIndice(destination, indexSommet);//recupere l'indice du sommet voisin
 
-                matrice[indexSource][indexDestination] = distance;
+                matrice[indexSource][indexDestination] = distance;//on affecte la distance a l'indice
 
-                voisins = voisins.suiv;
+                voisins = voisins.suiv;//on passe au voisin suivant
             }
 
-            tmp = tmp.suiv;
+            tmp = tmp.suiv;//on passe au maillon suivant jusqu'a la fin de la liste chainée
         }
 
-        double[][] distances = matrice.clone();
+        double[][] distances = new double[cpt][cpt];
+        for (int i = 0; i < cpt; i++) {
+            for (int j = 0; j < cpt; j++) {
+
+                distances[i][j] = matrice[i][j];
+
+            }
+        }
         double[][] predecesseurs = new double[cpt][cpt];
 
         for (int i = 0; i < cpt; i++) {
@@ -962,7 +969,6 @@ class LCGraphe {
     }
 
     /**
-     *
      * @param predecesseurs
      * @param distances
      * @param indexSommet
@@ -985,7 +991,6 @@ class LCGraphe {
     }
 
     /**
-     *
      * @param source
      * @param destination
      * @param predecesseurs
@@ -1002,14 +1007,13 @@ class LCGraphe {
 
         System.out.print("  " + getNomSommet(source, indexSommet));
         int i = 0;
-        for ( i = 0; i < chemin.size(); i++) {
+        for (i = 0; i < chemin.size(); i++) {
             System.out.print(" -> " + getNomSommet(chemin.get(i), indexSommet));
         }
         System.out.print(" -> " + getNomSommet(destination, indexSommet));
     }
 
     /**
-     *
      * @param source
      * @param destination
      * @param predecesseurs
@@ -1024,7 +1028,6 @@ class LCGraphe {
     }
 
     /**
-     *
      * @param index
      * @param indexSommet
      * @return
@@ -1039,7 +1042,6 @@ class LCGraphe {
     }
 
     /**
-     *
      * @param nomSommet
      * @param indexSommet
      * @return
