@@ -969,6 +969,8 @@ class LCGraphe {
     }
 
     /**
+     * Cette methode affiche tout les plus courts chemins
+     *
      * @param predecesseurs
      * @param distances
      * @param indexSommet
