@@ -153,7 +153,9 @@ class LCGraphe {
         }
 
         /**
+         *
          * @param nomVoisin
+         *
          * @return
          */
         public MaillonGrapheSec getVoisin(String nomVoisin) {
@@ -229,6 +231,8 @@ class LCGraphe {
     /**
      * @param centre1
      * @param centre2
+     * @see {@link #chercherMaillon(String)} , une methode qui permet de chercher
+        le maillon grace a son nom passer en parametre
      */
     public String voisinsVoisinsToString(String centre1, String centre2) {
         StringBuilder res = new StringBuilder();
@@ -289,7 +293,8 @@ class LCGraphe {
     }
 
     /**
-     * Cette methode ajoute les Voisins(Arretes) avec les parametres
+     * Cette methode ajoute les Voisins(Arretes) avec
+       les parametres donner en entrée de la methode
      *
      * @param nomCentre
      * @param nomDestinataire
@@ -316,7 +321,8 @@ class LCGraphe {
     }
 
     /**
-     * Cette methode permet de modifier les donnee d'un voisin(Arrete)
+     * Cette methode permet de modifier les donnee d'un voisin(Arrete) avec
+       les parmatres donnés en entrée de la methode
      *
      * @param nomCentre
      * @param nomDestinataire
@@ -374,11 +380,11 @@ class LCGraphe {
 
     /**
      * Cette methode renvoie true si il existe une arrete sinon elle renvoie
-     * false
+       false
      *
      * @param nomCentre
      * @param nomDestinataire
-     * @return boolean: res
+     * @return res : boolean
      */
     public boolean existeVoisin(String nomCentre, String nomDestinataire) {
         boolean res = false;
@@ -398,11 +404,12 @@ class LCGraphe {
     }
 
     /**
-     * Cette methode renvoie true si le centre(sommet) existe sinon elle renvoie
-     * <p>
+     * Cette methode renvoie true si le centre(sommet) existe sinon elle renvoie false
+     *
      * false
      *
      * @param nomCentre
+     * @see MaillonGraphe#getNom()
      * @return boolean : res
      */
     public boolean existeCentre(String nomCentre) {
@@ -461,6 +468,8 @@ class LCGraphe {
     }
 
     /**
+     * Cette methode renvoie tout les blocs sous formes de chaine de caraceteres
+     * 
      * @return String : res
      */
     public String tousLesBlocsToString() {
@@ -494,7 +503,9 @@ class LCGraphe {
     }
 
     /**
-     *
+     * Cette methode permet de lire le fichier grace au chemin specifier en parametre
+     * 
+     * @param nomFichierChoisi
      */
     public void chargementFichier(String nomFichierChoisi) {
         try {
@@ -538,7 +549,9 @@ class LCGraphe {
     }
 
     /**
-     * @return
+     * Cette methode parcourt la liste pour afficher le Graphe avec les sommets et les arretes
+     * 
+     * @return String
      */
     public String toString() {
         StringBuilder res = new StringBuilder();
@@ -869,7 +882,13 @@ class LCGraphe {
     }
 
     /**
-     * @return
+     * Cette methode implemente l'algorithme de floyd warshall qui permet 
+     * de trouver tout les plus chemins de tous les sommets 
+     * 
+     * @see {@link #getIndice(String, Map)}
+     * @see {@link #afficherPlusCourtsChemins(double[][], double[][], Map)}
+     * 
+     * @return predecesseurs : double[][]
      */
     public double[][] floydWarshall() {
         MaillonGraphe tmp = this.premier;
@@ -897,10 +916,10 @@ class LCGraphe {
         tmp = this.premier;
         int index = 0;
         while (tmp != null) {
-            String nomSommet = tmp.nom;
-            indexSommet.put(nomSommet, index);
+            String nomSommet = tmp.nom;//stocke le nom dans une variable
+            indexSommet.put(nomSommet, index);//affecte dans le hashMap le sommet ainsi que son indice
             index++;
-            tmp = tmp.suiv;
+            tmp = tmp.suiv;//passe au sommet suivant 
         }
 
         tmp = this.premier;
@@ -917,6 +936,9 @@ class LCGraphe {
                S1[0,S2,S3,S4]
                S2[S1,0,S4,S5]
                etc...
+               il ne doit y avoir que des zeros sur la diagonale
+                sinon il ya des circuits absorbants c'est a dire qu'il y a des valeurs negatif
+                et donc que l'algorithme ne permet de trouver des plus courts chemins
                 */
                 String destination = voisins.getDestination();//recupere le voisin qui est relié au sommet principale
                 double distance = voisins.getDistance();//recupere la distance
@@ -974,6 +996,8 @@ class LCGraphe {
      * @param predecesseurs
      * @param distances
      * @param indexSommet
+     * 
+     * @see {@link #afficherChemin(int, int, double[][], Map)}
      */
     public void afficherPlusCourtsChemins(double[][] predecesseurs, double[][] distances, Map<String, Integer> indexSommet) {
         int taille = predecesseurs.length;
@@ -997,8 +1021,11 @@ class LCGraphe {
      * @param destination
      * @param predecesseurs
      * @param indexSommet
+     *
+     * @see {@link #construireChemin(int, int, double[][], List)}
      */
     public void afficherChemin(int source, int destination, double[][] predecesseurs, Map<String, Integer> indexSommet) {
+        // Vérifier s'il existe un chemin de la source à la destination
         if (predecesseurs[source][destination] == -1) {
             System.out.println("Aucun chemin trouvé de " + getNomSommet(source, indexSommet) + " à " + getNomSommet(destination, indexSommet));
             return;
@@ -1007,6 +1034,7 @@ class LCGraphe {
         List<Integer> chemin = new ArrayList<>();
         construireChemin(source, destination, predecesseurs, chemin);
 
+        // Affiche le chemin
         System.out.print("  " + getNomSommet(source, indexSommet));
         int i = 0;
         for (i = 0; i < chemin.size(); i++) {
@@ -1022,14 +1050,19 @@ class LCGraphe {
      * @param chemin
      */
     private void construireChemin(int source, int destination, double[][] predecesseurs, List<Integer> chemin) {
+        // Récupére le prédécesseur de la destination dans le chemin
         int predecesseur = (int) predecesseurs[source][destination];
         if (predecesseur != source) {
+            // Si le prédécesseur n'est pas la source, construire le chemin récursivement
             construireChemin(source, predecesseur, predecesseurs, chemin);
         }
+        // J'ajoute le prédécesseur au chemin
         chemin.add(predecesseur);
     }
 
     /**
+     * Cette methode renvoie le nom du sommet a partir de son indice
+     *
      * @param index
      * @param indexSommet
      * @return
@@ -1044,6 +1077,8 @@ class LCGraphe {
     }
 
     /**
+     * Cette methode renvoie l'indice du maillion a partir de son nom
+     *
      * @param nomSommet
      * @param indexSommet
      * @return
