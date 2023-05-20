@@ -60,14 +60,20 @@ public class InterfaceGraphe extends JFrame {
             graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
             LCGraphe.MaillonGraphe tmp = graphe.getPremier();
             // Exemple d'ajout de sommets
+            int tailleCadre = (int) (Math.sqrt(30) * 100);
+            int xCentre = getWidth() / 2;
+            int yCentre = getHeight() / 2;
+int i = 1;
             while (tmp != null){
-                Random random = new Random();
 
-                int nombreAleatoireX = random.nextInt(100 - 0 + 1) + 0;
-                int nombreAleatoireY = random.nextInt(200 - 100+ 1) + 100;
-                ajouterSommet(tmp,nombreAleatoireX,nombreAleatoireY);
+                double angle = 2 * Math.PI * i / 30;
+                int x = xCentre + (int) (tailleCadre / 2 * Math.cos(angle));
+                int y = yCentre + (int) (tailleCadre / 2 * Math.sin(angle));
+
+                ajouterSommet(tmp,x,y);
                 System.out.println("test");
                 tmp = tmp.getSuivant();
+                i++;
             }
 
         }
@@ -126,7 +132,7 @@ public class InterfaceGraphe extends JFrame {
                     if (sommet1.estVoisin(sommet2.getNom())) {
                         g2d.fillOval(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, 10, 10);
                         g2d.fillOval(p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2, 10, 10);
-                        g2d.setStroke(new BasicStroke(3));
+                        g2d.setStroke(new BasicStroke(1));
 
                         g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
                     }
