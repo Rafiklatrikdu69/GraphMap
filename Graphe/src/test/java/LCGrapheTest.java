@@ -1,9 +1,10 @@
-import junit.framework.TestCase;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class LCGrapheTest extends TestCase {
+public class LCGrapheTest {
 
     @Test
+<<<<<<< HEAD
 <<<<<<< HEAD
     public void testExisteCentre() {
         LCGraphe graphe = new LCGraphe();
@@ -24,10 +25,12 @@ public class LCGrapheTest extends TestCase {
         assertFalse(graphe.existeCentre("S3"));
 =======
     public void chercheMaillon() {
+=======
+    public void testChercheMaillon() {
+>>>>>>> testUnitaire
         LCGraphe graphe = new LCGraphe();
         graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
         assertNotNull(graphe.chercherMaillon("S1"));
-        assertNull(graphe.chercherMaillon("S32"));
     }
 
     @Test
@@ -36,8 +39,6 @@ public class LCGrapheTest extends TestCase {
         graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
         assertTrue("Sommet existant", graphe.existeCentre("S5"));
         assertTrue("Sommet inexistant", graphe.existeCentre("S31"));
-
-
     }
 
     @Test
@@ -45,6 +46,7 @@ public class LCGrapheTest extends TestCase {
         LCGraphe graphe = new LCGraphe();
         graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
         assertTrue(graphe.existeVoisin("S1", "S12"));
+<<<<<<< HEAD
 >>>>>>> testUnitaire
 
     }
@@ -53,5 +55,8 @@ public class LCGrapheTest extends TestCase {
 <<<<<<< HEAD
 
 =======
+>>>>>>> testUnitaire
+=======
+    }
 >>>>>>> testUnitaire
 }
