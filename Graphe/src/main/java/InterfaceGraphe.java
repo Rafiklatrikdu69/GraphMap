@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
+import java.util.Random;
 
 public class InterfaceGraphe extends JFrame {
 
@@ -60,7 +61,11 @@ public class InterfaceGraphe extends JFrame {
             LCGraphe.MaillonGraphe tmp = graphe.getPremier();
             // Exemple d'ajout de sommets
             while (tmp != null){
-                ajouterSommet(tmp,100,200);
+                Random random = new Random();
+
+                int nombreAleatoireX = random.nextInt(100 - 0 + 1) + 0;
+                int nombreAleatoireY = random.nextInt(200 - 100+ 1) + 100;
+                ajouterSommet(tmp,nombreAleatoireX,nombreAleatoireY);
                 System.out.println("test");
                 tmp = tmp.getSuivant();
             }
@@ -129,7 +134,7 @@ public class InterfaceGraphe extends JFrame {
             }
 
 
-         
+
 
         }
     }
