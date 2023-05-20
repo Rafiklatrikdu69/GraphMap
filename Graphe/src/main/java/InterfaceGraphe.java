@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class InterfaceGraphe extends JFrame {
@@ -14,7 +15,7 @@ public class InterfaceGraphe extends JFrame {
         super();
         initComponents();
         setTitle("Graphe");
-        setSize(800, 600);
+        setSize(1980, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -29,9 +30,10 @@ public class InterfaceGraphe extends JFrame {
         cp.setLayout(new BorderLayout());
         cp.add(panelBoutons, BorderLayout.SOUTH);
         dessinGraphe = new DessinGraphe();
-        cp.add(dessinGraphe, BorderLayout.CENTER);
+
 
         initEventListeners();
+        cp.add(dessinGraphe, BorderLayout.CENTER);
     }
 
     public void initEventListeners() {
@@ -45,36 +47,40 @@ public class InterfaceGraphe extends JFrame {
 
     public class DessinGraphe extends JPanel {
 
-        private HashMap<LCGraphe.MaillonGraphe, JLabel> sommets;
+        private Map<LCGraphe.MaillonGraphe, JLabel> sommets;
         private JLabel sommetEnDeplacement;
         private int xPos, yPos;
 
 
         DessinGraphe() {
             super();
-            setPreferredSize(new Dimension(800, 600));
+
             setLayout(null);
             sommets = new HashMap<>();
+
             LCGraphe graphe = new LCGraphe();
 
             graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
             LCGraphe.MaillonGraphe tmp = graphe.getPremier();
-            // Exemple d'ajout de sommets
+
             int tailleCadre = (int) (Math.sqrt(30) * 100);
-            int xCentre = getWidth() / 2;
-            int yCentre = getHeight() / 2;
-int i = 1;
-            while (tmp != null){
+            int xCentre = 1400 / 2;
+            int yCentre = 600 / 2;
+            int i = 1;
+            while (tmp != null) {
 
                 double angle = 2 * Math.PI * i / 30;
                 int x = xCentre + (int) (tailleCadre / 2 * Math.cos(angle));
                 int y = yCentre + (int) (tailleCadre / 2 * Math.sin(angle));
 
-                ajouterSommet(tmp,x,y);
-                System.out.println("test");
+                ajouterSommet(tmp, x, y);
+               //System.out.println("test");
                 tmp = tmp.getSuivant();
                 i++;
             }
+            int preferredWidth = tailleCadre + 100;
+            int preferredHeight = tailleCadre + 100;
+            setPreferredSize(new Dimension(preferredWidth, preferredHeight));
 
         }
 
@@ -85,6 +91,7 @@ int i = 1;
             label.setBackground(Color.WHITE);
             label.setHorizontalAlignment(SwingConstants.CENTER);
             label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -138,8 +145,6 @@ int i = 1;
                     }
                 }
             }
-
-
 
 
         }
