@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Color;
@@ -12,14 +11,12 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.event.*;
-import java.util.List;
 
 public class InterfaceGraphe extends JFrame {
 
     private static LCGraphe Graphe = new LCGraphe();
     private JButton btnRetour;
     private LinkedList<JLabel> labels = new LinkedList<>();
-    //private JScrollPane scroll;
     private JMenuBar menu;
     private JMenu j;
     private JMenuItem option1, option2, option3;
@@ -30,7 +27,6 @@ public class InterfaceGraphe extends JFrame {
 
         super();
 
-        //Graphe.toString();
         initComponents();
         setTitle("Graphe");
         setSize(1280, 720);
@@ -41,16 +37,12 @@ public class InterfaceGraphe extends JFrame {
         pack();
     }
 
-    /**
-     *
-     */
     private void initComponents() {
 
         cp = (JPanel) getContentPane();
         JPanel panelBoutons = new JPanel();
-        this.btnRetour = new JButton("Retour Menu Principale");
+        this.btnRetour = new JButton("Retour Menu Principal");
         panelBoutons.add(btnRetour);
-        System.out.println("test");
 
         menu = new JMenuBar();
         j = new JMenu("Menu");
@@ -67,24 +59,16 @@ public class InterfaceGraphe extends JFrame {
         menu.add(j);
 
         cp.add(menu, BorderLayout.NORTH);
-        cp.add(panelBoutons,BorderLayout.PAGE_END);
+        cp.add(panelBoutons, BorderLayout.PAGE_END);
+
         initEventListeners();
         pack();
-
-        // scroll = new JScrollPane(cp);
     }
 
-    /**
-     *
-     * @return
-     */
     public String getNomFichier() {
         return this.nomFichier;
     }
 
-    /**
-     *
-     */
     public void initEventListeners() {
 
         option1.addActionListener(new ActionListener() {
@@ -92,42 +76,37 @@ public class InterfaceGraphe extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fenetreOuvertureFichier = new JFileChooser(new File("."));
                 File fichier;
-                if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { // Si un fichier est sélectionné dans la fenêtre ouverte grâce à fenetreOuvertureFichier.showOpenDialog(null)
-                    fichier = fenetreOuvertureFichier.getSelectedFile(); // Récupérer le fichier
+                if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    fichier = fenetreOuvertureFichier.getSelectedFile();
                     System.out.println(fichier.getPath());
 
                     Graphe.chargementFichier(fichier.getPath());
                     DessinGraphe dessinGraphe = new DessinGraphe(Graphe);
                     cp.add(dessinGraphe, BorderLayout.CENTER);
                     cp.revalidate();
-                    //cp.repaint();
-
                 }
-
             }
         });
-             option3.addActionListener(new ActionListener() {
+
+        option3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JPanel p = new JPanel();
-                
+
                 JLabel j = new JLabel("Modification du graphe :");
                 p.add(j);
-                 JTable jt= new  JTable(5,6); 
-                   jt.setBounds( 30 , 40 , 200 , 300 );   
-                   p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-                   p.add(jt);
-                   cp.add(p);
-
-                   
-
+                JTable jt = new JTable(5, 6);
+                jt.setBounds(30, 40, 200, 300);
+                p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+                p.add(jt);
+                cp.add(p);
             }
         });
+
         btnRetour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cp.repaint();
-
             }
         });
     }
@@ -136,46 +115,94 @@ public class InterfaceGraphe extends JFrame {
 
         private LCGraphe graphe;
         private HashMap<LCGraphe.MaillonGraphe, JLabel> sommets;
-        private  JLabel label;
+        private JLabel labelEnDeplacement;
+        private int xPos, yPos;
 
         DessinGraphe(LCGraphe graphe) {
             super();
             this.graphe = graphe;
             sommets = new HashMap<LCGraphe.MaillonGraphe, JLabel>();
-            labels = new LinkedList<>();
             setPreferredSize(new Dimension(1280, 720));
+            initEventListeners();
         }
 
-        /**
-         *
-         * @param g2d
-         * @param sommet
-         */
+        private void initEventListeners() {
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    super.mousePressed(e);
+                    Object source = e.getSource();
+                    if (source instanceof JLabel) {
+                        JLabel label = (JLabel) source;
+                        if (sommets.containsValue(label)) {
+                            labelEnDeplacement = label;
+                            xPos = e.getX() - label.getX();
+                            yPos = e.getY() - label.getY();
+                        }
+                    }
+                }
+            });
+
+            addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    if (labelEnDeplacement != null) {
+                        int x = e.getX();
+                        int y = e.getY();
+                        labelEnDeplacement.setLocation(x - xPos, y - yPos);
+                        int rayon = 45;
+
+                        cp.repaint();
+
+                    }
+                }
+            });
+
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    super.mouseReleased(e);
+                    labelEnDeplacement = null;
+                }
+            });
+        }
+
+        private JLabel getLabelEnCoordonnees(int x, int y) {
+            for (LCGraphe.MaillonGraphe sommet : sommets.keySet()) {
+                JLabel label = sommets.get(sommet);
+                if (x >= label.getX() && x <= label.getX() + label.getWidth()
+                        && y >= label.getY() && y <= label.getY() + label.getHeight()) {
+                    return label;
+                }
+            }
+            return null;
+        }
+
         private void dessinerSommet(Graphics2D g2d, LCGraphe.MaillonGraphe sommet) {
             int rayon = 45;
-            JLabel p = sommets.get(sommet);
+            JLabel label = sommets.get(sommet);
+            if (label == null) {
+                label = new JLabel(sommet.getNom());
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                label.setVerticalAlignment(SwingConstants.CENTER);
+                sommets.put(sommet, label);
+                cp.add(label);
+            }
+            labelEnDeplacement = new JLabel();
+            //label.setBounds(label.getX() - rayon / 2, label.getY() - rayon / 2, rayon, rayon);
             g2d.setColor(Color.RED);
-            g2d.fillOval(p.getX() - rayon / 2, p.getY() - rayon / 2, rayon, rayon);
+            g2d.fillOval(label.getX() - rayon / 2, label.getY() - rayon / 2, rayon, rayon);
             g2d.setColor(Color.BLACK);
-            g2d.drawOval(p.getX() - rayon / 2, p.getY() - rayon / 2, rayon, rayon);
-            JLabel label = new JLabel(sommet.getNom());
-            label.setHorizontalAlignment(SwingConstants.CENTER);
-            label.setVerticalAlignment(SwingConstants.CENTER);
-            label.setBounds(p.getX() - rayon / 2, p.getY() - rayon / 2, rayon, rayon);
-            sommets.put(sommet, label);
-            labels.add(label);
-            cp.add(label);
+            g2d.drawOval(label.getX() - rayon / 2, label.getY() - rayon / 2, rayon, rayon);
 
-// Appeler setHorizontalAlignment après l'ajout du label au conteneur
-            label.setHorizontalAlignment(SwingConstants.CENTER);
-            label.setVerticalAlignment(SwingConstants.CENTER);
+          /*  g2d.setColor(Color.RED);
+            g2d.fillOval(labelEnDeplacement.getX() - rayon / 2, labelEnDeplacement.getY() - rayon / 2, rayon, rayon);
+            g2d.setColor(Color.BLACK);
+            g2d.drawOval(labelEnDeplacement.getX() - rayon / 2, labelEnDeplacement.getY() - rayon / 2, rayon, rayon);*/
+            cp.repaint();
+
         }
 
-
-        /**
-         *
-         * @param g2d
-         */
         private void dessinerAretes(Graphics2D g2d) {
             g2d.setColor(Color.BLACK);
             for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
@@ -183,101 +210,50 @@ public class InterfaceGraphe extends JFrame {
                 for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
                     JLabel p2 = sommets.get(sommet2);
                     if (sommet1.estVoisin(sommet2.getNom())) {
-                        g2d.fillOval(p1.getX(), p1.getY(), 10, 10);
-                        g2d.fillOval(p2.getX(), p2.getY(), 10, 10);
+                        g2d.fillOval(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, 10, 10);
+                        g2d.fillOval(p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2, 10, 10);
                         g2d.setStroke(new BasicStroke(3));
 
-                        g2d.drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+                        g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
                     }
                 }
             }
         }
 
-        /**
-         *
-         * @return
-         */
-        private int compteSommet() {
-            int nbSommet = 0;
-            LCGraphe.MaillonGraphe tmp = graphe.premier;
-            while (tmp != null) {
-                nbSommet++;
-                tmp = tmp.suiv;
-            }
-            return nbSommet;
-        }
-
-        /**
-         * 
-         * @param g2d
-         */
         private void dessinerGraphe(Graphics2D g2d) {
-            // Calcul de la taille du cadre
-            int tailleCadre = (int) (Math.sqrt(compteSommet()) * 100);
-
-            // Calcul du centre du cadre
+            int tailleCadre = (int) (Math.sqrt(30) * 100);
             int xCentre = getWidth() / 2;
             int yCentre = getHeight() / 2;
             int i = 1;
-            // Placement des sommets dans le cadre
             LCGraphe.MaillonGraphe sommet = graphe.getPremier();
             while (sommet != null) {
-                // Calcul de l'angle entre le sommet et l'axe horizontal
-                double angle = 2 * Math.PI * i / compteSommet();
-
-                // Calcul des coordonnées du sommet dans le cadre
+                double angle = 2 * Math.PI * i / 30;
                 int x = xCentre + (int) (tailleCadre / 2 * Math.cos(angle));
                 int y = yCentre + (int) (tailleCadre / 2 * Math.sin(angle));
-               JLabel l  =  new JLabel("");
-                // Ajout du sommet à la liste
-                l.setLocation(x,y);
-                sommets.put(sommet,l);
-
-
-                // Dessin du sommet
+                JLabel l = new JLabel("");
+                l.setLocation(x, y);
+                sommets.put(sommet, l);
                 dessinerSommet(g2d, sommet);
-
-                // Passage au sommet suivant
-                // sommet = sommet.suiv;
                 sommet = sommet.getSuivant();
-
                 i++;
             }
             dessinerAretes(g2d);
-
         }
 
-        /**
-         *
-         * @param g the <code>Graphics</code> object to protect
-         */
         @Override
         public void paintComponent(Graphics g) {
-            super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
+            if (labelEnDeplacement != null) {
+                int x = labelEnDeplacement.getX() + xPos;
+                int y = labelEnDeplacement.getY() + yPos;
+
+                int rayon = 45;
+                g2d.setColor(Color.RED);
+                g2d.fillOval(x - rayon / 2, y - rayon / 2, rayon, rayon);
+                g2d.setColor(Color.BLACK);
+                g2d.drawOval(x - rayon / 2, y - rayon / 2, rayon, rayon);
+            }
             dessinerGraphe(g2d);
-
-            for (JLabel label : labels) {
-                add(label);
-            }
         }
-
-        /**
-         *
-         * @param listeLabels
-         */
-        public void addInventList(List<JLabel> listeLabels){
-            for(JLabel l : listeLabels){
-                l.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        super.mouseClicked(e);
-                    }
-                });
-
-            }
-        }
-
     }
-
 }

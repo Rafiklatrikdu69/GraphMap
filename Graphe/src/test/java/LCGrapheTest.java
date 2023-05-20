@@ -3,7 +3,7 @@ import static org.junit.Assert.*;
 
 public class LCGrapheTest {
 
-  
+
 
     @Test
     public void testAjouterSommet() {
