@@ -890,7 +890,7 @@ class LCGraphe {
      * 
      * @return predecesseurs : double[][]
      */
-    public double[][] floydWarshall() {
+    public double[][] floydWarshall(String sourceO ,String destinationD) {
         MaillonGraphe tmp = this.premier;
         int cpt = 0; // taille de la matrice
 
@@ -985,7 +985,7 @@ class LCGraphe {
             }
         }
 
-        afficherPlusCourtsChemins(predecesseurs, distances, indexSommet);
+        afficherPlusCourtsChemins(predecesseurs, distances, indexSommet,sourceO,destinationD);
 
         return predecesseurs;
     }
@@ -999,22 +999,22 @@ class LCGraphe {
      * 
      * @see {@link #afficherChemin(int, int, double[][], Map)}
      */
-    public void afficherPlusCourtsChemins(double[][] predecesseurs, double[][] distances, Map<String, Integer> indexSommet) {
+    public void afficherPlusCourtsChemins(double[][] predecesseurs, double[][] distances, Map<String, Integer> indexSommet,String sourceO ,String destinationD) {
         int taille = predecesseurs.length;
 
-        // Parcours de chaque paire de sommets pour afficher les chemins et les distances
-        for (int i = 0; i < taille; i++) {
-            for (int j = 0; j < taille; j++) {
-                if (i != j) {
-                    System.out.println("Plus court chemin de " + getNomSommet(i, indexSommet) + " à " + getNomSommet(j, indexSommet) + ":");
-                    afficherChemin(i, j, predecesseurs, indexSommet);
-                    System.out.println();
-                    System.out.println("Distance : " + distances[i][j]);
-                    System.out.println();
-                }
-            }
+
+        int source = getIndice(sourceO,indexSommet);
+        int destination = getIndice(destinationD,indexSommet);
+        if (predecesseurs[source][destination] != -1) {
+            System.out.println("Plus court chemin de " + getNomSommet(source, indexSommet) + " à " + getNomSommet(destination, indexSommet) + ":");
+            afficherChemin(source, destination, predecesseurs, indexSommet);
+            System.out.println();
+            System.out.println("Distance : " + distances[source][destination]);
+        } else {
+            System.out.println("Aucun chemin trouvé de " + getNomSommet(source, indexSommet) + " à " + getNomSommet(destination, indexSommet));
         }
     }
+
 
     /**
      * @param source
@@ -1035,12 +1035,14 @@ class LCGraphe {
         construireChemin(source, destination, predecesseurs, chemin);
 
         // Affiche le chemin
-        System.out.print("  " + getNomSommet(source, indexSommet));
+
         int i = 0;
         for (i = 0; i < chemin.size(); i++) {
-            System.out.print(" -> " + getNomSommet(chemin.get(i), indexSommet));
+
+                System.out.print(getNomSommet(chemin.get(i), indexSommet)+" -> ");
+
         }
-        System.out.print(" -> " + getNomSommet(destination, indexSommet));
+        System.out.print(getNomSommet(destination, indexSommet));
     }
 
     /**

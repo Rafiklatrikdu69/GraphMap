@@ -6,13 +6,14 @@ import java.util.Scanner;
 
 public class MenuConsoleGraphe{
     private static LCGraphe newGraphe = new LCGraphe();
+    private static   String optionDispensaire2;
 
     public static void main(String[] args){
 
         newGraphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
 
-        double[][] predecesseurs = newGraphe.floydWarshall();
-        System.out.println(newGraphe.plusCourtCheminDijkstraDuree("S1","S30"));
+
+        //System.out.println(newGraphe.plusCourtCheminDijkstraDuree("S1","S30"));
 
         Scanner scanner = new Scanner(System.in);
         int option;
@@ -83,7 +84,7 @@ public class MenuConsoleGraphe{
                                     System.out.println("| " + ConsoleColors.YELLOW_BOLD + "5. Afficher le chemin le plus fiable               " + ConsoleColors.RESET + "|");
                                     System.out.println("| " + ConsoleColors.RED_BOLD    + "6. Afficher le chemin avec la plus petite distance " + ConsoleColors.RESET + "|");
                                     System.out.println("| " + ConsoleColors.WHITE_BOLD  + "7. Afficher le chemin avec la plus petite durée    " + ConsoleColors.RESET + "|");
-                                    System.out.println("| " + ConsoleColors.GRAY_BOLD + "8. Retourner au menu principal                     " + ConsoleColors.RESET + "|");
+                                    System.out.println("| " + ConsoleColors.GRAY_BOLD + "8. Afficher le chemin avec la plus petite distance(floyd Warshall)" + ConsoleColors.RESET + "|");
                                     System.out.println("=======================================================");
                                     System.out.print("Saisir votre choix : ");
                                     if (scannerFonctionDispensaire.hasNextInt()) {
@@ -194,7 +195,7 @@ public class MenuConsoleGraphe{
                                             }
                                             case 7 -> {
                                                 System.out.print("Veillez saisir un autre dispensaire (entre S1 et S30) : ");
-                                                String optionDispensaire2;
+
                                                 Scanner scannerDispensaire2 = new Scanner(System.in);
                                                 optionDispensaire2 = scannerDispensaire2.next();
                                                 scannerDispensaire2.nextLine();
@@ -223,8 +224,16 @@ public class MenuConsoleGraphe{
                                                 }
                                                 pressEnterToContinue(scannerFonctionDispensaire);
                                             }
+                                            case 8 ->
+                                            {
+                                                System.out.println("Selectionner le sommet de destination :");
+                                                Scanner scannerDispensaire2 = new Scanner(System.in);
+                                                optionDispensaire2 = scannerDispensaire2.next();
+                                                scannerDispensaire2.nextLine();
+                                                double[][] predecesseurs = newGraphe.floydWarshall(dispensaire.getNom(),optionDispensaire2);
+                                            }
 
-                                            case 8 -> sortieAnnexe = true;
+                                            case 9 -> sortieAnnexe = true;
                                         }
                                     } else {
                                         scannerFonctionDispensaire.nextLine();
