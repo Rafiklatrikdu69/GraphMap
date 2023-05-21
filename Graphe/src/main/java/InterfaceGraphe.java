@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Random;
 
 public class InterfaceGraphe extends JFrame {
 
@@ -13,11 +12,11 @@ public class InterfaceGraphe extends JFrame {
     private JPanel cp;
     private DessinGraphe dessinGraphe;
 
-    private static LCGraphe Graphe ;
+    private static LCGraphe Graphe;
 
     private LinkedList<JLabel> labels = new LinkedList<>();
     private JMenuBar menu;
-    private JMenu j;
+    private JMenu fichier, fenetre, fonctionnalites;
     private JMenuItem option1, option2, option3;
     private FileF<String> f;
 
@@ -28,8 +27,8 @@ public class InterfaceGraphe extends JFrame {
     public InterfaceGraphe() {
 
         super();
-        Graphe  = new LCGraphe();
-        f =LCGraphe.getFile();
+        Graphe = new LCGraphe();
+        f = LCGraphe.getFile();
 
         initComponents();
         setTitle("Graphe");
@@ -37,6 +36,9 @@ public class InterfaceGraphe extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+    }
+    public LCGraphe getGraphe() {
+        return this.Graphe;
     }
 
     private void initComponents() {
@@ -49,18 +51,21 @@ public class InterfaceGraphe extends JFrame {
         cp.add(panelBoutons, BorderLayout.SOUTH);
         dessinGraphe = new DessinGraphe();
         menu = new JMenuBar();
-        j = new JMenu("Menu");
+        fichier = new JMenu("Fichier");
+        fenetre = new JMenu("Fenetre");
+        fonctionnalites = new JMenu("Fonctionnalités");
 
 
         //Menu
-        option1 = new JMenuItem("Choisir le fichier pour le graphe");
-        option2 = new JMenuItem("Sélectionner un dispensaire");
-        option3 = new JMenuItem("Fermer la fenetre ");
-        j.add(option1);
-        j.add(option2);
-        j.add(option3);
-        menu.add(j);
-
+        option1 = new JMenuItem("Ouvrir");
+        option2 = new JMenuItem("Fermer");
+        option3 = new JMenuItem("Afficher le plus courts chemins");
+        fichier.add(option1);
+        fenetre.add(option2);
+        fonctionnalites.add(option3);
+        menu.add(fichier);
+        menu.add(fenetre);
+        menu.add(fonctionnalites);
 
         cp.add(menu, BorderLayout.NORTH);
 
@@ -73,7 +78,9 @@ public class InterfaceGraphe extends JFrame {
         btnRetour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cp.repaint();
+
+                dispose();
+                AccueilInterface a = new AccueilInterface("Graphe");
             }
         });
         option1.addActionListener(new ActionListener() {
@@ -86,7 +93,9 @@ public class InterfaceGraphe extends JFrame {
                     fichier = fenetreOuvertureFichier.getSelectedFile(); // Récupérer le fichier
                     System.out.println(fichier.getPath());
                     Graphe.chargementFichier(fichier.getPath());
+                    nomFichier  = fichier.getPath();
                     Graphe();
+
 
 
                 }
@@ -94,14 +103,24 @@ public class InterfaceGraphe extends JFrame {
 
             }
         });
-        option3.addActionListener(new ActionListener() {
+        option2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
                 dispose();
             }
         });
+        option3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AfficherCheminGraphe cheminGraphe = new AfficherCheminGraphe("Chemins Graphes", InterfaceGraphe.this);
+            }
+        });
 
+
+    }
+    public String getNomFichier(){
+        return this.nomFichier;
     }
 
     public void Graphe() {
@@ -198,32 +217,31 @@ public class InterfaceGraphe extends JFrame {
             g2d.setColor(Color.BLACK);
             //double[][] predecesseurs = Graphe.floydWarshall("S1", "S8");
 
-           // while (!f.estVide()) {
-             //   String def = f.defiler();
+            // while (!f.estVide()) {
+            //   String def = f.defiler();
 
-                for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
-                    JLabel p1 = sommets.get(sommet1);
+            for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
+                JLabel p1 = sommets.get(sommet1);
 
-                    for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
-                        JLabel p2 = sommets.get(sommet2);
+                for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
+                    JLabel p2 = sommets.get(sommet2);
 
-                        if (sommet1.estVoisin(sommet2.getNom())/*sommet1.getNom().equals("S1") && sommet2.getNom().equals("S8")*/) {
-                            g2d.setColor(Color.BLACK);
-                            g2d.setStroke(new BasicStroke(3));
-                            g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
-                        } /*else {
+                    if (sommet1.estVoisin(sommet2.getNom())/*sommet1.getNom().equals("S1") && sommet2.getNom().equals("S8")*/) {
+                        g2d.setColor(Color.BLACK);
+                        g2d.setStroke(new BasicStroke(3));
+                        g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
+                    } /*else {
                             g2d.setColor(Color.BLACK);
                             g2d.setStroke(new BasicStroke(1));
                             g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
                         }*/
-                    }
                 }
             }
-
-
-
         }
+
+
     }
+}
 
 
 

@@ -1,5 +1,5 @@
 public class LancerInterface {
     public static void main(String[] args){
-        InterfaceGraphe t = new InterfaceGraphe();
+        AccueilInterface t = new AccueilInterface("Interface d'un graphe");
     }
 }
