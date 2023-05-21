@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
@@ -10,6 +11,18 @@ public class InterfaceGraphe extends JFrame {
     private JButton btnRetour;
     private JPanel cp;
     private DessinGraphe dessinGraphe;
+
+    private static LCGraphe Graphe = new LCGraphe();
+
+    private LinkedList<JLabel> labels = new LinkedList<>();
+    private JMenuBar menu;
+    private JMenu j;
+    private JMenuItem option1, option2, option3;
+
+
+    private String nomFichier;
+
+
 
     public InterfaceGraphe() {
         super();
@@ -30,7 +43,21 @@ public class InterfaceGraphe extends JFrame {
         cp.setLayout(new BorderLayout());
         cp.add(panelBoutons, BorderLayout.SOUTH);
         dessinGraphe = new DessinGraphe();
+        menu = new JMenuBar();
+        j = new JMenu("Menu");
+<<<<<<< HEAD
+=======
+        //Menu
+>>>>>>> c75f233 (menu feature)
+        option1 = new JMenuItem("Choisir le fichier pour le graphe");
+        option2 = new JMenuItem("Sélectionner un dispensaire");
+        option3 = new JMenuItem("Modifier le Graphe");
+        j.add(option1);
+        j.add(option2);
+        j.add(option3);
+        menu.add(j);
 
+        cp.add(menu);
 
         initEventListeners();
         cp.add(dessinGraphe, BorderLayout.CENTER);
@@ -74,7 +101,7 @@ public class InterfaceGraphe extends JFrame {
                 int y = yCentre + (int) (tailleCadre / 2 * Math.sin(angle));
 
                 ajouterSommet(tmp, x, y);
-               //System.out.println("test");
+                //System.out.println("test");
                 tmp = tmp.getSuivant();
                 i++;
             }
