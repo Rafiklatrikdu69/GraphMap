@@ -46,12 +46,16 @@ public class InterfaceGraphe extends JFrame {
         menu = new JMenuBar();
         j = new JMenu("Menu");
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
         //Menu
 >>>>>>> c75f233 (menu feature)
 >>>>>>> DessinGraphe
+=======
+        //Menu
+>>>>>>> c75f233 (menu feature)
         option1 = new JMenuItem("Choisir le fichier pour le graphe");
         option2 = new JMenuItem("Sélectionner un dispensaire");
         option3 = new JMenuItem("Modifier le Graphe");
