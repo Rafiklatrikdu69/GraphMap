@@ -13,19 +13,24 @@ public class InterfaceGraphe extends JFrame {
     private JPanel cp;
     private DessinGraphe dessinGraphe;
 
-    private static LCGraphe Graphe = new LCGraphe();
+    private static LCGraphe Graphe ;
 
     private LinkedList<JLabel> labels = new LinkedList<>();
     private JMenuBar menu;
     private JMenu j;
     private JMenuItem option1, option2, option3;
+    private FileF<String> f;
 
 
     private String nomFichier;
 
 
     public InterfaceGraphe() {
+
         super();
+        Graphe  = new LCGraphe();
+        f =LCGraphe.getFile();
+
         initComponents();
         setTitle("Graphe");
         setSize(1980, 1080);
@@ -139,10 +144,9 @@ public class InterfaceGraphe extends JFrame {
             setLayout(null);
             sommets = new HashMap<>();
 
-       
-
 
         }
+
 
         private void ajouterSommet(LCGraphe.MaillonGraphe m, int x, int y) {
             JLabel label = new JLabel(m.getNom());
@@ -185,30 +189,41 @@ public class InterfaceGraphe extends JFrame {
             add(label);
         }
 
-        @Override
+        /**
+         * @param g the <code>Graphics</code> object to protect
+         */
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(Color.BLACK);
+            //double[][] predecesseurs = Graphe.floydWarshall("S1", "S8");
 
+           // while (!f.estVide()) {
+             //   String def = f.defiler();
 
-            for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
-                JLabel p1 = sommets.get(sommet1);
-                for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
-                    JLabel p2 = sommets.get(sommet2);
-                    if (sommet1.estVoisin(sommet2.getNom())) {
-                        g2d.fillOval(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, 10, 10);
-                        g2d.fillOval(p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2, 10, 10);
-                        g2d.setStroke(new BasicStroke(1));
+                for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
+                    JLabel p1 = sommets.get(sommet1);
 
-                        g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
+                    for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
+                        JLabel p2 = sommets.get(sommet2);
+
+                        if (sommet1.estVoisin(sommet2.getNom())/*sommet1.getNom().equals("S1") && sommet2.getNom().equals("S8")*/) {
+                            g2d.setColor(Color.BLACK);
+                            g2d.setStroke(new BasicStroke(3));
+                            g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
+                        } /*else {
+                            g2d.setColor(Color.BLACK);
+                            g2d.setStroke(new BasicStroke(1));
+                            g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
+                        }*/
                     }
                 }
             }
+
 
 
         }
     }
 
 
-}
+

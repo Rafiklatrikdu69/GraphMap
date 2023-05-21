@@ -12,6 +12,11 @@ import java.util.*;
  * @author Rafik Bouchenna et Emmanuel Ardoin
  */
 class LCGraphe {
+    private static FileF<String> file;
+    static FileF getFile(){
+        return file;
+    }
+
 
     public class MaillonGrapheSec {
 
@@ -56,6 +61,7 @@ class LCGraphe {
         public double getFiabilite() {
             return fiab;
         }
+
 
         /**
          * @param dest
@@ -208,6 +214,7 @@ class LCGraphe {
 
     public LCGraphe() {
         premier = null;
+        file = new FileF<>();
     }
 
     public MaillonGraphe getPremier() {
@@ -690,6 +697,7 @@ class LCGraphe {
         List<String[]> fileAttente = new ArrayList<>();//creation d'une liste permettant d'ajouter les sommet traiter
         fileAttente.add(new String[]{centre1, "0"});//ajoute le premier sommet avec comme distance 0
         String[] donnee;
+
         while (!(fileAttente.isEmpty())) {//tant que cette liste n'est pas vide
             donnee = fileAttente.get(fileAttente.size() - 1);//sauvegarde la distance et le centre de la fin de la file dans la variable donnee
             fileAttente.remove(fileAttente.size() - 1);//supprime ces cet element
@@ -990,6 +998,7 @@ class LCGraphe {
         return predecesseurs;
     }
 
+
     /**
      * Cette methode affiche tout les plus courts chemins
      *
@@ -1003,9 +1012,11 @@ class LCGraphe {
         int taille = predecesseurs.length;
 
 
+
         int source = getIndice(sourceO,indexSommet);
         int destination = getIndice(destinationD,indexSommet);
         if (predecesseurs[source][destination] != -1) {
+
             System.out.println("Plus court chemin de " + getNomSommet(source, indexSommet) + " à " + getNomSommet(destination, indexSommet) + ":");
             afficherChemin(source, destination, predecesseurs, indexSommet);
             System.out.println();
@@ -1013,6 +1024,7 @@ class LCGraphe {
         } else {
             System.out.println("Aucun chemin trouvé de " + getNomSommet(source, indexSommet) + " à " + getNomSommet(destination, indexSommet));
         }
+
     }
 
 
@@ -1038,11 +1050,13 @@ class LCGraphe {
 
         int i = 0;
         for (i = 0; i < chemin.size(); i++) {
-
+            file.enfiler(getNomSommet(chemin.get(i), indexSommet));
                 System.out.print(getNomSommet(chemin.get(i), indexSommet)+" -> ");
 
         }
         System.out.print(getNomSommet(destination, indexSommet));
+        file.enfiler(getNomSommet(destination, indexSommet));
+
     }
 
     /**

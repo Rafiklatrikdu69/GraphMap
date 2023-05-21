@@ -15,6 +15,7 @@ public class MenuConsoleGraphe{
 
         //System.out.println(newGraphe.plusCourtCheminDijkstraDuree("S1","S30"));
 
+
         Scanner scanner = new Scanner(System.in);
         int option;
         boolean sortie = false;
