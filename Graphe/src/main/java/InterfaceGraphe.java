@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -21,7 +22,6 @@ public class InterfaceGraphe extends JFrame {
 
 
     private String nomFichier;
-
 
 
     public InterfaceGraphe() {
@@ -46,39 +46,22 @@ public class InterfaceGraphe extends JFrame {
         menu = new JMenuBar();
         j = new JMenu("Menu");
 
-        option1 = new JMenuItem("Choisir le fichier pour le graphe");
-        option2 = new JMenuItem("Sélectionner un dispensaire");
-        option3 = new JMenuItem("Modifier le Graphe");
-        j.add(option1);
-        j.add(option2);
-        j.add(option3);
-        menu.add(j);
-
-
-
-        option1 = new JMenuItem("Choisir le fichier pour le graphe");
-        option2 = new JMenuItem("Sélectionner un dispensaire");
-        option3 = new JMenuItem("Modifier le Graphe");
-        j.add(option1);
-        j.add(option2);
-        j.add(option3);
-        menu.add(j);
-
 
         //Menu
         option1 = new JMenuItem("Choisir le fichier pour le graphe");
         option2 = new JMenuItem("Sélectionner un dispensaire");
-        option3 = new JMenuItem("Modifier le Graphe");
+        option3 = new JMenuItem("Fermer la fenetre ");
         j.add(option1);
         j.add(option2);
         j.add(option3);
         menu.add(j);
 
 
-        cp.add(menu);
+        cp.add(menu, BorderLayout.NORTH);
 
         initEventListeners();
-        cp.add(dessinGraphe, BorderLayout.CENTER);
+
+
     }
 
     public void initEventListeners() {
@@ -88,6 +71,59 @@ public class InterfaceGraphe extends JFrame {
                 cp.repaint();
             }
         });
+        option1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("test");
+                JFileChooser fenetreOuvertureFichier = new JFileChooser(new File("."));
+                File fichier;
+                if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { // Si un fichier est sélectionné dans la fenêtre ouverte grâce à fenetreOuvertureFichier.showOpenDialog(null)
+                    fichier = fenetreOuvertureFichier.getSelectedFile(); // Récupérer le fichier
+                    System.out.println(fichier.getPath());
+                    Graphe.chargementFichier(fichier.getPath());
+                    Graphe();
+
+
+                }
+
+
+            }
+        });
+        option3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                dispose();
+            }
+        });
+
+    }
+
+    public void Graphe() {
+
+        LCGraphe.MaillonGraphe tmp = Graphe.getPremier();
+
+        int tailleCadre = (int) (Math.sqrt(30) * 100);
+        int xCentre = 1400 / 2;
+        int yCentre = 600 / 2;
+        int i = 1;
+        while (tmp != null) {
+
+            double angle = 2 * Math.PI * i / 30;
+            int x = xCentre + (int) (tailleCadre / 2 * Math.cos(angle));
+            int y = yCentre + (int) (tailleCadre / 2 * Math.sin(angle));
+
+            dessinGraphe.ajouterSommet(tmp, x, y);
+            //System.out.println("test");
+            tmp = tmp.getSuivant();
+            i++;
+        }
+        int preferredWidth = tailleCadre + 100;
+        int preferredHeight = tailleCadre + 100;
+        setPreferredSize(new Dimension(preferredWidth, preferredHeight));
+
+        cp.add(dessinGraphe, BorderLayout.CENTER);
+        cp.revalidate();
     }
 
     public class DessinGraphe extends JPanel {
@@ -103,29 +139,8 @@ public class InterfaceGraphe extends JFrame {
             setLayout(null);
             sommets = new HashMap<>();
 
-            LCGraphe graphe = new LCGraphe();
+       
 
-            graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
-            LCGraphe.MaillonGraphe tmp = graphe.getPremier();
-
-            int tailleCadre = (int) (Math.sqrt(30) * 100);
-            int xCentre = 1400 / 2;
-            int yCentre = 600 / 2;
-            int i = 1;
-            while (tmp != null) {
-
-                double angle = 2 * Math.PI * i / 30;
-                int x = xCentre + (int) (tailleCadre / 2 * Math.cos(angle));
-                int y = yCentre + (int) (tailleCadre / 2 * Math.sin(angle));
-
-                ajouterSommet(tmp, x, y);
-                //System.out.println("test");
-                tmp = tmp.getSuivant();
-                i++;
-            }
-            int preferredWidth = tailleCadre + 100;
-            int preferredHeight = tailleCadre + 100;
-            setPreferredSize(new Dimension(preferredWidth, preferredHeight));
 
         }
 
