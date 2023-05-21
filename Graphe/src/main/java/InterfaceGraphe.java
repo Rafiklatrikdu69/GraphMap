@@ -45,6 +45,7 @@ public class InterfaceGraphe extends JFrame {
         dessinGraphe = new DessinGraphe();
         menu = new JMenuBar();
         j = new JMenu("Menu");
+<<<<<<< HEAD
 
         option1 = new JMenuItem("Choisir le fichier pour le graphe");
         option2 = new JMenuItem("Sélectionner un dispensaire");
@@ -54,6 +55,17 @@ public class InterfaceGraphe extends JFrame {
         j.add(option3);
         menu.add(j);
 
+=======
+        //Menu
+        option1 = new JMenuItem("Choisir le fichier pour le graphe");
+        option2 = new JMenuItem("Sélectionner un dispensaire");
+        option3 = new JMenuItem("Modifier le Graphe");
+        j.add(option1);
+        j.add(option2);
+        j.add(option3);
+        menu.add(j);
+
+>>>>>>> c75f233c2a11b7de1ba978b4eeffa64d0d2a88b9
         cp.add(menu);
 
         initEventListeners();
