@@ -21,6 +21,7 @@ public class AfficherCheminGraphe extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        chargementGraphe.Graphe.chargementFichier(interfaceGraphe.getNomFichier());
         setVisible(true);
     }
 
@@ -74,13 +75,14 @@ public class AfficherCheminGraphe extends JFrame {
                 String selectedSommet = (String) comboBoxDeuxieme.getSelectedItem();
                 System.out.println(selectedSommet);
                 choixSommet2 = selectedSommet;
+                System.out.println(choixSommet2);
             }
         });
 
         lancerRecherche.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double prec[][] = interfaceGraphe.getGraphe().floydWarshall(choixSommet1, choixSommet2);
+                double prec[][] = chargementGraphe.Graphe.floydWarshall("S1", "S3");
                 // Utilisez la liste pour votre algorithme ici
             }
         });
