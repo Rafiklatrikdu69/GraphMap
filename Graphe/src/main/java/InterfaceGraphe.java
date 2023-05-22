@@ -166,7 +166,12 @@ public class InterfaceGraphe extends JFrame {
 
         }
 
-
+        /**
+         * 
+         * @param m
+         * @param x
+         * @param y
+         */
         private void ajouterSommet(LCGraphe.MaillonGraphe m, int x, int y) {
             JLabel label = new JLabel(m.getNom());
             label.setBounds(x, y, 50, 30);
