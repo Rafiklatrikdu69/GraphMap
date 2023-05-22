@@ -9,6 +9,11 @@ public class AfficherCheminGraphe extends JFrame {
     private String choixSommet1, choixSommet2;
     private JButton lancerRecherche;
 
+    /**
+     *
+     * @param nom
+     * @param interfaceGraphe
+     */
     AfficherCheminGraphe(String nom, InterfaceGraphe interfaceGraphe) {
         this.interfaceGraphe = interfaceGraphe;
         initComponents();
@@ -19,6 +24,9 @@ public class AfficherCheminGraphe extends JFrame {
         setVisible(true);
     }
 
+    /**
+     *
+     */
     private void initComponents() {
         JPanel cp = (JPanel) getContentPane();
         cp.setLayout(new BoxLayout(cp, BoxLayout.X_AXIS));
@@ -45,6 +53,10 @@ public class AfficherCheminGraphe extends JFrame {
         cp.add(lancerRecherche);
         initEventListeners();
     }
+
+    /**
+     *
+     */
 
     private void initEventListeners() {
         comboBoxPremier.addActionListener(new ActionListener() {

@@ -6,6 +6,10 @@ import java.awt.event.ActionListener;
 public class AccueilInterface extends JFrame {
     private JButton commencer, parametre;
 
+    /**
+     *
+     * @param nom
+     */
     AccueilInterface(String nom) {
         initComponents();
         setTitle(nom);
@@ -14,6 +18,10 @@ public class AccueilInterface extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
+
+    /**
+     *
+     */
 
     private void initComponents() {
         JPanel cp = (JPanel) getContentPane();
@@ -45,6 +53,10 @@ public class AccueilInterface extends JFrame {
 
         initEventListeners();
     }
+
+    /**
+     *
+     */
 
     private void initEventListeners() {
         commencer.addActionListener(new ActionListener() {

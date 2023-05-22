@@ -41,6 +41,9 @@ public class InterfaceGraphe extends JFrame {
         return this.Graphe;
     }
 
+    /**
+     *
+     */
     private void initComponents() {
         cp = (JPanel) getContentPane();
         JPanel panelBoutons = new JPanel();
@@ -119,6 +122,11 @@ public class InterfaceGraphe extends JFrame {
 
 
     }
+
+    /**
+     *
+     * @return
+     */
     public String getNomFichier(){
         return this.nomFichier;
     }
@@ -156,7 +164,9 @@ public class InterfaceGraphe extends JFrame {
         private JLabel sommetEnDeplacement;
         private int xPos, yPos;
 
-
+        /**
+         * 
+         */
         DessinGraphe() {
             super();
 
