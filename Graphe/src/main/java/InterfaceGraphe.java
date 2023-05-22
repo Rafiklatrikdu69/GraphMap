@@ -95,7 +95,7 @@ public class InterfaceGraphe extends JFrame {
                 if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { // Si un fichier est sélectionné dans la fenêtre ouverte grâce à fenetreOuvertureFichier.showOpenDialog(null)
                     fichier = fenetreOuvertureFichier.getSelectedFile(); // Récupérer le fichier
                     System.out.println(fichier.getPath());
-                    Graphe.chargementFichier(fichier.getPath());
+                    chargementGraphe.Graphe.chargementFichier(fichier.getPath());
                     nomFichier  = fichier.getPath();
                     Graphe();
 
@@ -133,7 +133,7 @@ public class InterfaceGraphe extends JFrame {
 
     public void Graphe() {
 
-        LCGraphe.MaillonGraphe tmp = Graphe.getPremier();
+        LCGraphe.MaillonGraphe tmp = chargementGraphe.Graphe.getPremier();
 
         int tailleCadre = (int) (Math.sqrt(30) * 100);
         int xCentre = 1400 / 2;
