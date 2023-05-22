@@ -5,9 +5,10 @@ import java.awt.event.ActionListener;
 public class AfficherCheminGraphe extends JFrame {
     private InterfaceGraphe interfaceGraphe;
     private JComboBox<String> comboBoxPremier, comboBoxDeuxieme;
-    private JLabel sommets;
-    private String choixSommet1, choixSommet2;
+    private JLabel sommets,l;
+    protected String choixSommet1, choixSommet2;
     private JButton lancerRecherche;
+    private JPanel p;
 
     /**
      *
@@ -52,7 +53,11 @@ public class AfficherCheminGraphe extends JFrame {
         cp.add(comboDeux);
         lancerRecherche = new JButton("Recherche chemin");
         cp.add(lancerRecherche);
+      p = new JPanel();
+
         initEventListeners();
+
+        cp.add(p);
     }
 
     /**
@@ -70,11 +75,13 @@ public class AfficherCheminGraphe extends JFrame {
         });
 
         comboBoxDeuxieme.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedSommet = (String) comboBoxDeuxieme.getSelectedItem();
                 System.out.println(selectedSommet);
                 choixSommet2 = selectedSommet;
+
                 System.out.println(choixSommet2);
             }
         });
@@ -82,9 +89,20 @@ public class AfficherCheminGraphe extends JFrame {
         lancerRecherche.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double prec[][] = chargementGraphe.Graphe.floydWarshall("S1", "S3");
+                String selectedSommet1 ="";
+                String selectedSommet2 = "";
+                double prec[][] = chargementGraphe.Graphe.floydWarshall(  (String) comboBoxPremier.getSelectedItem(),  (String) comboBoxDeuxieme.getSelectedItem());
+                FileF<String> f = chargementGraphe.Graphe.getFile();
+                    while (!f.estVide()){
+                         l = new JLabel(f.defiler()+" -> ");
+                         p.add(l);
+
+
+                    }
+                }
                 // Utilisez la liste pour votre algorithme ici
-            }
+
+
         });
     }
 }
