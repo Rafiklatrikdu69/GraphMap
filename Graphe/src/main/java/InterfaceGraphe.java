@@ -246,7 +246,7 @@ public class InterfaceGraphe extends JFrame {
 
                     if (sommet1.estVoisin(sommet2.getNom())/*sommet1.getNom().equals("S1") && sommet2.getNom().equals("S8")*/) {
                         g2d.setColor(Color.BLACK);
-                        g2d.setStroke(new BasicStroke(3));
+                        g2d.setStroke(new BasicStroke(1));
                         g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
                     } /*else {
                             g2d.setColor(Color.BLACK);
