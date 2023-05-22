@@ -8,10 +8,10 @@ import java.util.Map;
 
 public class InterfaceGraphe extends JFrame {
 
-
-    private JButton btnRetour;
-    private JPanel cp;
+    private JButton btnRetour, hamburgerButton, option1Button, option2Button, option3Button;
+    private JPanel cp, menuPanel, mainPanel;
     private DessinGraphe dessinGraphe;
+    private boolean menuVisible = false;
 
     private static LCGraphe Graphe;
 
@@ -21,12 +21,9 @@ public class InterfaceGraphe extends JFrame {
     private JMenuItem option1, option2, option3;
     private FileF<String> f;
 
-
     private String nomFichier;
 
-
     public InterfaceGraphe() {
-
         super();
         Graphe = new LCGraphe();
         f = LCGraphe.getFile();
@@ -38,13 +35,11 @@ public class InterfaceGraphe extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
+
     public LCGraphe getGraphe() {
         return this.Graphe;
     }
 
-    /**
-     *
-     */
     private void initComponents() {
         cp = (JPanel) getContentPane();
         JPanel panelBoutons = new JPanel();
@@ -59,8 +54,7 @@ public class InterfaceGraphe extends JFrame {
         fenetre = new JMenu("Fenetre");
         fonctionnalites = new JMenu("Fonctionnalités");
 
-
-        //Menu
+        // Menu
         option1 = new JMenuItem("Ouvrir");
         option2 = new JMenuItem("Fermer");
         option3 = new JMenuItem("Afficher le plus courts chemins");
@@ -72,10 +66,66 @@ public class InterfaceGraphe extends JFrame {
         menu.add(fonctionnalites);
 
         cp.add(menu, BorderLayout.NORTH);
+        slide();
 
         initEventListeners();
+    }
+
+    private void visible() {
+        if (!menuVisible) {
+            mainPanel.add(menuPanel, BorderLayout.WEST);
+            menuVisible = true;
+        } else {
+            mainPanel.remove(menuPanel);
+            menuVisible = false;
+        }
+        revalidate();
+        repaint();
+    }
+
+    public void slide() {
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
+        menuPanel = new JPanel();
+
+        menuPanel.setPreferredSize(new Dimension(200, 20));
+
+        option1Button = new JButton("Option 1");
+        option2Button = new JButton("Option 2");
+        option3Button = new JButton("Option 3");
 
 
+        menuPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(1, 10, 10, 10);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        menuPanel.add(option1Button, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        menuPanel.add(option2Button, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        menuPanel.add(option3Button, gbc);
+
+        hamburgerButton = new JButton("\u2630");
+
+        hamburgerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                visible();
+            }
+        });
+
+        mainPanel.add(hamburgerButton, BorderLayout.WEST);
+        cp.add(mainPanel);
+
+        setVisible(true);
     }
 
     public void initEventListeners() {
@@ -97,9 +147,8 @@ public class InterfaceGraphe extends JFrame {
                     fichier = fenetreOuvertureFichier.getSelectedFile(); // Récupérer le fichier
                     System.out.println(fichier.getPath());
                     chargementGraphe.Graphe.chargementFichier(fichier.getPath());
-                    nomFichier  = fichier.getPath();
+                    nomFichier = fichier.getPath();
                     Graphe();
-
 
 
                 }
@@ -125,10 +174,9 @@ public class InterfaceGraphe extends JFrame {
     }
 
     /**
-     *
      * @return
      */
-    public String getNomFichier(){
+    public String getNomFichier() {
         return this.nomFichier;
     }
 
@@ -166,7 +214,7 @@ public class InterfaceGraphe extends JFrame {
         private int xPos, yPos;
 
         /**
-         * 
+         *
          */
         DessinGraphe() {
             super();
@@ -178,7 +226,6 @@ public class InterfaceGraphe extends JFrame {
         }
 
         /**
-         * 
          * @param m
          * @param x
          * @param y
