@@ -184,6 +184,7 @@ public class InterfaceGraphe extends JFrame {
          */
         private void ajouterSommet(LCGraphe.MaillonGraphe m, int x, int y) {
             JLabel label = new JLabel(m.getNom());
+          
             label.setBounds(x, y, 50, 30);
             label.setOpaque(true);
             label.setBackground(Color.WHITE);
@@ -214,6 +215,7 @@ public class InterfaceGraphe extends JFrame {
                         int x = e.getXOnScreen() - xPos;
                         int y = e.getYOnScreen() - yPos;
                         sommetEnDeplacement.setLocation(x, y);
+
                         repaint();
                     }
                 }
