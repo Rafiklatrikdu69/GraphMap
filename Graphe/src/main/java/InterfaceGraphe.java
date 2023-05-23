@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,6 +20,7 @@ public class InterfaceGraphe extends JFrame {
     private Timer timer;
 
     private static LCGraphe Graphe;
+    private boolean occupied;
 
     private LinkedList<JLabel> labels = new LinkedList<>();
     private JMenuBar menu;
@@ -35,7 +37,7 @@ public class InterfaceGraphe extends JFrame {
 
         initComponents();
         setTitle("Graphe");
-        setSize(1980, 1080);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -46,6 +48,7 @@ public class InterfaceGraphe extends JFrame {
     }
 
     private void initComponents() {
+
         cp = (JPanel) getContentPane();
 
 
@@ -87,7 +90,7 @@ public class InterfaceGraphe extends JFrame {
                     timer.stop();
                     cp.add(graphe, BorderLayout.EAST);
 
-                    barre.remove(barreChargement);
+                    barreChargement.setVisible(false);
                     cp.revalidate();
 
 
@@ -96,8 +99,9 @@ public class InterfaceGraphe extends JFrame {
         });
 
         slide();
-
+        //verifeAutorisation();
         initEventListeners();
+
     }
 
     private void visible() {
@@ -113,6 +117,7 @@ public class InterfaceGraphe extends JFrame {
     }
 
     public void slide() {
+
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
@@ -136,6 +141,7 @@ public class InterfaceGraphe extends JFrame {
         gbc.gridy = 0;
         menuPanel.add(option1Button, gbc);
 
+
         gbc.gridx = 0;
         gbc.gridy = 1;
         menuPanel.add(option2Button, gbc);
@@ -150,13 +156,29 @@ public class InterfaceGraphe extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 visible();
+                verifeAutorisation();
+                //verifeAutorisation();
+
+
             }
         });
+
+
+
+
 
         mainPanel.add(hamburgerButton, BorderLayout.WEST);
         cp.add(mainPanel, BorderLayout.WEST);
 
         setVisible(true);
+    }
+    public void verifeAutorisation() {
+        if (!bloquerGraphe.isSelected()) {
+
+            option1Button.setEnabled(false);
+
+            visible(); // Ouvrir le menu
+        }
     }
 
     public void demarrerChargement() {
@@ -208,9 +230,27 @@ public class InterfaceGraphe extends JFrame {
                 dispose();
             }
         });
+        option1Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                option1Button.setEnabled(true);
+            }
+        });
+
 
 
     }
+    @Override
+    public void setEnabled(boolean b){
+        if (b){
+            setBackground(Color.black);
+        } else {
+            setBackground(Color.gray);
+        }
+        super.setEnabled(b);
+    }
+
+
 
     /**
      * @return
