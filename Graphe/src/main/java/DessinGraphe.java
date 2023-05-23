@@ -9,7 +9,7 @@ import java.util.Map;
 public class DessinGraphe extends JPanel {
 
     @Override
-    public void paint(Graphics g){
+    public void paint(Graphics g) {
         super.paint(g);
 
         myPaintComponent(g);
@@ -27,7 +27,6 @@ public class DessinGraphe extends JPanel {
 
         setLayout(null);
         sommets = new HashMap<>();
-
 
 
     }
@@ -68,16 +67,16 @@ public class DessinGraphe extends JPanel {
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
-              //  if (bloquerGraphe.isSelected()) {
+                //  if (bloquerGraphe.isSelected()) {
 
-                    if (sommetEnDeplacement != null) {
-                        int x = e.getXOnScreen() - xPos;
-                        int y = e.getYOnScreen() - yPos;
-                        sommetEnDeplacement.setLocation(x, y);
+                if (sommetEnDeplacement != null) {
+                    int x = e.getXOnScreen() - xPos;
+                    int y = e.getYOnScreen() - yPos;
+                    sommetEnDeplacement.setLocation(x, y);
 
-                        repaint();
-                    }
-               // }
+                    repaint();
+                }
+                // }
             }
         });
 
@@ -117,13 +116,14 @@ public class DessinGraphe extends JPanel {
             }
         }
     }
+
     public void Graphe() {
 
         LCGraphe.MaillonGraphe tmp = ChargementGraphe.Graphe.getPremier();
 
         int tailleCadre = (int) (Math.sqrt(30) * 100);
-        int xCentre = 1400 / 2;
-        int yCentre = 600 / 2;
+        int xCentre = 600 / 2;
+        int yCentre = 50 / 2;
         int i = 1;
         while (tmp != null) {
 
@@ -136,11 +136,11 @@ public class DessinGraphe extends JPanel {
             tmp = tmp.getSuivant();
             i++;
         }
-        int preferredWidth = tailleCadre + 100;
-        int preferredHeight = tailleCadre + 100;
+        int preferredWidth = tailleCadre;
+        int preferredHeight = tailleCadre;
         setPreferredSize(new Dimension(preferredWidth, preferredHeight));
 
-revalidate();
+        revalidate();
     }
 
 
