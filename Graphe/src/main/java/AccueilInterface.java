@@ -4,10 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AccueilInterface extends JFrame {
-    private JButton commencer, parametre;
+    private JButton commencer, parametre, quitter;
 
     /**
-     *
      * @param nom
      */
     AccueilInterface(String nom) {
@@ -40,6 +39,7 @@ public class AccueilInterface extends JFrame {
 
         commencer = new JButton("Commencer");
         parametre = new JButton("Paramètres");
+        quitter = new JButton("Quitter");
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -48,7 +48,9 @@ public class AccueilInterface extends JFrame {
         gbc.gridx = 1;
         gbc.gridy = 1;
         centerPanel.add(parametre, gbc);
-
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        centerPanel.add(quitter, gbc);
         cp.add(centerPanel, BorderLayout.CENTER);
 
         initEventListeners();
@@ -64,6 +66,12 @@ public class AccueilInterface extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 InterfaceGraphe interfaceGraphe = new InterfaceGraphe();
+            }
+        });
+        quitter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
             }
         });
     }
