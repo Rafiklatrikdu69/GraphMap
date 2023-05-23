@@ -7,12 +7,16 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class InterfaceGraphe extends JFrame {
+    private Map<LCGraphe.MaillonGraphe, JLabel> sommets;
+    private JButton hamburgerButton, option1Button, option2Button, option3Button;
+    private JPanel cp, menuPanel, mainPanel,graphe;
 
-    private JButton btnRetour, hamburgerButton, option1Button, option2Button, option3Button;
-    private JPanel cp;
     private DessinGraphe dessinGraphe;
     private boolean menuVisible = false;
     private JRadioButton bloquerGraphe;
+    private JProgressBar barreChargement;
+    private int progresse;
+    private Timer timer;
 
     private static LCGraphe Graphe;
 
@@ -44,12 +48,13 @@ public class InterfaceGraphe extends JFrame {
     private void initComponents() {
         cp = (JPanel) getContentPane();
         JPanel panelBoutons = new JPanel();
-        this.btnRetour = new JButton("Retour Menu Principal");
-        panelBoutons.add(btnRetour);
+
 
         cp.setLayout(new BorderLayout());
         cp.add(panelBoutons, BorderLayout.SOUTH);
-        dessinGraphe = new DessinGraphe();
+
+
+
         menu = new JMenuBar();
         fichier = new JMenu("Fichier");
         fenetre = new JMenu("Fenetre");
@@ -71,26 +76,96 @@ public class InterfaceGraphe extends JFrame {
         menu.add(fenetre);
         menu.add(fonctionnalites);
 
+
         cp.add(menu, BorderLayout.NORTH);
 
+        timer = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+                progresse++;
+                barreChargement.setValue(progresse);
+                if (progresse == 100) {
+                    System.out.println("100");
+                    timer.stop();
+                    cp.add(graphe, BorderLayout.EAST);
+                    cp.revalidate();
+
+
+                }
+            }
+        });
+
+        slide();
 
         initEventListeners();
     }
 
+    private void visible() {
+        if (!menuVisible) {
+            mainPanel.add(menuPanel, BorderLayout.WEST);
+            menuVisible = true;
+        } else {
+            mainPanel.remove(menuPanel);
+            menuVisible = false;
+        }
+        revalidate();
+        repaint();
+    }
+
+    public void slide() {
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
+        menuPanel = new JPanel();
+        mainPanel.setBorder(BorderFactory.createTitledBorder("Menu"));
+
+        menuPanel.setPreferredSize(new Dimension(100, 100));
+
+        option1Button = new JButton("Option 1");
+        option2Button = new JButton("Option 2");
+        option3Button = new JButton("Option 3");
 
 
+        menuPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(1, 10, 10, 10);
 
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        menuPanel.add(option1Button, gbc);
 
-    public void initEventListeners() {
-        btnRetour.addActionListener(new ActionListener() {
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        menuPanel.add(option2Button, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        menuPanel.add(option3Button, gbc);
+
+        hamburgerButton = new JButton("\u2630");
+
+        hamburgerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                dispose();
-                AccueilInterface a = new AccueilInterface("Graphe");
+                visible();
             }
         });
+
+        mainPanel.add(hamburgerButton, BorderLayout.WEST);
+        cp.add(mainPanel, BorderLayout.WEST);
+
+        setVisible(true);
+    }
+
+    public void demarrerChargement() {
+        progresse = 0;
+        timer.start();
+    }
+
+    public void initEventListeners() {
+
         option1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -102,7 +177,23 @@ public class InterfaceGraphe extends JFrame {
                     System.out.println(fichier.getPath());
                     ChargementGraphe.Graphe.chargementFichier(fichier.getPath());
                     nomFichier = fichier.getPath();
-                    Graphe();
+
+
+                    barreChargement = new JProgressBar(0, 100);
+                    barreChargement.setStringPainted(true);
+                     graphe = new DessinGraphe();
+
+                    graphe.setBorder(BorderFactory.createTitledBorder("Graphe"));
+
+
+                    graphe.setPreferredSize(new Dimension(500,100));
+
+                    JPanel barre = new JPanel();
+                    barre.add(barreChargement);
+                    cp.add(barre, BorderLayout.SOUTH);
+                    barre.setPreferredSize(new Dimension(300, 100));
+                    barre.setBorder(BorderFactory.createTitledBorder("Barre de chargement "));
+                    demarrerChargement();
 
 
                 }
@@ -134,137 +225,10 @@ public class InterfaceGraphe extends JFrame {
         return this.nomFichier;
     }
 
-    public void Graphe() {
-
-        LCGraphe.MaillonGraphe tmp = ChargementGraphe.Graphe.getPremier();
-
-        int tailleCadre = (int) (Math.sqrt(30) * 100);
-        int xCentre = 1400 / 2;
-        int yCentre = 600 / 2;
-        int i = 1;
-        while (tmp != null) {
-
-            double angle = 2 * Math.PI * i / 30;
-            int x = xCentre + (int) (tailleCadre / 2 * Math.cos(angle));
-            int y = yCentre + (int) (tailleCadre / 2 * Math.sin(angle));
-
-            dessinGraphe.ajouterSommet(tmp, x, y);
-            //System.out.println("test");
-            tmp = tmp.getSuivant();
-            i++;
-        }
-        int preferredWidth = tailleCadre + 100;
-        int preferredHeight = tailleCadre + 100;
-        setPreferredSize(new Dimension(preferredWidth, preferredHeight));
-
-        cp.add(dessinGraphe, BorderLayout.CENTER);
-        cp.revalidate();
-    }
-
-    public class DessinGraphe extends JPanel {
-
-        private Map<LCGraphe.MaillonGraphe, JLabel> sommets;
-        private JLabel sommetEnDeplacement;
-        private int xPos, yPos;
-
-        /**
-         *
-         */
-        DessinGraphe() {
-            super();
-
-            setLayout(null);
-            sommets = new HashMap<>();
 
 
-        }
-
-        /**
-         * @param m
-         * @param x
-         * @param y
-         */
-        private void ajouterSommet(LCGraphe.MaillonGraphe m, int x, int y) {
-            JLabel label = new JLabel(m.getNom());
-
-            label.setBounds(x, y, 50, 30);
-            label.setOpaque(true);
-            label.setBackground(Color.WHITE);
-            label.setHorizontalAlignment(SwingConstants.CENTER);
-            label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-            label.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-
-                        super.mousePressed(e);
-                        sommetEnDeplacement = label;
-                        xPos = e.getX();
-                        yPos = e.getY();
-
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    super.mouseReleased(e);
-                    sommetEnDeplacement = null;
-                }
-            });
-
-            label.addMouseMotionListener(new MouseMotionAdapter() {
-                @Override
-                public void mouseDragged(MouseEvent e) {
-                    super.mouseDragged(e);
-                    if (bloquerGraphe.isSelected()) {
-
-                        if (sommetEnDeplacement != null) {
-                            int x = e.getXOnScreen() - xPos;
-                            int y = e.getYOnScreen() - yPos;
-                            sommetEnDeplacement.setLocation(x, y);
-
-                            repaint();
-                        }
-                    }
-                }
-            });
-
-            sommets.put(m, label);
-            add(label);
-        }
-
-        /**
-         * @param g the <code>Graphics</code> object to protect
-         */
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setColor(Color.BLACK);
-            //double[][] predecesseurs = Graphe.floydWarshall("S1", "S8");
-
-            // while (!f.estVide()) {
-            //   String def = f.defiler();
-
-            for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
-                JLabel p1 = sommets.get(sommet1);
-
-                for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
-                    JLabel p2 = sommets.get(sommet2);
-
-                    if (sommet1.estVoisin(sommet2.getNom())/*sommet1.getNom().equals("S1") && sommet2.getNom().equals("S8")*/) {
-                        g2d.setColor(Color.BLACK);
-                        g2d.setStroke(new BasicStroke(1));
-                        g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
-                    } /*else {
-                            g2d.setColor(Color.BLACK);
-                            g2d.setStroke(new BasicStroke(1));
-                            g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2, p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
-                        }*/
-                }
-            }
-        }
 
 
-    }
 }
 
 
