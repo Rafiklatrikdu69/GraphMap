@@ -13,7 +13,7 @@ public class MenuConsoleGraphe{
         newGraphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
 
 
-        //System.out.println(newGraphe.plusCourtCheminDijkstraDuree("S1","S30"));
+        System.out.println(newGraphe.plusCourtCheminDijkstraDistance("S1","S21"));
 
 
         Scanner scanner = new Scanner(System.in);

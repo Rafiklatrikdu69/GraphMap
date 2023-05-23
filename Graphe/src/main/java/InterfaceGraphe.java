@@ -9,9 +9,10 @@ import java.util.Map;
 public class InterfaceGraphe extends JFrame {
 
     private JButton btnRetour, hamburgerButton, option1Button, option2Button, option3Button;
-    private JPanel cp, menuPanel, mainPanel;
+    private JPanel cp;
     private DessinGraphe dessinGraphe;
     private boolean menuVisible = false;
+    private JRadioButton bloquerGraphe;
 
     private static LCGraphe Graphe;
 
@@ -52,12 +53,17 @@ public class InterfaceGraphe extends JFrame {
         menu = new JMenuBar();
         fichier = new JMenu("Fichier");
         fenetre = new JMenu("Fenetre");
-        fonctionnalites = new JMenu("Fonctionnalités");
+        fonctionnalites = new JMenu("Mode du Graphe");
 
         // Menu
         option1 = new JMenuItem("Ouvrir");
         option2 = new JMenuItem("Fermer");
-        option3 = new JMenuItem("Afficher le plus courts chemins");
+        option3 = new JMenuItem("Mode ");
+        bloquerGraphe = new JRadioButton("Bloquer");
+        fonctionnalites.add(bloquerGraphe);
+        menu.add(fonctionnalites);
+
+
         fichier.add(option1);
         fenetre.add(option2);
         fonctionnalites.add(option3);
@@ -66,67 +72,15 @@ public class InterfaceGraphe extends JFrame {
         menu.add(fonctionnalites);
 
         cp.add(menu, BorderLayout.NORTH);
-        slide();
+
+
 
         initEventListeners();
     }
 
-    private void visible() {
-        if (!menuVisible) {
-            mainPanel.add(menuPanel, BorderLayout.WEST);
-            menuVisible = true;
-        } else {
-            mainPanel.remove(menuPanel);
-            menuVisible = false;
-        }
-        revalidate();
-        repaint();
-    }
-
-    public void slide() {
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-
-        menuPanel = new JPanel();
-
-        menuPanel.setPreferredSize(new Dimension(200, 20));
-
-        option1Button = new JButton("Option 1");
-        option2Button = new JButton("Option 2");
-        option3Button = new JButton("Option 3");
 
 
-        menuPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(1, 10, 10, 10);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        menuPanel.add(option1Button, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        menuPanel.add(option2Button, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        menuPanel.add(option3Button, gbc);
-
-        hamburgerButton = new JButton("\u2630");
-
-        hamburgerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                visible();
-            }
-        });
-
-        mainPanel.add(hamburgerButton, BorderLayout.WEST);
-        cp.add(mainPanel);
-
-        setVisible(true);
-    }
 
     public void initEventListeners() {
         btnRetour.addActionListener(new ActionListener() {
@@ -146,7 +100,7 @@ public class InterfaceGraphe extends JFrame {
                 if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { // Si un fichier est sélectionné dans la fenêtre ouverte grâce à fenetreOuvertureFichier.showOpenDialog(null)
                     fichier = fenetreOuvertureFichier.getSelectedFile(); // Récupérer le fichier
                     System.out.println(fichier.getPath());
-                    chargementGraphe.Graphe.chargementFichier(fichier.getPath());
+                    ChargementGraphe.Graphe.chargementFichier(fichier.getPath());
                     nomFichier = fichier.getPath();
                     Graphe();
 
@@ -182,7 +136,7 @@ public class InterfaceGraphe extends JFrame {
 
     public void Graphe() {
 
-        LCGraphe.MaillonGraphe tmp = chargementGraphe.Graphe.getPremier();
+        LCGraphe.MaillonGraphe tmp = ChargementGraphe.Graphe.getPremier();
 
         int tailleCadre = (int) (Math.sqrt(30) * 100);
         int xCentre = 1400 / 2;
@@ -242,10 +196,12 @@ public class InterfaceGraphe extends JFrame {
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    super.mousePressed(e);
-                    sommetEnDeplacement = label;
-                    xPos = e.getX();
-                    yPos = e.getY();
+
+                        super.mousePressed(e);
+                        sommetEnDeplacement = label;
+                        xPos = e.getX();
+                        yPos = e.getY();
+
                 }
 
                 @Override
@@ -259,12 +215,15 @@ public class InterfaceGraphe extends JFrame {
                 @Override
                 public void mouseDragged(MouseEvent e) {
                     super.mouseDragged(e);
-                    if (sommetEnDeplacement != null) {
-                        int x = e.getXOnScreen() - xPos;
-                        int y = e.getYOnScreen() - yPos;
-                        sommetEnDeplacement.setLocation(x, y);
+                    if (bloquerGraphe.isSelected()) {
 
-                        repaint();
+                        if (sommetEnDeplacement != null) {
+                            int x = e.getXOnScreen() - xPos;
+                            int y = e.getYOnScreen() - yPos;
+                            sommetEnDeplacement.setLocation(x, y);
+
+                            repaint();
+                        }
                     }
                 }
             });
