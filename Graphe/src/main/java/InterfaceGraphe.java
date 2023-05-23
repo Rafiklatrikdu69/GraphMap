@@ -9,11 +9,11 @@ import java.util.Map;
 public class InterfaceGraphe extends JFrame {
     private Map<LCGraphe.MaillonGraphe, JLabel> sommets;
     private JButton hamburgerButton, option1Button, option2Button, option3Button;
-    private JPanel cp, menuPanel, mainPanel,graphe;
+    private JPanel cp, menuPanel, mainPanel, graphe, barre;
 
     private DessinGraphe dessinGraphe;
     private boolean menuVisible = false;
-    private JRadioButton bloquerGraphe;
+    static JRadioButton bloquerGraphe;
     private JProgressBar barreChargement;
     private int progresse;
     private Timer timer;
@@ -47,12 +47,9 @@ public class InterfaceGraphe extends JFrame {
 
     private void initComponents() {
         cp = (JPanel) getContentPane();
-        JPanel panelBoutons = new JPanel();
 
 
         cp.setLayout(new BorderLayout());
-        cp.add(panelBoutons, BorderLayout.SOUTH);
-
 
 
         menu = new JMenuBar();
@@ -63,7 +60,7 @@ public class InterfaceGraphe extends JFrame {
         // Menu
         option1 = new JMenuItem("Ouvrir");
         option2 = new JMenuItem("Fermer");
-        option3 = new JMenuItem("Mode ");
+
         bloquerGraphe = new JRadioButton("Bloquer");
         fonctionnalites.add(bloquerGraphe);
         menu.add(fonctionnalites);
@@ -71,7 +68,7 @@ public class InterfaceGraphe extends JFrame {
 
         fichier.add(option1);
         fenetre.add(option2);
-        fonctionnalites.add(option3);
+
         menu.add(fichier);
         menu.add(fenetre);
         menu.add(fonctionnalites);
@@ -79,16 +76,18 @@ public class InterfaceGraphe extends JFrame {
 
         cp.add(menu, BorderLayout.NORTH);
 
-        timer = new Timer(100, new ActionListener() {
+        timer = new Timer(30, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
                 progresse++;
                 barreChargement.setValue(progresse);
                 if (progresse == 100) {
-                    System.out.println("100");
+                    System.out.println("temps : 100");
                     timer.stop();
                     cp.add(graphe, BorderLayout.EAST);
+
+                    barre.remove(barreChargement);
                     cp.revalidate();
 
 
@@ -119,8 +118,9 @@ public class InterfaceGraphe extends JFrame {
 
         menuPanel = new JPanel();
         mainPanel.setBorder(BorderFactory.createTitledBorder("Menu"));
+        mainPanel.setPreferredSize(new Dimension(400, 100));
 
-        menuPanel.setPreferredSize(new Dimension(100, 100));
+        menuPanel.setPreferredSize(new Dimension(400, 100));
 
         option1Button = new JButton("Option 1");
         option2Button = new JButton("Option 2");
@@ -130,7 +130,7 @@ public class InterfaceGraphe extends JFrame {
         menuPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(1, 10, 10, 10);
+        gbc.insets = new Insets(10, 10, 10, 10);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -181,14 +181,14 @@ public class InterfaceGraphe extends JFrame {
 
                     barreChargement = new JProgressBar(0, 100);
                     barreChargement.setStringPainted(true);
-                     graphe = new DessinGraphe();
+                    graphe = new DessinGraphe();
 
                     graphe.setBorder(BorderFactory.createTitledBorder("Graphe"));
 
 
-                    graphe.setPreferredSize(new Dimension(500,100));
+                    graphe.setPreferredSize(new Dimension(3000, 200));
 
-                    JPanel barre = new JPanel();
+                    barre = new JPanel();
                     barre.add(barreChargement);
                     cp.add(barre, BorderLayout.SOUTH);
                     barre.setPreferredSize(new Dimension(300, 100));
@@ -208,12 +208,6 @@ public class InterfaceGraphe extends JFrame {
                 dispose();
             }
         });
-        option3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AfficherCheminGraphe cheminGraphe = new AfficherCheminGraphe("Chemins Graphes", InterfaceGraphe.this);
-            }
-        });
 
 
     }
@@ -224,9 +218,6 @@ public class InterfaceGraphe extends JFrame {
     public String getNomFichier() {
         return this.nomFichier;
     }
-
-
-
 
 
 }
