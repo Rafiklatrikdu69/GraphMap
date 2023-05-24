@@ -57,7 +57,7 @@ public class DessinGraphe extends JPanel {
 
         label.setBounds(x, y, 50, 30);
 
-
+label.setHorizontalAlignment(SwingConstants.CENTER);
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
