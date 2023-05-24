@@ -22,7 +22,7 @@ public class AfficherCheminGraphe extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ChargementGraphe.Graphe.chargementFichier(interfaceGraphe.getNomFichier());
+        grapheConstant.Graphe.chargementFichier(interfaceGraphe.getNomFichier());
         setVisible(true);
     }
 
@@ -91,8 +91,8 @@ public class AfficherCheminGraphe extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String selectedSommet1 ="";
                 String selectedSommet2 = "";
-                double prec[][] = ChargementGraphe.Graphe.floydWarshall(  (String) comboBoxPremier.getSelectedItem(),  (String) comboBoxDeuxieme.getSelectedItem());
-                FileF<String> f = ChargementGraphe.Graphe.getFile();
+                double prec[][] = grapheConstant.Graphe.floydWarshall(  (String) comboBoxPremier.getSelectedItem(),  (String) comboBoxDeuxieme.getSelectedItem());
+                FileF<String> f = grapheConstant.Graphe.getFile();
                     while (!f.estVide()){
                          l = new JLabel(f.defiler()+" -> ");
                          p.add(l);
