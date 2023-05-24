@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.Ellipse2D;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class DessinGraphe extends JPanel {
             double angle = 2 * Math.PI * i / 30;
             int x = LargeurPanel + (int) (tailleCadre / 2 * Math.cos(angle));
             int y = hauteurPanel + (int) (tailleCadre / 2 * Math.cos(angle));
-            ajouterSommet(tmp, 3, 3);
+            ajouterSommet(tmp, 30, 30);
             tmp = tmp.getSuivant();
             i++;
         }
@@ -47,12 +48,12 @@ public class DessinGraphe extends JPanel {
      */
     private void ajouterSommet(LCGraphe.MaillonGraphe m, int x, int y) {
         JLabel label = new JLabel(m.getNom());
+        label.setForeground(Color.WHITE);
 
         label.setBounds(x, y, 50, 30);
-        label.setOpaque(true);
-        label.setBackground(Color.WHITE);
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+
+
 
         label.addMouseListener(new MouseAdapter() {
             @Override
@@ -76,25 +77,28 @@ public class DessinGraphe extends JPanel {
                 super.mouseDragged(e);
                 if (!InterfaceGraphe.bloquerGraphe.isSelected()) {
                     if (sommetEnDeplacement != null) {
-                        int x = e.getXOnScreen() - xPos + sommetEnDeplacement.getX();
+                        int x = e.getXOnScreen() - xPos + sommetEnDeplacement.getX();//modifie l'emplacement du jlabel
                         int y = e.getYOnScreen() - yPos + sommetEnDeplacement.getY();
+                        //recupere les dimension du panel
                         int LargeurPanel = getWidth();
                         int hauteurPanel = getHeight();
+                        //recupere les dimension du label sommet
                         int labelLargeur = sommetEnDeplacement.getWidth();
                         int labelhauteur = sommetEnDeplacement.getHeight();
 
                         if (x < 0) {
                             x = 0;
-                        } else if (x > LargeurPanel - labelLargeur) {
+                        } else if (x > LargeurPanel - labelLargeur) {//detecte si les coordonnes de x sont superieurs
+                                                                    // a la largeur du panel moins la largeur du Jlabel
                             x = LargeurPanel - labelLargeur;
                         }
 
                         if (y < 0) {
                             y = 0;
-                        } else if (y > hauteurPanel - labelhauteur) {
+                        } else if (y > hauteurPanel - labelhauteur) {//meme principe
                             y = hauteurPanel - labelhauteur;
                         }
-                        sommetEnDeplacement.setLocation(x, y);
+                        sommetEnDeplacement.setLocation(x, y);//reaffecte les nouvelles coordonnes pour bouger le sommet
 
                         xPos = e.getXOnScreen();
                         yPos = e.getYOnScreen();
@@ -116,24 +120,36 @@ public class DessinGraphe extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
+       // g2d.drawOval(sommetEnDeplacement.getX(), sommetEnDeplacement.getY(), 100, 100);
+
+
+
         for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
             JLabel p1 = sommets.get(sommet1);
+            int x1 = p1.getX() + p1.getWidth() / 2;
+            int y1 = p1.getY() + p1.getHeight() / 2;
+            int radius = p1.getWidth() / 2;
+
+            // Dessiner un cercle au lieu d'un carré
+            g2d.setColor(Color.BLACK);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.fill(new Ellipse2D.Double(x1 - radius, y1 - radius, radius * 2, radius * 2));//dessiner un rond avec un rayon
 
             for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
                 JLabel p2 = sommets.get(sommet2);
+                int x2 = p2.getX() + p2.getWidth() / 2;
+                int y2 = p2.getY() + p2.getHeight() / 2;
 
                 if (sommet1.estVoisin(sommet2.getNom())) {
-                    g2d.setColor(Color.BLACK);
-                    g2d.setStroke(new BasicStroke(1));
-                    g2d.drawLine(p1.getX() + p1.getWidth() / 2, p1.getY() + p1.getHeight() / 2,
-                            p2.getX() + p2.getWidth() / 2, p2.getY() + p2.getHeight() / 2);
+                    g2d.drawLine(x1, y1, x2, y2);//trace la ligne
                 }
             }
         }
     }
 
+
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(500, 300);
+        return new Dimension(800, 300);
     }
 }
