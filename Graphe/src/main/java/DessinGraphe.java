@@ -23,7 +23,7 @@ public class DessinGraphe extends JPanel {
         sommets = new HashMap<>();
 
         LCGraphe.MaillonGraphe tmp = ChargementGraphe.Graphe.getPremier();
-        int LargeurPanel = getWidth() / 2;
+        int LargeurPanel = getWidth() / 2;//largeur de la panel
         int hauteurPanel = getHeight() / 2;
         int tailleCadre = (int) (Math.sqrt(30) * 30);
 
