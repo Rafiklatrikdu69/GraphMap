@@ -53,8 +53,6 @@ public class DessinGraphe extends JPanel {
         label.setBounds(x, y, 50, 30);
 
 
-
-
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -89,7 +87,7 @@ public class DessinGraphe extends JPanel {
                         if (x < 0) {
                             x = 0;
                         } else if (x > LargeurPanel - labelLargeur) {//detecte si les coordonnes de x sont superieurs
-                                                                    // a la largeur du panel moins la largeur du Jlabel
+                            // a la largeur du panel moins la largeur du Jlabel
                             x = LargeurPanel - labelLargeur;
                         }
 
@@ -120,8 +118,7 @@ public class DessinGraphe extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-       // g2d.drawOval(sommetEnDeplacement.getX(), sommetEnDeplacement.getY(), 100, 100);
-
+        // g2d.drawOval(sommetEnDeplacement.getX(), sommetEnDeplacement.getY(), 100, 100);
 
 
         for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {

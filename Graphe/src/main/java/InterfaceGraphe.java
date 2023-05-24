@@ -29,6 +29,7 @@ public class InterfaceGraphe extends JFrame {
     private FileF<String> f;
 
     private String nomFichier;
+    static  boolean fenetreDejaOuverte = false;
 
     public InterfaceGraphe() {
         super();
@@ -204,7 +205,7 @@ public class InterfaceGraphe extends JFrame {
                     barreChargement = new JProgressBar(0, 100);
                     barreChargement.setStringPainted(true);
                     graphe = new DessinGraphe();
-
+                    fenetreDejaOuverte= true;
                     graphe.setBorder(BorderFactory.createTitledBorder("Graphe"));
 
 
@@ -228,6 +229,7 @@ public class InterfaceGraphe extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 dispose();
+                InterfaceGraphe.fenetreDejaOuverte = false;
             }
         });
         option1Button.addActionListener(new ActionListener() {

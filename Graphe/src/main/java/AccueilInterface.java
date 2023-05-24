@@ -64,8 +64,11 @@ public class AccueilInterface extends JFrame {
         commencer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(!InterfaceGraphe.fenetreDejaOuverte) {
+                    InterfaceGraphe interfaceGraphe = new InterfaceGraphe();
+                    InterfaceGraphe.fenetreDejaOuverte = true;
+                }
 
-                InterfaceGraphe interfaceGraphe = new InterfaceGraphe();
             }
         });
         quitter.addActionListener(new ActionListener() {
