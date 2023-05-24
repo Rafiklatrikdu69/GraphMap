@@ -26,7 +26,7 @@ public class DessinGraphe extends JPanel {
         LCGraphe.MaillonGraphe tmp = grapheConstant.Graphe.getPremier();
         int LargeurPanel = getWidth() / 2;//largeur de la panel
 
-        
+
 
 
         int hauteurPanel = getHeight() / 2;
