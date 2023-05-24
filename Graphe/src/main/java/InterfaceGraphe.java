@@ -1,9 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -197,7 +195,7 @@ public class InterfaceGraphe extends JFrame {
                 if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { // Si un fichier est sélectionné dans la fenêtre ouverte grâce à fenetreOuvertureFichier.showOpenDialog(null)
                     fichier = fenetreOuvertureFichier.getSelectedFile(); // Récupérer le fichier
                     System.out.println(fichier.getPath());
-                    ChargementGraphe.Graphe.chargementFichier(fichier.getPath());
+                    grapheConstant.Graphe.chargementFichier(fichier.getPath());
                     nomFichier = fichier.getPath();
 
 
