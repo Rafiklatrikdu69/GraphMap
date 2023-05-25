@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +8,8 @@ import java.util.Map;
 public class DessinGraphe extends JPanel {
 
     private Map<LCGraphe.MaillonGraphe, JLabel> sommets;
+    private LCGraphe.MaillonGraphe sommetSelectionne;
+
     private JLabel sommetEnDeplacement;
     private int xPos, yPos;
     private LCGraphe graphe;
@@ -27,7 +27,7 @@ public class DessinGraphe extends JPanel {
         int LargeurPanel = getWidth() + 800 / 2;//largeur de la panel
 
 
-        int hauteurPanel = getHeight() + 450/ 2;
+        int hauteurPanel = getHeight() + 450 / 2;
         int tailleCadre = (int) (Math.sqrt(30) * 30);
 
         int i = 1;
@@ -54,7 +54,7 @@ public class DessinGraphe extends JPanel {
         JLabel label = new JLabel(m.getNom());
         label.setForeground(Color.WHITE);
 
-        label.setBounds(x, y, 50, 30);
+        label.setBounds(x, y, 30, 20);
 
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.addMouseListener(new MouseAdapter() {
@@ -105,16 +105,26 @@ public class DessinGraphe extends JPanel {
                         xPos = e.getXOnScreen();
                         yPos = e.getYOnScreen();
 
-                        repaint();//redessine
+
                     }
                 } else {
-                    System.out.println("cibler ");
+
+
+                    sommetSelectionne = m;
+
+
                 }
+                repaint();
             }
         });
 
         sommets.put(m, label);
         add(label);
+    }
+
+    private void initEventListeners() {
+
+
     }
 
     @Override
@@ -131,8 +141,8 @@ public class DessinGraphe extends JPanel {
             int y1 = p1.getY() + p1.getHeight() / 2;
             int radius = p1.getWidth() / 2;
 
-            // Dessiner un cercle au lieu d'un carré
-            g2d.setColor(Color.BLACK);
+            // Dessine un cercle au lieu d'un carré
+            //g2d.setColor(Color.BLACK);
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.fill(new Ellipse2D.Double(x1 - radius, y1 - radius, radius * 2, radius * 2));//dessiner un rond avec un rayon
 
@@ -140,15 +150,24 @@ public class DessinGraphe extends JPanel {
                 JLabel p2 = sommets.get(sommet2);
                 int x2 = p2.getX() + p2.getWidth() / 2;
                 int y2 = p2.getY() + p2.getHeight() / 2;
-
+                if (sommetSelectionne == sommet2) {
+                    g2d.setColor(Color.RED); // Définir la couleur de remplissage
+                    g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
+                    System.out.println("Le nom du dispensaire " + sommet2.getNom() + " Son type : " + sommet2.getType());
+                } else {
+                    g2d.setColor(Color.BLACK); // Définir la couleur de remplissage
+                    g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
+                }
                 if (sommet1.estVoisin(sommet2.getNom())) {
-                    g2d.drawLine(x1, y1, x2, y2);//trace la ligne
+                    g2d.setColor(Color.BLACK);
+                    g2d.drawLine(x1, y1, x2, y2); // Trace la ligne
                     cptArrete++;
                 }
             }
+
         }
-        System.out.println("Le nombre d'arretes est de : "+cptArrete);
     }
+    // System.out.println("Le nombre d'arretes est de : " + cptArrete);
 
 
     @Override

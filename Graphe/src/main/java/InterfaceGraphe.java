@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class InterfaceGraphe extends JFrame {
     private Map<LCGraphe.MaillonGraphe, JLabel> sommets;
-    private JButton hamburgerButton, option1Button, option2Button, option3Button;
+    static JButton hamburgerButton, option1Button, option2Button, option3Button;
     private JPanel cp, menuPanel, mainPanel, graphe, barre;
 
     private DessinGraphe dessinGraphe;
@@ -127,7 +127,7 @@ public class InterfaceGraphe extends JFrame {
         menuPanel.setPreferredSize(new Dimension(400, 100));
 
         option1Button = new JButton("Option 1");
-        option2Button = new JButton("Option 2");
+        option2Button = new JButton("Selectionner un dispensaire");
         option3Button = new JButton("Option 3");
 
 
@@ -171,6 +171,7 @@ public class InterfaceGraphe extends JFrame {
 
         setVisible(true);
     }
+
     public void verifeAutorisation() {
         if (!bloquerGraphe.isSelected()) {
 
