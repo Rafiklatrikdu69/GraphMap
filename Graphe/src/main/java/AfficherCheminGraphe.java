@@ -2,12 +2,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AfficherCheminGraphe extends  DessinGraphe{
+public class AfficherCheminGraphe {
 
 
 
     AfficherCheminGraphe() {
-       super();
+       //super();
 
     }
 

@@ -13,6 +13,7 @@ public class DessinGraphe extends JPanel {
     private JLabel sommetEnDeplacement;
     private int xPos, yPos;
     private LCGraphe graphe;
+    private JPanel panelInfoSommet;
 
     /**
      * Constructeur de la classe DessinGraphe
@@ -111,14 +112,9 @@ public class DessinGraphe extends JPanel {
 
 
                     sommetSelectionne = m;
-                    JPanel panelInfoSommet = new JPanel(new BorderLayout());
-                    JLabel nom = new JLabel("Nom du sommet : "+sommetSelectionne.getNom());
-                    JLabel type = new JLabel("Type : "+sommetSelectionne.getType());
-                    panelInfoSommet.add(nom,BorderLayout.NORTH);
-                    panelInfoSommet.add(type,BorderLayout.CENTER);
-                    panelInfoSommet.setBorder(BorderFactory.createTitledBorder("info"));
-                    add(panelInfoSommet, BorderLayout.PAGE_END);
-                    revalidate();
+
+
+
 
 
                 }
@@ -142,7 +138,7 @@ public class DessinGraphe extends JPanel {
 
         // g2d.drawOval(sommetEnDeplacement.getX(), sommetEnDeplacement.getY(), 100, 100);
         int cptArrete = 0;
-
+        panelInfoSommet = new JPanel(new BorderLayout());
         for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
             JLabel p1 = sommets.get(sommet1);
             int x1 = p1.getX() + p1.getWidth() / 2;
@@ -162,6 +158,18 @@ public class DessinGraphe extends JPanel {
                     g2d.setColor(Color.RED); // Définir la couleur de remplissage
                     g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
                     System.out.println("Le nom du dispensaire " + sommet2.getNom() + " Son type : " + sommet2.getType());
+
+                    //panelInfoSommet.removeAll();
+                    JLabel nom = new JLabel("Nom du sommet : "+sommet2.getNom());
+                    JLabel type = new JLabel("Type : "+sommet2.getType());
+                    nom.setText("Nom du sommet : "+sommet2.getNom());
+                    type.setText("Type : "+sommet2.getType());
+                    //panelInfoSommet.removeAll();
+                    panelInfoSommet.add(nom,BorderLayout.NORTH);
+                    panelInfoSommet.add(type,BorderLayout.CENTER);
+                    panelInfoSommet.setBorder(BorderFactory.createTitledBorder("info"));
+
+
                 } else {
                     g2d.setColor(Color.BLACK); // Définir la couleur de remplissage
                     g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
@@ -174,6 +182,8 @@ public class DessinGraphe extends JPanel {
             }
 
         }
+        add(panelInfoSommet);
+        panelInfoSommet.setBounds(3,3,200,100);
     }
     // System.out.println("Le nombre d'arretes est de : " + cptArrete);
 
