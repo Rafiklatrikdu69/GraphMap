@@ -111,6 +111,14 @@ public class DessinGraphe extends JPanel {
 
 
                     sommetSelectionne = m;
+                    JPanel panelInfoSommet = new JPanel(new BorderLayout());
+                    JLabel nom = new JLabel("Nom du sommet : "+sommetSelectionne.getNom());
+                    JLabel type = new JLabel("Type : "+sommetSelectionne.getType());
+                    panelInfoSommet.add(nom,BorderLayout.NORTH);
+                    panelInfoSommet.add(type,BorderLayout.CENTER);
+                    panelInfoSommet.setBorder(BorderFactory.createTitledBorder("info"));
+                    add(panelInfoSommet, BorderLayout.PAGE_END);
+                    revalidate();
 
 
                 }
@@ -172,6 +180,6 @@ public class DessinGraphe extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(800, 300);
+        return new Dimension(900, 500);
     }
 }

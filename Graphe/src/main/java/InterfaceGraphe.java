@@ -87,7 +87,7 @@ public class InterfaceGraphe extends JFrame {
                 if (progresse == 100) {
                     System.out.println("temps : 100");
                     timer.stop();
-                    cp.add(graphe, BorderLayout.EAST);
+                    cp.add(graphe, BorderLayout.CENTER);
 
                     barreChargement.setVisible(false);
                     cp.revalidate();
