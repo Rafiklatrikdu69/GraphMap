@@ -24,23 +24,22 @@ public class DessinGraphe extends JPanel {
 
 
         LCGraphe.MaillonGraphe tmp = grapheConstant.Graphe.getPremier();
-        int LargeurPanel = getWidth() / 2;//largeur de la panel
+        int LargeurPanel = getWidth() + 800 / 2;//largeur de la panel
 
 
-
-
-        int hauteurPanel = getHeight() / 2;
+        int hauteurPanel = getHeight() + 450/ 2;
         int tailleCadre = (int) (Math.sqrt(30) * 30);
 
         int i = 1;
 
         while (tmp != null) {
             double angle = 2 * Math.PI * i / 30;
-            int x = LargeurPanel + (int) (tailleCadre / 2 * Math.cos(angle));
-            int y = hauteurPanel + (int) (tailleCadre / 2 * Math.cos(angle));
-            ajouterSommet(tmp, 30, 30);
-            tmp = tmp.getSuivant();
+            int x = LargeurPanel + (int) (tailleCadre * Math.cos(angle));
+            int y = hauteurPanel + (int) (tailleCadre * Math.sin(angle));
+            ajouterSommet(tmp, x, y);
             i++;
+            tmp = tmp.getSuivant();
+
         }
     }
 
@@ -57,7 +56,7 @@ public class DessinGraphe extends JPanel {
 
         label.setBounds(x, y, 50, 30);
 
-label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -106,7 +105,7 @@ label.setHorizontalAlignment(SwingConstants.CENTER);
                         xPos = e.getXOnScreen();
                         yPos = e.getYOnScreen();
 
-                        repaint();
+                        repaint();//redessine
                     }
                 } else {
                     System.out.println("cibler ");
@@ -124,7 +123,7 @@ label.setHorizontalAlignment(SwingConstants.CENTER);
         Graphics2D g2d = (Graphics2D) g;
 
         // g2d.drawOval(sommetEnDeplacement.getX(), sommetEnDeplacement.getY(), 100, 100);
-
+        int cptArrete = 0;
 
         for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
             JLabel p1 = sommets.get(sommet1);
@@ -144,9 +143,11 @@ label.setHorizontalAlignment(SwingConstants.CENTER);
 
                 if (sommet1.estVoisin(sommet2.getNom())) {
                     g2d.drawLine(x1, y1, x2, y2);//trace la ligne
+                    cptArrete++;
                 }
             }
         }
+        System.out.println("Le nombre d'arretes est de : "+cptArrete);
     }
 
 
