@@ -92,9 +92,11 @@ public class DessinGraphe extends JPanel {
 
                         LCGraphe.MaillonGrapheSec sommetVoisi = sommet.lVois;
                         while (sommetVoisi != null) {
-                            String infoText = "Distance: " + sommetVoisi.getDistance() + " Durée: " + sommetVoisi.getDuree() + " Fiabilité: " + sommetVoisi.getFiabilite();
-                            JLabel info = new JLabel(infoText);
-                            panelInfoSommet.add(info);
+                            if(sommetVoisi.equals(sommet)) {
+                                String infoText = "Distance: " + sommetVoisi.getDistance() + " Durée: " + sommetVoisi.getDuree() + " Fiabilité: " + sommetVoisi.getFiabilite();
+                                JLabel info = new JLabel(infoText);
+                                panelInfoSommet.add(info);
+                            }
                             sommetVoisi = sommetVoisi.suiv;
                         }
                         
