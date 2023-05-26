@@ -2,12 +2,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AfficherCheminGraphe {
+public class AfficherCheminGraphe extends JOptionPane{
 
 
 
     AfficherCheminGraphe() {
-       //super();
+       super();
 
     }
 
