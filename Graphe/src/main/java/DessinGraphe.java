@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
@@ -12,7 +13,7 @@ public class DessinGraphe extends JPanel {
 
     private JLabel sommetEnDeplacement;
     private int xPos, yPos;
-    private LCGraphe graphe;
+
     private JPanel panelInfoSommet;
 
     /**
@@ -24,11 +25,11 @@ public class DessinGraphe extends JPanel {
         sommets = new HashMap<>();
 
 
+        panelInfoSommet = new JPanel();
         LCGraphe.MaillonGraphe tmp = grapheConstant.Graphe.getPremier();
-        int LargeurPanel = getWidth() + 800 / 2;//largeur de la panel
+        int LargeurPanel = getWidth() + 1250 / 2;//largeur de la panel
 
-
-        int hauteurPanel = getHeight() + 450 / 2;
+        int hauteurPanel = getHeight() + 700 / 2;
         int tailleCadre = (int) (Math.sqrt(30) * 30);
 
         int i = 1;
@@ -40,7 +41,6 @@ public class DessinGraphe extends JPanel {
             ajouterSommet(tmp, x, y);
             i++;
             tmp = tmp.getSuivant();
-
         }
     }
 
@@ -68,6 +68,54 @@ public class DessinGraphe extends JPanel {
             }
 
             @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                sommetSelectionne = m;
+                panelInfoSommet.setLayout(new BoxLayout(panelInfoSommet, BoxLayout.Y_AXIS));
+                panelInfoSommet.removeAll();
+                //panelInfoVoisin.removeAll();
+
+                JLabel nom = new JLabel("Nom du sommet : " + sommetSelectionne.getNom());
+                JLabel type = new JLabel("Type : " + sommetSelectionne.getType());
+                System.out.println("Le nom du dispensaire " + sommetSelectionne.getNom() + " Son type : " + sommetSelectionne.getType());
+                JLabel voisin = new JLabel("Les voisins de ce sommet : ");
+                //panelInfoVoisin.add(voisin);
+                panelInfoSommet.add(nom);
+                panelInfoSommet.add(type);
+                JLabel infoSommet = new JLabel("Info des sommets voisins:");
+                panelInfoSommet.add(infoSommet);
+
+                for (LCGraphe.MaillonGraphe sommet : sommets.keySet()) {
+                    if (sommetSelectionne.estVoisin(sommet.getNom())) {
+                        JLabel sommetVoisin = new JLabel("Nom : " + sommet.getNom() + " Type : " + sommet.getType());
+                        panelInfoSommet.add(sommetVoisin); // Ajout du JLabel pour le voisin
+
+                        LCGraphe.MaillonGrapheSec sommetVoisi = sommet.lVois;
+                        while (sommetVoisi != null) {
+                            String infoText = "Distance: " + sommetVoisi.getDistance() + " Durée: " + sommetVoisi.getDuree() + " Fiabilité: " + sommetVoisi.getFiabilite();
+                            JLabel info = new JLabel(infoText);
+                            panelInfoSommet.add(info);
+                            sommetVoisi = sommetVoisi.suiv;
+                        }
+                        
+                    }
+                }
+
+
+
+
+
+                panelInfoSommet.setBorder(BorderFactory.createTitledBorder("info"));
+
+
+                add(panelInfoSommet);
+                panelInfoSommet.setBounds(10, 20, 300, 700);
+
+                panelInfoSommet.validate();
+                panelInfoSommet.repaint();
+            }
+
+            @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 sommetEnDeplacement = null;
@@ -80,44 +128,38 @@ public class DessinGraphe extends JPanel {
                 super.mouseDragged(e);
                 if (!InterfaceGraphe.bloquerGraphe.isSelected()) {
                     if (sommetEnDeplacement != null) {
-                        int x = e.getXOnScreen() - xPos + sommetEnDeplacement.getX();//modifie l'emplacement du jlabel
+                        int x = e.getXOnScreen() - xPos + sommetEnDeplacement.getX();
                         int y = e.getYOnScreen() - yPos + sommetEnDeplacement.getY();
-                        //recupere les dimension du panel
                         int LargeurPanel = getWidth();
                         int hauteurPanel = getHeight();
-                        //recupere les dimension du label sommet
                         int labelLargeur = sommetEnDeplacement.getWidth();
                         int labelhauteur = sommetEnDeplacement.getHeight();
+                        int infoSommetWidth = panelInfoSommet.getWidth();
 
-                        if (x < 0) {
-                            x = 0;
-                        } else if (x > LargeurPanel - labelLargeur) {//detecte si les coordonnes de x sont superieurs
-                            // a la largeur du panel moins la largeur du Jlabel
+
+                        if (x < infoSommetWidth) {
+                            x = infoSommetWidth;
+                        } else if (x > LargeurPanel - labelLargeur) {
                             x = LargeurPanel - labelLargeur;
                         }
 
                         if (y < 0) {
                             y = 0;
-                        } else if (y > hauteurPanel - labelhauteur) {//meme principe
+                        } else if (y > hauteurPanel - labelhauteur) {
                             y = hauteurPanel - labelhauteur;
                         }
-                        sommetEnDeplacement.setLocation(x, y);//reaffecte les nouvelles coordonnes pour bouger le sommet
+
+
+                        sommetEnDeplacement.setLocation(x, y);
 
                         xPos = e.getXOnScreen();
                         yPos = e.getYOnScreen();
-
-
                     }
                 } else {
-
-
-                    sommetSelectionne = m;
-
-
-
-
-
+                    // ...
                 }
+
+                revalidate();
                 repaint();
             }
         });
@@ -126,67 +168,43 @@ public class DessinGraphe extends JPanel {
         add(label);
     }
 
-    private void initEventListeners() {
-
-
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        // g2d.drawOval(sommetEnDeplacement.getX(), sommetEnDeplacement.getY(), 100, 100);
         int cptArrete = 0;
-        panelInfoSommet = new JPanel(new BorderLayout());
         for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
             JLabel p1 = sommets.get(sommet1);
             int x1 = p1.getX() + p1.getWidth() / 2;
             int y1 = p1.getY() + p1.getHeight() / 2;
             int radius = p1.getWidth() / 2;
 
-            // Dessine un cercle au lieu d'un carré
-            //g2d.setColor(Color.BLACK);
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.fill(new Ellipse2D.Double(x1 - radius, y1 - radius, radius * 2, radius * 2));//dessiner un rond avec un rayon
+            g2d.fill(new Ellipse2D.Double(x1 - radius, y1 - radius, radius * 2, radius * 2));
 
             for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
                 JLabel p2 = sommets.get(sommet2);
                 int x2 = p2.getX() + p2.getWidth() / 2;
                 int y2 = p2.getY() + p2.getHeight() / 2;
                 if (sommetSelectionne == sommet2) {
-                    g2d.setColor(Color.RED); // Définir la couleur de remplissage
+                    g2d.setColor(Color.RED);
                     g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
-                    System.out.println("Le nom du dispensaire " + sommet2.getNom() + " Son type : " + sommet2.getType());
-
-                    //panelInfoSommet.removeAll();
-                    JLabel nom = new JLabel("Nom du sommet : "+sommet2.getNom());
-                    JLabel type = new JLabel("Type : "+sommet2.getType());
-                    nom.setText("Nom du sommet : "+sommet2.getNom());
-                    type.setText("Type : "+sommet2.getType());
-                    //panelInfoSommet.removeAll();
-                    panelInfoSommet.add(nom,BorderLayout.NORTH);
-                    panelInfoSommet.add(type,BorderLayout.CENTER);
-                    panelInfoSommet.setBorder(BorderFactory.createTitledBorder("info"));
-
-
                 } else {
-                    g2d.setColor(Color.BLACK); // Définir la couleur de remplissage
+                    g2d.setColor(Color.BLACK);
                     g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
                 }
                 if (sommet1.estVoisin(sommet2.getNom())) {
                     g2d.setColor(Color.BLACK);
-                    g2d.drawLine(x1, y1, x2, y2); // Trace la ligne
+                    g2d.drawLine(x1, y1, x2, y2);
                     cptArrete++;
                 }
             }
-
         }
-        add(panelInfoSommet);
-        panelInfoSommet.setBounds(3,3,200,100);
-    }
-    // System.out.println("Le nombre d'arretes est de : " + cptArrete);
 
+        repaint();
+    }
 
     @Override
     public Dimension getPreferredSize() {
