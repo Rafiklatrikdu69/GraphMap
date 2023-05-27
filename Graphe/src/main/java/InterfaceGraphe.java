@@ -19,7 +19,7 @@ public class InterfaceGraphe extends JFrame {
     private int progresse;
     private Timer timer;
 
-    private static LCGraphe Graphe;
+
     private boolean occupied;
 
     private LinkedList<JLabel> labels = new LinkedList<>();
@@ -32,7 +32,7 @@ public class InterfaceGraphe extends JFrame {
 
     public InterfaceGraphe() {
         super();
-        Graphe = new LCGraphe();
+
 
         initComponents();
 
@@ -43,9 +43,7 @@ public class InterfaceGraphe extends JFrame {
         setVisible(true);
     }
 
-    public LCGraphe getGraphe() {
-        return this.Graphe;
-    }
+
 
     private void initComponents() {
         cp = (JPanel) getContentPane();
@@ -81,7 +79,7 @@ public class InterfaceGraphe extends JFrame {
                /* if (barreChargement != null) {
                     barreChargement.setValue(progresse);
                 }*/
-                 if (progresse == 100) {
+                if (progresse == 100) {
                     System.out.println("temps : 100");
                     timer.stop();
                     if (graphe != null) {
@@ -177,9 +175,10 @@ public class InterfaceGraphe extends JFrame {
                 File fichier;
                 if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     fichier = fenetreOuvertureFichier.getSelectedFile();
-                    System.out.println(fichier.getPath());
-                    chargerFichier(fichier);
-
+                    if (fichier.getPath().endsWith(".csv")) {
+                        System.out.println(fichier.getPath());
+                        chargerNouveauFichier(fichier);
+                    }
                     cp.revalidate();
                 }
             }
@@ -221,10 +220,11 @@ public class InterfaceGraphe extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-
-    private void chargerFichier(File file) {
+    private void chargerNouveauFichier(File file) {
+        fichierCharge = file;
         if (fichierCharge != null) {
             int option = JOptionPane.showConfirmDialog(null, "Un fichier est déjà ouvert. Voulez-vous le fermer et en ouvrir un nouveau ?", "Confirmation", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
@@ -234,8 +234,10 @@ public class InterfaceGraphe extends JFrame {
             }
         }
 
+
+
         grapheConstant.Graphe.chargementFichier(file.getPath());
-        fichierCharge = file;
+
 
         barreChargement = new JProgressBar(0, 100);
         barreChargement.setStringPainted(true);
@@ -251,9 +253,9 @@ public class InterfaceGraphe extends JFrame {
         barre.setBorder(BorderFactory.createTitledBorder("Barre de chargement "));
         demarrerChargement();
         cp.revalidate();
+        cp.repaint();
     }
 
-    public String getNomFichier() {
-        return this.nomFichier;
-    }
+
+
 }
