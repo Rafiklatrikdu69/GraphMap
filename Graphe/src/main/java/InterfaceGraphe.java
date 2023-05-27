@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static javax.swing.JOptionPane.showOptionDialog;
+
 public class InterfaceGraphe extends JFrame {
     private Map<LCGraphe.MaillonGraphe, JLabel> sommets;
     static JButton hamburgerButton, option1Button, option2Button, option3Button;
@@ -30,11 +32,10 @@ public class InterfaceGraphe extends JFrame {
     private File fichierCharge;
     private String nomFichier;
     static boolean fenetreDejaOuverte = false;
-    static  boolean cheminValide = false;
+    static boolean cheminValide = false;
 
     public InterfaceGraphe() {
         super();
-
 
         initComponents();
 
@@ -64,6 +65,10 @@ public class InterfaceGraphe extends JFrame {
         menu.add(fonctionnalites);
 
         fichier.add(option1);
+        fichier.setFont(new Font("Arial", Font.BOLD, 14));
+        fonctionnalites.setFont(new Font("Arial", Font.BOLD, 14));
+        fenetre.setFont(new Font("Arial", Font.BOLD, 14));
+        menu.setBackground(Color.GRAY);
         fenetre.add(option2);
 
         menu.add(fichier);
@@ -77,18 +82,11 @@ public class InterfaceGraphe extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 progresse++;
                 barreChargement.setValue(progresse);
-               /* if (barreChargement != null) {
-                    barreChargement.setValue(progresse);
-                }*/
                 if (progresse == 100) {
-                    System.out.println("temps : 100");
                     timer.stop();
                     if (graphe != null) {
-
                         graphe = new DessinGraphe();
                         cp.add(graphe);
-
-
                     }
 
                     barreChargement.setVisible(false);
@@ -145,6 +143,7 @@ public class InterfaceGraphe extends JFrame {
         menuPanel.add(option3Button, gbc);
 
         hamburgerButton = new JButton("\u2630");
+        hamburgerButton.setBackground(Color.WHITE); // Couleur du bouton
 
         hamburgerButton.addActionListener(new ActionListener() {
             @Override
@@ -180,10 +179,17 @@ public class InterfaceGraphe extends JFrame {
                 File fichier;
                 if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     fichier = fenetreOuvertureFichier.getSelectedFile();
-                 //   if (fichier.getPath().endsWith(".xlx")) {
-                        System.out.println(fichier.getPath());
+                    System.out.println(fichier.getPath());
+                    if (fichier.getPath().endsWith(".csv")) {
                         chargerNouveauFichier(fichier);
-                   // }
+
+                    } else {
+                        System.out.println("fichier corrompu");
+
+                        JPanel panelCorrompu = new JPanel();
+                        int result = showOptionDialog(null, panelCorrompu, "fichier corrompu ! ", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+
+                    }
                     cp.revalidate();
                 }
             }
@@ -202,8 +208,6 @@ public class InterfaceGraphe extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("recherche itineraire");
                 cheminValide = true;
-
-
             }
         });
     }
@@ -211,9 +215,9 @@ public class InterfaceGraphe extends JFrame {
     @Override
     public void setEnabled(boolean b) {
         if (b) {
-            setBackground(Color.black);
+            setBackground(Color.BLACK);
         } else {
-            setBackground(Color.gray);
+            setBackground(Color.GRAY);
         }
         super.setEnabled(b);
     }
@@ -257,6 +261,7 @@ public class InterfaceGraphe extends JFrame {
     }
 
     private void chargerNouveauFichier(File file) {
+
         fermerFichier();
         supprimerGraphe();
         if (fichierCharge != null) {
@@ -271,9 +276,9 @@ public class InterfaceGraphe extends JFrame {
         fichierCharge = file;
 
         if (fichierCharge != null) {
+           // cp.remove(graphe);
             grapheConstant.graphe.chargementFichier(fichierCharge.getPath());
         } else {
-
             return;
         }
 
@@ -291,10 +296,7 @@ public class InterfaceGraphe extends JFrame {
         demarrerChargement();
 
         cp.add(barre, BorderLayout.SOUTH);
-
-
+      //  cp.add(graphe);
         cp.revalidate();
     }
-
-
 }

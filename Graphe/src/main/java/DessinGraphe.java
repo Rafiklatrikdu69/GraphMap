@@ -20,8 +20,12 @@ public class DessinGraphe extends JPanel {
     private int xPos, yPos;
 
     private JPanel panelInfoSommet;
-    private  double[][] predecesseur;
 
+    private static final int LABEL_WIDTH = 30;
+    private static final int LABEL_HEIGHT = 30;
+    private static final Color DEFAULT_LABEL_COLOR = Color.WHITE;
+    private static final Color SELECTED_LABEL_COLOR = Color.GREEN;
+    private static final Color BACKGROUND_COLOR = Color.BLACK;
     /**
      * Constructeur de la classe DessinGraphe
      */
@@ -40,7 +44,8 @@ public class DessinGraphe extends JPanel {
         LCGraphe.MaillonGraphe tmp = grapheConstant.graphe.getPremier();
 
         int LargeurPanel = getWidth() + 1250 / 2;//largeur de la panel
-        int hauteurPanel = getHeight() + 700 / 2;
+
+        int hauteurPanel = getHeight() + 600 / 2;
         int tailleCadre = (int) (Math.sqrt(30) * 30);
         int i = 1;
 
@@ -68,8 +73,8 @@ public class DessinGraphe extends JPanel {
     private void ajouterSommet(LCGraphe.MaillonGraphe m, int x, int y) {
         JLabel label = new JLabel(m.getNom());
 
-        label.setForeground(Color.WHITE);
-        label.setBounds(x, y, 30, 20);
+        label.setForeground(DEFAULT_LABEL_COLOR);
+        label.setBounds(x, y, LABEL_WIDTH, LABEL_HEIGHT);
         label.setHorizontalAlignment(SwingConstants.CENTER);
 
         label.addMouseListener(new MouseAdapter() {
@@ -94,7 +99,7 @@ public class DessinGraphe extends JPanel {
 
 
 
-                predecesseur = grapheConstant.graphe.floydWarshallDistance();
+                double [][] prec = grapheConstant.graphe.floydWarshallDistance();
                 System.out.println("sommet selectionner : "+sommetSelectionne.getNom());
                // System.out.println("sommet choisis : "+algoPlusCourtsChemins.getChoixSommet());
                 if(InterfaceGraphe.cheminValide) {
@@ -214,7 +219,6 @@ public class DessinGraphe extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        int cptArrete = 0;
         int radius;
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -244,17 +248,18 @@ public class DessinGraphe extends JPanel {
                 y2 = p2.getY() + p2.getHeight() / 2;
 
                 if (sommetSelectionne == sommet2) {
-                    g2d.setColor(Color.RED);
+                    g2d.setColor(SELECTED_LABEL_COLOR);
                     g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
-                } else {
-                    g2d.setColor(Color.BLACK);
+                }
+                else {
+                    g2d.setColor(BACKGROUND_COLOR);
                     g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
                 }
 
                 if (sommet1.estVoisin(sommet2.getNom())) {
                     g2d.setColor(Color.BLACK);
                     g2d.drawLine(x1, y1, x2, y2);
-                    cptArrete++;
+
                 }
             }
         }
@@ -290,17 +295,10 @@ public class DessinGraphe extends JPanel {
         }
 
         System.out.println("Chemin de " + source + " à " + destination + ":");
-       grapheConstant.graphe.afficherChemin(indexSource, indexDestination);
+      grapheConstant.graphe.afficherChemin(indexSource, indexDestination);
         System.out.println("Distance : " + grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
-         s =""+ grapheConstant.graphe.getMatrice()[indexSource][indexDestination];
-
-        AfficherChemin a = new AfficherChemin(s);
+        String chemin = String.valueOf(grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
+        AfficherChemin a = new AfficherChemin(chemin);
     }
-    public  String getDistances(){
-        return this.s;
-    }
-
-
-
 
 }

@@ -26,31 +26,30 @@ public class AccueilInterface extends JFrame {
         JPanel cp = (JPanel) getContentPane();
         cp.setLayout(new BorderLayout());
 
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel titleLabel = new JLabel("Bienvenue !");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        centerPanel.add(titleLabel, gbc);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(titleLabel);
 
         commencer = new JButton("Commencer");
         parametre = new JButton("Paramètres");
         quitter = new JButton("Quitter");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        centerPanel.add(commencer, gbc);
 
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        centerPanel.add(parametre, gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        centerPanel.add(quitter, gbc);
+        commencer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        parametre.setAlignmentX(Component.CENTER_ALIGNMENT);
+        quitter.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        centerPanel.add(Box.createVerticalStrut(50));
+        centerPanel.add(commencer);
+        centerPanel.add(Box.createVerticalStrut(50));
+        centerPanel.add(parametre);
+        centerPanel.add(Box.createVerticalStrut(50));
+        centerPanel.add(quitter);
+
         cp.add(centerPanel, BorderLayout.CENTER);
 
         initEventListeners();
@@ -64,7 +63,7 @@ public class AccueilInterface extends JFrame {
         commencer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!InterfaceGraphe.fenetreDejaOuverte) {
+                if (!InterfaceGraphe.fenetreDejaOuverte) {
                     InterfaceGraphe interfaceGraphe = new InterfaceGraphe();
                     InterfaceGraphe.fenetreDejaOuverte = true;
                 }
