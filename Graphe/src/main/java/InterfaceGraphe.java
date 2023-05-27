@@ -83,7 +83,7 @@ public class InterfaceGraphe extends JFrame {
                     System.out.println("temps : 100");
                     timer.stop();
                     if (graphe != null) {
-                        cp.add(graphe, BorderLayout.CENTER);
+                        cp.add(graphe, BorderLayout.EAST);
                     }
 
                     barreChargement.setVisible(false);
@@ -209,12 +209,32 @@ public class InterfaceGraphe extends JFrame {
         }
         super.setEnabled(b);
     }
+    private void supprimerGraphe() {
+        // Supprimer tous les composants liés au graphe
+        if (graphe != null) {
+            cp.remove(graphe);
+            graphe = null;
+        }
+
+        // Supprimer la barre de chargement
+        if (barreChargement != null) {
+            cp.remove(barreChargement);
+            barreChargement = null;
+        }
+
+        // Repaint et revalider le contenu du conteneur
+        cp.revalidate();
+        cp.repaint();
+    }
+
 
     private void fermerFichier() {
         try {
             if (fichierCharge != null) {
+                System.out.println(fichierCharge.getPath());
                 FileInputStream fileInputStream = new FileInputStream(fichierCharge);
                 fileInputStream.close();
+
             }
             fichierCharge = null;
         } catch (IOException e) {
@@ -224,7 +244,8 @@ public class InterfaceGraphe extends JFrame {
     }
 
     private void chargerNouveauFichier(File file) {
-        fichierCharge = file;
+        //fermerFichier();
+        supprimerGraphe();
         if (fichierCharge != null) {
             int option = JOptionPane.showConfirmDialog(null, "Un fichier est déjà ouvert. Voulez-vous le fermer et en ouvrir un nouveau ?", "Confirmation", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
@@ -234,27 +255,34 @@ public class InterfaceGraphe extends JFrame {
             }
         }
 
+        fichierCharge = file;
 
+        if (fichierCharge != null) {
+            grapheConstant.Graphe.chargementFichier(fichierCharge.getPath());
+        } else {
 
-        grapheConstant.Graphe.chargementFichier(file.getPath());
-
+            return;
+        }
 
         barreChargement = new JProgressBar(0, 100);
         barreChargement.setStringPainted(true);
+
         graphe = new DessinGraphe();
-        fenetreDejaOuverte = true;
         graphe.setBorder(BorderFactory.createTitledBorder("Graphe"));
         graphe.setPreferredSize(new Dimension(3000, 200));
 
         barre = new JPanel();
         barre.add(barreChargement);
-        cp.add(barre, BorderLayout.SOUTH);
         barre.setPreferredSize(new Dimension(300, 100));
         barre.setBorder(BorderFactory.createTitledBorder("Barre de chargement "));
         demarrerChargement();
+
+        cp.add(barre, BorderLayout.SOUTH);
+
+
         cp.revalidate();
-        cp.repaint();
     }
+
 
 
 
