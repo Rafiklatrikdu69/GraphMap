@@ -65,6 +65,7 @@ public class DessinGraphe extends JPanel {
                 sommetEnDeplacement = label;
                 xPos = e.getXOnScreen();
                 yPos = e.getYOnScreen();
+                repaint();
             }
 
             @Override
@@ -121,6 +122,7 @@ public class DessinGraphe extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 sommetEnDeplacement = null;
+                repaint();
             }
         });
 
@@ -162,12 +164,13 @@ public class DessinGraphe extends JPanel {
                 }
 
                 revalidate();
-                repaint();
+                //repaint();
             }
         });
 
         sommets.put(m, label);
         add(label);
+        repaint();
     }
 
 
