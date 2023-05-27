@@ -202,7 +202,7 @@ public class InterfaceGraphe extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("recherche itineraire");
                 cheminValide = true;
-                AlgoPlusCourtsChemins algoPlusCourtsChemins = new AlgoPlusCourtsChemins();
+
 
             }
         });
