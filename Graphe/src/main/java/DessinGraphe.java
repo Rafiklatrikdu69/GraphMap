@@ -94,7 +94,7 @@ public class DessinGraphe extends JPanel {
 
 
 
-                predecesseur = grapheConstant.graphe.floydWarshall();
+                predecesseur = grapheConstant.graphe.floydWarshallDistance();
                 System.out.println("sommet selectionner : "+sommetSelectionne.getNom());
                // System.out.println("sommet choisis : "+algoPlusCourtsChemins.getChoixSommet());
                 if(InterfaceGraphe.cheminValide) {

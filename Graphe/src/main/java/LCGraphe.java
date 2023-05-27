@@ -912,7 +912,7 @@ class LCGraphe {
      */
 
 
-    public double[][] floydWarshall() {
+    public double[][] floydWarshallDistance() {
         MaillonGraphe tmp = this.premier;
         int compteurTailleMatrice = 0; // taille de la matrice
 
@@ -1014,7 +1014,7 @@ class LCGraphe {
     }
 
     /**
-     * Cette methode affiche cette fois ci le plus courts entre deux sommets donnés en parametre
+     * Cette methode affiche cette fois ci le plus court chemin  entre deux sommets donnés en parametre
      *
      * @param source
      * @param destination
@@ -1132,6 +1132,10 @@ class LCGraphe {
         return indexSommet.get(sommet);
     }
 
+    /**
+     *
+     * @return
+     */
     public Map<String, Integer> indexSommet(){
         return this.indexSommet;
     }
