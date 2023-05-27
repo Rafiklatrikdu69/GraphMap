@@ -6,8 +6,8 @@ public class AfficherChemin extends JOptionPane {
         // Création des composants de votre boîte de dialogue
         DessinGraphe algo = new DessinGraphe();
         JLabel label = new JLabel("Distance : ");
-        System.out.println(algo.getDistances());
-        JLabel dist = new JLabel(chemin) ;
+
+        JLabel dist = new JLabel(chemin+" km") ;
 
 
 

@@ -16,6 +16,10 @@ class LCGraphe {
     static FileF getFile(){
         return file;
     }
+    private double[][] matrice;
+    private double[][] distances;
+    private double[][] predecesseurs;
+    private Map<String, Integer> indexSommet;
 
     public double[][] getPredecesseurs() {
         return this.predecesseurs;
@@ -100,9 +104,9 @@ class LCGraphe {
         }
 
         public String toString() {
-            StringBuilder res = new StringBuilder();
-            res.append(this.dest).append(" [Fiabilité : ").append(this.fiab * 10).append("%, Distance : ").append(this.dist).append("Km, Durée : ").append(this.dur).append(" minutes]");
-            return res.toString();
+            StringBuilder chaine = new StringBuilder();
+            chaine.append(this.dest).append(" [Fiabilité : ").append(this.fiab * 10).append("%, Distance : ").append(this.dist).append("Km, Durée : ").append(this.dur).append(" minutes]");
+            return chaine.toString();
         }
     }
 
@@ -156,14 +160,14 @@ class LCGraphe {
          * @return LinkedList<MaillonGrapheSec>
          */
         public LinkedList<MaillonGrapheSec> voisinsToList() {
-            LinkedList<MaillonGrapheSec> res = new LinkedList<>();
+            LinkedList<MaillonGrapheSec> listeMaillon = new LinkedList<>();
             MaillonGrapheSec tmp = this.lVois;
             while (tmp != null) {
-                res.add(tmp);
+                listeMaillon.add(tmp);
                 tmp = tmp.suiv;
             }
-            assert res != null;
-            return res;
+            assert listeMaillon != null;
+            return listeMaillon;
         }
 
         /**
@@ -173,15 +177,15 @@ class LCGraphe {
          * @return
          */
         public MaillonGrapheSec getVoisin(String nomVoisin) {
-            MaillonGrapheSec res = null;
+            MaillonGrapheSec voisin = null;
             MaillonGrapheSec tmp = this.lVois;
-            while (res == null && tmp != null) {
+            while (voisin == null && tmp != null) {
                 if (tmp.getDestination().equals(nomVoisin)) {
-                    res = tmp;
+                    voisin = tmp;
                 }
                 tmp = tmp.suiv;
             }
-            return res;
+            return voisin;
         }
 
         /**
@@ -189,15 +193,15 @@ class LCGraphe {
          * @return
          */
         public boolean estVoisin(String nomVoisin) {
-            boolean res = false;
+            boolean verife = false;
             MaillonGrapheSec tmp = this.lVois;
-            while (!res && tmp != null) {
+            while (!verife && tmp != null) {
                 if (tmp.getDestination().equals(nomVoisin)) {
-                    res = true;
+                    verife = true;
                 }
                 tmp = tmp.suiv;
             }
-            return res;
+            return verife;
         }
 
         /**
@@ -238,7 +242,7 @@ class LCGraphe {
     public void ajoutCentre(String nomCentre, String typeCentre) {
         MaillonGraphe nouv = new MaillonGraphe(nomCentre, typeCentre);
 
-        nouv.suiv = this.premier;
+        nouv.suiv= this.premier;
         this.premier = nouv;
 
     }
@@ -250,7 +254,7 @@ class LCGraphe {
         le maillon grace a son nom passer en parametre
      */
     public String voisinsVoisinsToString(String centre1, String centre2) {
-        StringBuilder res = new StringBuilder();
+        StringBuilder chaineVoisin = new StringBuilder();
         List<String> voisins1 = new LinkedList<>();
         List<String> voisins2 = new LinkedList<>();
         MaillonGraphe maillonCentre1 = chercherMaillon(centre1);
@@ -276,7 +280,7 @@ class LCGraphe {
             MaillonGrapheSec tmp3 = maillonVoisin.lVois;
             while (tmp3 != null) {
                 if (voisins1.contains(tmp3.dest) && voisins2.contains(tmp3.dest)) {
-                    res.append("Les sommets " + centre1 + " et " + centre2 + " sont à une distance de 2.");
+                    chaineVoisin.append("Les sommets " + centre1 + " et " + centre2 + " sont à une distance de 2.");
                     distance2 = true;
                     break;
                 }
@@ -287,9 +291,9 @@ class LCGraphe {
             }
         }
         if (!distance2) {
-            res.append("Les sommets " + centre1 + " et " + centre2 + " ne sont pas à une distance de 2.");
+            chaineVoisin.append("Les sommets " + centre1 + " et " + centre2 + " ne sont pas à une distance de 2.");
         }
-        return res.toString();
+        return chaineVoisin.toString();
     }
 
     /**
@@ -302,7 +306,7 @@ class LCGraphe {
             if (courant.nom.equals(nomMaillon)) {
                 return courant;
             }
-            courant = courant.suiv;
+            courant = courant.getSuivant();
         }
         return null; // Le maillon n'a pas été trouvé dans la liste chaînée
     }
@@ -321,7 +325,7 @@ class LCGraphe {
         MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, nomDestinataire);
         MaillonGraphe tmp = this.premier;
         while (!tmp.nom.equals(nomCentre)) {
-            tmp = tmp.suiv;
+            tmp = tmp.getSuivant();
         }
         nouv.suiv = tmp.lVois;
         tmp.lVois = nouv;
@@ -329,7 +333,7 @@ class LCGraphe {
         MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, nomCentre);
         tmp = this.premier;
         while (!tmp.nom.equals(nomDestinataire)) {
-            tmp = tmp.suiv;
+            tmp = tmp.getSuivant();
         }
         nouv2.suiv = tmp.lVois;
         tmp.lVois = nouv2;
@@ -353,7 +357,7 @@ class LCGraphe {
         MaillonGraphe tmp3 = this.premier;
         boolean check = false;
         while (!tmp.nom.equals(nomCentre)) {
-            tmp = tmp.suiv;
+            tmp = tmp.getSuivant();
             if (tmp == null) {
                 throw new CentreException("Le centre " + nomCentre + " n'existe pas!");
             }
@@ -375,7 +379,7 @@ class LCGraphe {
         } // regarde si l'arete existe
 
         while (!tmp3.nom.equals(nomDestinataire)) {
-            tmp3 = tmp3.suiv;
+            tmp3 = tmp3.getSuivant();
             if (tmp3 == null) {
                 throw new CentreException("Le sommet " + nomDestinataire + " n'existe pas!");
             }
@@ -402,20 +406,20 @@ class LCGraphe {
      * @return res : boolean
      */
     public boolean existeVoisin(String nomCentre, String nomDestinataire) {
-        boolean res = false;
+        boolean verifeExistence = false;
         MaillonGraphe tmp = this.premier;
         MaillonGrapheSec tmp2 = null;
         while (!tmp.nom.equals(nomCentre)) {
-            tmp = tmp.suiv;
+            tmp = tmp.getSuivant();
         }
         tmp2 = tmp.lVois;
-        while (!res && tmp2 != null) {
+        while (!verifeExistence && tmp2 != null) {
             if (tmp2.dest.equals(nomDestinataire)) {
-                res = true;
+                verifeExistence = true;
             }
             tmp2 = tmp2.suiv;
         }
-        return res;
+        return verifeExistence;
     }
 
     /**
@@ -430,7 +434,7 @@ class LCGraphe {
     public boolean existeCentre(String nomCentre) {
         MaillonGraphe tmp = this.premier;
         while (tmp != null && !tmp.getNom().equals(nomCentre)) {
-            tmp = tmp.suiv;
+            tmp = tmp.getSuivant();
         }
         return (tmp != null);
     }
@@ -441,45 +445,45 @@ class LCGraphe {
      * @return String : res
      */
     public String tousLesCentresToString() {
-        StringBuilder res = new StringBuilder();
+        StringBuilder chaineCentres = new StringBuilder();
         MaillonGraphe tmp = this.premier;
         while (tmp != null) {
-            res.append(tmp.nom).append(" [").append(tmp.type).append("]\n");
-            tmp = tmp.suiv;
+            chaineCentres.append(tmp.nom).append(" [").append(tmp.type).append("]\n");
+            tmp = tmp.getSuivant();
         }
-        return res.toString();
+        return chaineCentres.toString();
     }
 
     /**
      * @return res : LinkedList<MaillonGraphe>
      */
     public LinkedList<MaillonGraphe> tousLesCentresToList() {
-        LinkedList<MaillonGraphe> res = new LinkedList<>();
+        LinkedList<MaillonGraphe> ensembleCentre = new LinkedList<>();
         MaillonGraphe tmp = this.premier;
         while (tmp != null) {
-            res.add(tmp);
-            tmp = tmp.suiv;
+            ensembleCentre.add(tmp);
+            tmp = tmp.getSuivant();
         }
-        return res;
+        return ensembleCentre;
     }
 
     /**
      * @return
      */
     public List<MaillonGrapheSec> toutesLesAretesToList() {
-        List<MaillonGrapheSec> res = new LinkedList<>();
+        List<MaillonGrapheSec> ensembleArrete = new LinkedList<>();
         MaillonGraphe tmp = this.premier;
         MaillonGrapheSec tmp2 = null;
         while (tmp != null) {
             tmp2 = tmp.lVois;
             while (tmp2 != null) {
-                if (res.contains(tmp2)) {
+                if (ensembleArrete.contains(tmp2)) {
                     tmp2 = tmp2.suiv;
                 }
             }
-            tmp = tmp.suiv;
+            tmp = tmp.getSuivant();
         }
-        return res;
+        return ensembleArrete;
     }
 
     /**
@@ -488,15 +492,15 @@ class LCGraphe {
      * @return String : res
      */
     public String tousLesBlocsToString() {
-        StringBuilder res = new StringBuilder();
+        StringBuilder ensembleBloc = new StringBuilder();
         MaillonGraphe tmp = this.premier;
         while (tmp != null) {
             if (tmp.type.equals("O")) {
-                res.append(tmp.nom).append("\n");
+                ensembleBloc.append(tmp.nom).append("\n");
             }
-            tmp = tmp.suiv;
+            tmp = tmp.getSuivant();
         }
-        return res.toString();
+        return ensembleBloc.toString();
     }
 
     /**
@@ -507,14 +511,14 @@ class LCGraphe {
      */
     public MaillonGraphe getCentre(String nomCentre) {
         MaillonGraphe tmp = this.premier;
-        MaillonGraphe res = null;
-        while (res == null && tmp != null) {
+        MaillonGraphe centreRechercher = null;
+        while (centreRechercher == null && tmp != null) {
             if (tmp.nom.equals(nomCentre)) {
-                res = tmp;
+                centreRechercher = tmp;
             }
-            tmp = tmp.suiv;
+            tmp = tmp.getSuivant();
         }
-        return res;
+        return centreRechercher;
     }
 
     /**
@@ -569,18 +573,18 @@ class LCGraphe {
      * @return String
      */
     public String toString() {
-        StringBuilder res = new StringBuilder();
+        StringBuilder chaine = new StringBuilder();
         MaillonGraphe tmp = this.premier;
         while (tmp != null) {
-            res.append("Nom: ").append(tmp.nom).append(" | Type: ").append(tmp.type).append("\n");
+            chaine.append("Nom: ").append(tmp.nom).append(" | Type: ").append(tmp.type).append("\n");
             MaillonGrapheSec tmp2 = tmp.lVois;
             while (tmp2 != null) {
-                res.append("Fiabilité: ").append(tmp2.fiab).append(" | Distance: ").append(tmp2.dist).append(" | Durée: ").append(tmp2.dur).append(" | Destination: ").append(tmp2.dest).append("\n");
+                chaine.append("Fiabilité: ").append(tmp2.fiab).append(" | Distance: ").append(tmp2.dist).append(" | Durée: ").append(tmp2.dur).append(" | Destination: ").append(tmp2.dest).append("\n");
                 tmp2 = tmp2.suiv;
             }
-            tmp = tmp.suiv;
+            tmp = tmp.getSuivant();
         }
-        return res.toString();
+        return chaine.toString();
     }
 
     /**
@@ -591,10 +595,10 @@ class LCGraphe {
      * @return
      */
     public LinkedHashMap<String, Double> plusCourtCheminDijkstraFiabilite(String centre1, String centre2) {
-        Map<String, LinkedHashMap<String, Double>> res = new HashMap<>();//Hash map qui permet de stocker les chemins les plus courts
+        Map<String, LinkedHashMap<String, Double>> cheminFiables = new HashMap<>();//Hash map qui permet de stocker les chemins les plus fiables
         Map<String, Boolean> sommetsTraites = new HashMap<>();//Hash map permettant de marquer les sommet traiter 
-        res.put(centre1, new LinkedHashMap<>());
-        res.get(centre1).put(centre1, 1.0);//le premier centre(sommet) a une fiabilite de 1 
+        cheminFiables.put(centre1, new LinkedHashMap<>());
+        cheminFiables.get(centre1).put(centre1, 1.0);//le premier centre(sommet) a une fiabilite de 1
         //on itere sur tout les centres afin de les mettre a false -> les sommets ne sont pas encore marquer
         this.tousLesCentresToList().forEach(Centre -> {
             sommetsTraites.put(Centre.getNom(), false);
@@ -613,15 +617,15 @@ class LCGraphe {
             while (voisin != null) {
                 String nomVoisin = voisin.getDestination();
                 if (!sommetsTraites.get(nomVoisin)) {
-                    if (!res.containsKey(nomVoisin)) {
+                    if (!cheminFiables.containsKey(nomVoisin)) {
                         // On arrive à cette endroit si nomVoisin n'a pas encore de chemin
-                        res.put(nomVoisin, new LinkedHashMap<>(res.get(centre)));
-                        res.get(nomVoisin).put(nomVoisin, (voisin.getFiabilite() / 10) * fiab);
+                        cheminFiables.put(nomVoisin, new LinkedHashMap<>(cheminFiables.get(centre)));
+                        cheminFiables.get(nomVoisin).put(nomVoisin, (voisin.getFiabilite() / 10) * fiab);
                         fileAttente.add(new String[]{nomVoisin, String.valueOf((voisin.getFiabilite() / 10) * fiab)});
 
                     } else {
                         // si nomVoisin a déjà un chemin
-                        LinkedHashMap<String, Double> chemin = res.get(nomVoisin);
+                        LinkedHashMap<String, Double> chemin = cheminFiables.get(nomVoisin);
                         Double lastFiabCentreDansChemin = null;
                         String lastNomCentreDansChemin = null;
                         for (Map.Entry<String, Double> centreChemin : chemin.entrySet()) {
@@ -631,8 +635,8 @@ class LCGraphe {
                         }
                         if (lastFiabCentreDansChemin < (voisin.getFiabilite() / 10) * fiab) {
                             // Si on arrive ici, ca veut dire que le chemin initial entre le centre1 et nomVoisin n'est pas le plus fiable a ce moment la
-                            res.put(nomVoisin, new LinkedHashMap<>(res.get(donnee[0])));
-                            res.get(nomVoisin).put(lastNomCentreDansChemin, (voisin.getFiabilite() / 10) * fiab);
+                            cheminFiables.put(nomVoisin, new LinkedHashMap<>(cheminFiables.get(donnee[0])));
+                            cheminFiables.get(nomVoisin).put(lastNomCentreDansChemin, (voisin.getFiabilite() / 10) * fiab);
                             // Donc on créer le nouveau chemin le plus fiable entre centre1 et nomVoisin
 
                             // Comme il y a un nouveau chemin, ca veut dire que la fileAttente est obsolete car elle n'est pas à jour
@@ -686,17 +690,17 @@ class LCGraphe {
                 fileAttente.remove(maxiFiabIndice);
             }
         }
-        if (!(res.containsKey(centre2))) {
+        if (!(cheminFiables.containsKey(centre2))) {
             return null;
         }
-        return res.get(centre2);
+        return cheminFiables.get(centre2);
     }
 
     public LinkedHashMap<String, Double> plusCourtCheminDijkstraDistance(String centre1, String centre2) {
-        Map<String, LinkedHashMap<String, Double>> res = new HashMap<>();//Hash map qui permet de stocker les chemins les plus courts
+        Map<String, LinkedHashMap<String, Double>> cheminCourts = new HashMap<>();//Hash map qui permet de stocker les chemins les plus courts
         Map<String, Boolean> sommetsTraites = new HashMap<>();//Hash map permettant de marquer les sommet traiter
-        res.put(centre1, new LinkedHashMap<>());
-        res.get(centre1).put(centre1, 0.0);//le premier centre(sommet) a une distance de 0
+        cheminCourts.put(centre1, new LinkedHashMap<>());
+        cheminCourts.get(centre1).put(centre1, 0.0);//le premier centre(sommet) a une distance de 0
         //on itere sur tout les centres afin de les mettre a false -> les sommets ne sont pas encore marquer
         this.tousLesCentresToList().forEach(Centre -> {
             sommetsTraites.put(Centre.getNom(), false);
@@ -716,15 +720,15 @@ class LCGraphe {
             while (voisin != null) {
                 String nomVoisin = voisin.getDestination();
                 if (!sommetsTraites.get(nomVoisin)) {
-                    if (!res.containsKey(nomVoisin)) {
+                    if (!cheminCourts.containsKey(nomVoisin)) {
                         // On arrive à cette endroit si nomVoisin n'a pas encore de chemin
-                        res.put(nomVoisin, new LinkedHashMap<>(res.get(centre)));
-                        res.get(nomVoisin).put(nomVoisin, voisin.getDistance() + distance);
+                        cheminCourts.put(nomVoisin, new LinkedHashMap<>(cheminCourts.get(centre)));
+                        cheminCourts.get(nomVoisin).put(nomVoisin, voisin.getDistance() + distance);
                         fileAttente.add(new String[]{nomVoisin, String.valueOf(voisin.getDistance() + distance)});
 
                     } else {
                         // si nomVoisin a déjà un chemin
-                        LinkedHashMap<String, Double> chemin = res.get(nomVoisin);
+                        LinkedHashMap<String, Double> chemin = cheminCourts.get(nomVoisin);
                         Double lastDistCentreDansChemin = null;
                         String lastNomCentreDansChemin = null;
                         for (Map.Entry<String, Double> centreChemin : chemin.entrySet()) {
@@ -734,8 +738,8 @@ class LCGraphe {
                         }
                         if (lastDistCentreDansChemin > voisin.getDistance() + distance) {
                             // Si on arrive ici, ca veut dire que le chemin initial entre le centre1 et nomVoisin n'est pas le plus court à ce moment la
-                            res.put(nomVoisin, new LinkedHashMap<>(res.get(donnee[0])));
-                            res.get(nomVoisin).put(lastNomCentreDansChemin, voisin.getDistance() + distance);
+                            cheminCourts.put(nomVoisin, new LinkedHashMap<>(cheminCourts.get(donnee[0])));
+                            cheminCourts.get(nomVoisin).put(lastNomCentreDansChemin, voisin.getDistance() + distance);
                             // Donc on créer le nouveau chemin le plus court entre centre1 et nomVoisin
 
                             // Comme il y a un nouveau chemin, ca veut dire que la fileAttente est obsolete car elle n'est pas à jour
@@ -789,17 +793,17 @@ class LCGraphe {
                 fileAttente.remove(maxiDistIndice);
             }
         }
-        if (!(res.containsKey(centre2))) {
+        if (!(cheminCourts.containsKey(centre2))) {
             return null;
         }
-        return res.get(centre2);
+        return cheminCourts.get(centre2);
     }
 
     public LinkedHashMap<String, Double> plusCourtCheminDijkstraDuree(String centre1, String centre2) {
-        Map<String, LinkedHashMap<String, Double>> res = new HashMap<>();//Hash map qui permet de stocker les chemins les plus courts
+        Map<String, LinkedHashMap<String, Double>> cheminRapide = new HashMap<>();//Hash map qui permet de stocker les chemins les plus courts
         Map<String, Boolean> sommetsTraites = new HashMap<>();//Hash map permettant de marquer les sommet traiter
-        res.put(centre1, new LinkedHashMap<>());
-        res.get(centre1).put(centre1, 0.0);//le premier centre(sommet) a une durée de 0
+        cheminRapide.put(centre1, new LinkedHashMap<>());
+        cheminRapide.get(centre1).put(centre1, 0.0);//le premier centre(sommet) a une durée de 0
         //on itere sur tout les centres afin de les mettre a false -> les sommets ne sont pas encore marquer
         this.tousLesCentresToList().forEach(Centre -> {
             sommetsTraites.put(Centre.getNom(), false);
@@ -818,15 +822,15 @@ class LCGraphe {
             while (voisin != null) {
                 String nomVoisin = voisin.getDestination();
                 if (!sommetsTraites.get(nomVoisin)) {
-                    if (!res.containsKey(nomVoisin)) {
+                    if (!cheminRapide.containsKey(nomVoisin)) {
                         // On arrive à cette endroit si nomVoisin n'a pas encore de chemin
-                        res.put(nomVoisin, new LinkedHashMap<>(res.get(centre)));
-                        res.get(nomVoisin).put(nomVoisin, voisin.getDuree() + duree);
+                        cheminRapide.put(nomVoisin, new LinkedHashMap<>(cheminRapide.get(centre)));
+                        cheminRapide.get(nomVoisin).put(nomVoisin, voisin.getDuree() + duree);
                         fileAttente.add(new String[]{nomVoisin, String.valueOf(voisin.getDuree() + duree)});
 
                     } else {
                         // si nomVoisin a déjà un chemin
-                        LinkedHashMap<String, Double> chemin = res.get(nomVoisin);
+                        LinkedHashMap<String, Double> chemin = cheminRapide.get(nomVoisin);
                         Double lastDurCentreDansChemin = null;
                         String lastNomCentreDansChemin = null;
                         for (Map.Entry<String, Double> centreChemin : chemin.entrySet()) {
@@ -836,8 +840,8 @@ class LCGraphe {
                         }
                         if (lastDurCentreDansChemin > voisin.getDuree() + duree) {
                             // Si on arrive ici, ca veut dire que le chemin initial entre le centre1 et nomVoisin n'est pas le plus court à ce moment la
-                            res.put(nomVoisin, new LinkedHashMap<>(res.get(donnee[0])));
-                            res.get(nomVoisin).put(lastNomCentreDansChemin, voisin.getDuree() + duree);
+                            cheminRapide.put(nomVoisin, new LinkedHashMap<>(cheminRapide.get(donnee[0])));
+                            cheminRapide.get(nomVoisin).put(lastNomCentreDansChemin, voisin.getDuree() + duree);
                             // Donc on créer le nouveau chemin le plus court entre centre1 et nomVoisin
 
                             // Comme il y a un nouveau chemin, ca veut dire que la fileAttente est obsolete car elle n'est pas à jour
@@ -891,10 +895,10 @@ class LCGraphe {
                 fileAttente.remove(maxiDurIndice);
             }
         }
-        if (!(res.containsKey(centre2))) {
+        if (!(cheminRapide.containsKey(centre2))) {
             return null;
         }
-        return res.get(centre2);
+        return cheminRapide.get(centre2);
     }
 
     /**
@@ -902,28 +906,25 @@ class LCGraphe {
      * de trouver tout les plus chemins de tous les sommets 
      * 
      * @see {@link #getIndice(String, Map)}
-     * @see {@link #afficherPlusCourtsChemins(double[][], double[][], Map)}
+     * @see {@link #afficherPlusCourtsChemins()}
      * 
      * @return predecesseurs : double[][]
      */
-    private double[][] matrice;
-    private double[][] distances;
-    private double[][] predecesseurs;
-    private Map<String, Integer> indexSommet;
+
 
     public double[][] floydWarshall() {
         MaillonGraphe tmp = this.premier;
-        int cpt = 0; // taille de la matrice
+        int compteurTailleMatrice = 0; // taille de la matrice
 
         while (tmp != null) {
-            cpt++;
-            tmp = tmp.suiv;
+            compteurTailleMatrice++;
+            tmp = tmp.getSuivant();
         }
 
-        matrice = new double[cpt][cpt];
+        matrice = new double[compteurTailleMatrice][compteurTailleMatrice];
         // Initialisation de la matrice, sur la diagonale on ne met que des 0 sinon la valeur infinie
-        for (int i = 0; i < cpt; i++) {
-            for (int j = 0; j < cpt; j++) {
+        for (int i = 0; i < compteurTailleMatrice; i++) {
+            for (int j = 0; j < compteurTailleMatrice; j++) {
                 if (i == j) {
                     matrice[i][j] = 0;
                 } else {
@@ -940,7 +941,7 @@ class LCGraphe {
             String nomSommet = tmp.nom; // Stocke le nom dans une variable
             indexSommet.put(nomSommet, index); // Affecte dans le hashMap le sommet ainsi que son indice
             index++;
-            tmp = tmp.suiv; // Passe au sommet suivant
+            tmp = tmp.getSuivant(); // Passe au sommet suivant
         }
 
         tmp = this.premier;
@@ -972,21 +973,21 @@ class LCGraphe {
                 voisins = voisins.suiv; // On passe au voisin suivant
             }
 
-            tmp = tmp.suiv; // On passe au maillon suivant jusqu'à la fin de la liste chaînée
+            tmp = tmp.getSuivant(); // On passe au maillon suivant jusqu'à la fin de la liste chaînée
         }
 
-        distances = new double[cpt][cpt];
-        for (int i = 0; i < cpt; i++) {
-            for (int j = 0; j < cpt; j++) {
+        distances = new double[compteurTailleMatrice][compteurTailleMatrice];
+        for (int i = 0; i < compteurTailleMatrice; i++) {
+            for (int j = 0; j < compteurTailleMatrice; j++) {
                 distances[i][j] = matrice[i][j]; // Copie des valeurs de matrice vers distances
             }
         }
 
 
-        predecesseurs = new double[cpt][cpt];
+        predecesseurs = new double[compteurTailleMatrice][compteurTailleMatrice];
 
-        for (int i = 0; i < cpt; i++) {
-            for (int j = 0; j < cpt; j++) {
+        for (int i = 0; i < compteurTailleMatrice; i++) {
+            for (int j = 0; j < compteurTailleMatrice; j++) {
                 if (i != j && matrice[i][j] != Double.POSITIVE_INFINITY) {
                     predecesseurs[i][j] = i;
                 } else {
@@ -994,10 +995,10 @@ class LCGraphe {
                 }
             }
         }
-
-        for (int k = 0; k < cpt; k++) {
-            for (int i = 0; i < cpt; i++) {
-                for (int j = 0; j < cpt; j++) {
+        //debut de l'algorithme de recherche
+        for (int k = 0; k < compteurTailleMatrice; k++) {
+            for (int i = 0; i < compteurTailleMatrice; i++) {
+                for (int j = 0; j < compteurTailleMatrice; j++) {
                     if (distances[i][k] + distances[k][j] < distances[i][j]) {
                         distances[i][j] = distances[i][k] + distances[k][j];
                         predecesseurs[i][j] = predecesseurs[k][j];
@@ -1006,32 +1007,39 @@ class LCGraphe {
             }
         }
 
-        afficherPlusCourtsChemins();
-        rechercherChemin("S1","S4");
+        afficherPlusCourtsChemins();//affiche les plus courts chemins
+
 
         return predecesseurs;
     }
+
+    /**
+     * Cette methode affiche cette fois ci le plus courts entre deux sommets donnés en parametre
+     *
+     * @param source
+     * @param destination
+     */
     public void rechercherChemin(String source ,String destination) {
 
 
         // Vérifie si les sommets saisis existent dans le graphe
-        if (!grapheConstant.Graphe.indexSommet().containsKey(source) || !grapheConstant.Graphe.indexSommet().containsKey(destination)) {
+        if (!grapheConstant.graphe.indexSommet().containsKey(source) || !grapheConstant.graphe.indexSommet().containsKey(destination)) {
             System.out.println("Les sommets saisis ne sont pas valides.");
             return;
         }
 
-        int indexSource = grapheConstant.Graphe.indexSommet().get(source);
-        int indexDestination = grapheConstant.Graphe.indexSommet().get(destination);
+        int indexSource = grapheConstant.graphe.indexSommet().get(source);
+        int indexDestination = grapheConstant.graphe.indexSommet().get(destination);
 
         // Vérifie si un chemin existe entre les sommets saisis
-        if (grapheConstant.Graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
+        if (grapheConstant.graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
             System.out.println("Aucun chemin trouvé entre " + source + " et " + destination);
             return;
         }
 
         System.out.println("Chemin de " + source + " à " + destination + ":");
-        grapheConstant.Graphe.afficherChemin(indexSource, indexDestination);
-        System.out.println("Distance : " + grapheConstant.Graphe.getMatrice()[indexSource][indexDestination]);
+        grapheConstant.graphe.afficherChemin(indexSource, indexDestination);
+        System.out.println("Distance : " + grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
     }
     /**
      * Cette méthode affiche tous les plus courts chemins
@@ -1055,9 +1063,12 @@ class LCGraphe {
     }
 
     /**
+     * Cette methode affiche le chemin
+     *
      * @param source
      * @param destination
      * @see {@link #construireChemin(int, int, List)}
+     * @see {@link  #getNomSommet(int)}
      */
     public void afficherChemin(int source, int destination) {
         // Vérifier s'il existe un chemin de la source à la destination

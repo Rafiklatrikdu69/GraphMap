@@ -37,7 +37,7 @@ public class DessinGraphe extends JPanel {
      *
      */
     private  void initGraphe(){
-        LCGraphe.MaillonGraphe tmp = grapheConstant.Graphe.getPremier();
+        LCGraphe.MaillonGraphe tmp = grapheConstant.graphe.getPremier();
 
         int LargeurPanel = getWidth() + 1250 / 2;//largeur de la panel
         int hauteurPanel = getHeight() + 700 / 2;
@@ -93,11 +93,16 @@ public class DessinGraphe extends JPanel {
                 panelInfoSommet.removeAll();
 
 
-                AlgoPlusCourtsChemins algoPlusCourtsChemins = new AlgoPlusCourtsChemins();
-                predecesseur = grapheConstant.Graphe.floydWarshall();
+
+                predecesseur = grapheConstant.graphe.floydWarshall();
                 System.out.println("sommet selectionner : "+sommetSelectionne.getNom());
-                System.out.println("sommet choisis : "+algoPlusCourtsChemins.getChoixSommet());
-                rechercherChemin(sommetSelectionne.getNom(),algoPlusCourtsChemins.getChoixSommet());
+               // System.out.println("sommet choisis : "+algoPlusCourtsChemins.getChoixSommet());
+                if(InterfaceGraphe.cheminValide) {
+                    AlgoPlusCourtsChemins algoPlusCourtsChemins = new AlgoPlusCourtsChemins();
+                    rechercherChemin(sommetSelectionne.getNom(), algoPlusCourtsChemins.getChoixSommet());
+                    InterfaceGraphe.cheminValide = false;
+
+                }
 
 
                 JLabel nom = new JLabel("Nom du sommet : " + sommetSelectionne.getNom());
@@ -270,24 +275,24 @@ public class DessinGraphe extends JPanel {
 
 
         // Vérifie si les sommets saisis existent dans le graphe
-        if (!grapheConstant.Graphe.indexSommet().containsKey(source) || !grapheConstant.Graphe.indexSommet().containsKey(destination)) {
+        if (!grapheConstant.graphe.indexSommet().containsKey(source) || !grapheConstant.graphe.indexSommet().containsKey(destination)) {
             System.out.println("Les sommets saisis ne sont pas valides.");
             return;
         }
 
-        int indexSource = grapheConstant.Graphe.indexSommet().get(source);
-        int indexDestination = grapheConstant.Graphe.indexSommet().get(destination);
+        int indexSource = grapheConstant.graphe.indexSommet().get(source);
+        int indexDestination = grapheConstant.graphe.indexSommet().get(destination);
 
         // Vérifie si un chemin existe entre les sommets saisis
-        if (grapheConstant.Graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
+        if (grapheConstant.graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
             System.out.println("Aucun chemin trouvé entre " + source + " et " + destination);
             return;
         }
 
         System.out.println("Chemin de " + source + " à " + destination + ":");
-       grapheConstant.Graphe.afficherChemin(indexSource, indexDestination);
-        System.out.println("Distance : " + grapheConstant.Graphe.getMatrice()[indexSource][indexDestination]);
-         s =""+ grapheConstant.Graphe.getMatrice()[indexSource][indexDestination];
+       grapheConstant.graphe.afficherChemin(indexSource, indexDestination);
+        System.out.println("Distance : " + grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
+         s =""+ grapheConstant.graphe.getMatrice()[indexSource][indexDestination];
 
         AfficherChemin a = new AfficherChemin(s);
     }

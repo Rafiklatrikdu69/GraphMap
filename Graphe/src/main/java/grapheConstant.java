@@ -1,3 +1,3 @@
 public class grapheConstant {
-    public static final LCGraphe Graphe = new LCGraphe();
+    public static final LCGraphe graphe = new LCGraphe();
 }

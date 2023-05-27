@@ -4,7 +4,6 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,6 +30,7 @@ public class InterfaceGraphe extends JFrame {
     private File fichierCharge;
     private String nomFichier;
     static boolean fenetreDejaOuverte = false;
+    static  boolean cheminValide = false;
 
     public InterfaceGraphe() {
         super();
@@ -84,12 +84,9 @@ public class InterfaceGraphe extends JFrame {
                     System.out.println("temps : 100");
                     timer.stop();
                     if (graphe != null) {
-                        sommets = new TreeMap<>();
-                        dessinGraphe = new DessinGraphe();
 
-                        //algoPlusCourtsChemins.setSommets(sommets);
-
-                        cp.add(dessinGraphe);
+                        graphe = new DessinGraphe();
+                        cp.add(graphe);
 
 
                     }
@@ -183,10 +180,10 @@ public class InterfaceGraphe extends JFrame {
                 File fichier;
                 if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     fichier = fenetreOuvertureFichier.getSelectedFile();
-                    if (fichier.getPath().endsWith(".csv")) {
+                 //   if (fichier.getPath().endsWith(".xlx")) {
                         System.out.println(fichier.getPath());
                         chargerNouveauFichier(fichier);
-                    }
+                   // }
                     cp.revalidate();
                 }
             }
@@ -204,9 +201,9 @@ public class InterfaceGraphe extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("recherche itineraire");
+                cheminValide = true;
                 AlgoPlusCourtsChemins algoPlusCourtsChemins = new AlgoPlusCourtsChemins();
-                remove(dessinGraphe);
-                cp.add(algoPlusCourtsChemins, BorderLayout.EAST);
+
             }
         });
     }
@@ -260,7 +257,7 @@ public class InterfaceGraphe extends JFrame {
     }
 
     private void chargerNouveauFichier(File file) {
-        //fermerFichier();
+        fermerFichier();
         supprimerGraphe();
         if (fichierCharge != null) {
             int option = JOptionPane.showConfirmDialog(null, "Un fichier est déjà ouvert. Voulez-vous le fermer et en ouvrir un nouveau ?", "Confirmation", JOptionPane.YES_NO_OPTION);
@@ -274,7 +271,7 @@ public class InterfaceGraphe extends JFrame {
         fichierCharge = file;
 
         if (fichierCharge != null) {
-            grapheConstant.Graphe.chargementFichier(fichierCharge.getPath());
+            grapheConstant.graphe.chargementFichier(fichierCharge.getPath());
         } else {
 
             return;
