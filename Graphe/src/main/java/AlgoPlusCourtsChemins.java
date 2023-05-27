@@ -2,6 +2,10 @@ import javax.swing.*;
 
 public class AlgoPlusCourtsChemins extends JOptionPane {
 private  String autreSommetSelectionne;
+
+    /**
+     *
+     */
     public AlgoPlusCourtsChemins() {
         // Création des composants de votre boîte de dialogue
         JLabel label = new JLabel("Sélectionnez l'autre sommet:");
@@ -27,6 +31,11 @@ private  String autreSommetSelectionne;
             System.out.println("Autre sommet sélectionné : " + autreSommetSelectionne);
         }
     }
+
+    /**
+     *
+     * @return
+     */
     public String getChoixSommet(){
         return autreSommetSelectionne;
     }

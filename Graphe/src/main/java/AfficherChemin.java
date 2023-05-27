@@ -2,12 +2,12 @@ import javax.swing.*;
 
 public class AfficherChemin extends JOptionPane {
     private  String autreSommetSelectionne;
-    public AfficherChemin() {
+    public AfficherChemin(String chemin) {
         // Création des composants de votre boîte de dialogue
         DessinGraphe algo = new DessinGraphe();
-        JLabel label = new JLabel("Distance :");
+        JLabel label = new JLabel("Distance : ");
         System.out.println(algo.getDistances());
-        JLabel dist = new JLabel(""+ algo.getDistances()) ;
+        JLabel dist = new JLabel(chemin) ;
 
 
 
