@@ -17,6 +17,14 @@ class LCGraphe {
         return file;
     }
 
+    public double[][] getPredecesseurs() {
+        return this.predecesseurs;
+    }
+
+    public double[][] getMatrice() {
+        return this.distances;
+    }
+
 
     public class MaillonGrapheSec {
 
@@ -898,7 +906,12 @@ class LCGraphe {
      * 
      * @return predecesseurs : double[][]
      */
-    public double[][] floydWarshall(String sourceO ,String destinationD) {
+    private double[][] matrice;
+    private double[][] distances;
+    private double[][] predecesseurs;
+    private Map<String, Integer> indexSommet;
+
+    public double[][] floydWarshall() {
         MaillonGraphe tmp = this.premier;
         int cpt = 0; // taille de la matrice
 
@@ -907,8 +920,8 @@ class LCGraphe {
             tmp = tmp.suiv;
         }
 
-        double[][] matrice = new double[cpt][cpt];
-//initialisation de la matrice ,sur la diagonale on ne met que des 0 sinon la valeur infinie
+        matrice = new double[cpt][cpt];
+        // Initialisation de la matrice, sur la diagonale on ne met que des 0 sinon la valeur infinie
         for (int i = 0; i < cpt; i++) {
             for (int j = 0; j < cpt; j++) {
                 if (i == j) {
@@ -918,59 +931,59 @@ class LCGraphe {
                 }
             }
         }
-//affectation des sommets a un indice pour la matrice
-        Map<String, Integer> indexSommet = new TreeMap<>();
+
+        indexSommet = new TreeMap<>();
 
         tmp = this.premier;
         int index = 0;
         while (tmp != null) {
-            String nomSommet = tmp.nom;//stocke le nom dans une variable
-            indexSommet.put(nomSommet, index);//affecte dans le hashMap le sommet ainsi que son indice
+            String nomSommet = tmp.nom; // Stocke le nom dans une variable
+            indexSommet.put(nomSommet, index); // Affecte dans le hashMap le sommet ainsi que son indice
             index++;
-            tmp = tmp.suiv;//passe au sommet suivant 
+            tmp = tmp.suiv; // Passe au sommet suivant
         }
 
         tmp = this.premier;
         while (tmp != null) {
-            //recupere le maillon de la liste principale
+            // Récupère le maillon de la liste principale
             String source = tmp.nom;
             MaillonGrapheSec voisins = tmp.lVois;
             while (voisins != null) {
-                //recupere le maillon de la liste des voisins
-                /*
-               S1 -> S2 ->S3.S1 est le maillon principale et les autre maillons sont les voisins de S1
-               S2-> S2 -S5
-               matrice :
-               S1[0,S2,S3,S4]
-               S2[S1,0,S4,S5]
-               etc...
-               il ne doit y avoir que des zeros sur la diagonale
-                sinon il ya des circuits absorbants c'est a dire qu'il y a des valeurs negatif
-                et donc que l'algorithme ne permet de trouver des plus courts chemins
-                */
-                String destination = voisins.getDestination();//recupere le voisin qui est relié au sommet principale
-                double distance = voisins.getDistance();//recupere la distance
+                // Récupère le maillon de la liste des voisins
+            /*
+            S1 -> S2 ->S3. S1 est le maillon principale et les autres maillons sont les voisins de S1
+            S2 -> S2 -S5
+            matrice :
+            S1[0, S2, S3, S4]
+            S2[S1, 0, S4, S5]
+            etc...
+            Il ne doit y avoir que des zéros sur la diagonale
+            sinon il y a des circuits absorbants, c'est-à-dire qu'il y a des valeurs négatives
+            et donc l'algorithme ne permet pas de trouver des plus courts chemins
+            */
+                String destination = voisins.getDestination(); // Récupère le voisin qui est relié au sommet principal
+                double distance = voisins.getDistance(); // Récupère la distance
 
-                int indexSource = getIndice(source, indexSommet);//recupere l'indice du sommet de la liste principale
-                int indexDestination = getIndice(destination, indexSommet);//recupere l'indice du sommet voisin
+                int indexSource = getIndice(source, indexSommet); // Récupère l'indice du sommet de la liste principale
+                int indexDestination = getIndice(destination, indexSommet); // Récupère l'indice du sommet voisin
 
-                matrice[indexSource][indexDestination] = distance;//on affecte la distance a l'indice
+                matrice[indexSource][indexDestination] = distance; // On affecte la distance à l'indice
 
-                voisins = voisins.suiv;//on passe au voisin suivant
+                voisins = voisins.suiv; // On passe au voisin suivant
             }
 
-            tmp = tmp.suiv;//on passe au maillon suivant jusqu'a la fin de la liste chainée
+            tmp = tmp.suiv; // On passe au maillon suivant jusqu'à la fin de la liste chaînée
         }
 
-        double[][] distances = new double[cpt][cpt];
+        distances = new double[cpt][cpt];
         for (int i = 0; i < cpt; i++) {
             for (int j = 0; j < cpt; j++) {
-
-                distances[i][j] = matrice[i][j];//initialisation
-
+                distances[i][j] = matrice[i][j]; // Copie des valeurs de matrice vers distances
             }
         }
-        double[][] predecesseurs = new double[cpt][cpt];
+
+
+        predecesseurs = new double[cpt][cpt];
 
         for (int i = 0; i < cpt; i++) {
             for (int j = 0; j < cpt; j++) {
@@ -993,119 +1006,126 @@ class LCGraphe {
             }
         }
 
-        afficherPlusCourtsChemins(predecesseurs, distances, indexSommet,sourceO,destinationD);
+        afficherPlusCourtsChemins();
+        rechercherChemin("S1","S4");
 
         return predecesseurs;
     }
+    public void rechercherChemin(String source ,String destination) {
 
 
-    /**
-     * Cette methode affiche tout les plus courts chemins
-     *
-     * @param predecesseurs
-     * @param distances
-     * @param indexSommet
-     * 
-     * @see {@link #afficherChemin(int, int, double[][], Map)}
-     */
-    public void afficherPlusCourtsChemins(double[][] predecesseurs, double[][] distances, Map<String, Integer> indexSommet,String sourceO ,String destinationD) {
-        int taille = predecesseurs.length;
-
-
-
-        int source = getIndice(sourceO,indexSommet);
-        int destination = getIndice(destinationD,indexSommet);
-        if (predecesseurs[source][destination] != -1) {
-
-            System.out.println("Plus court chemin de " + getNomSommet(source, indexSommet) + " à " + getNomSommet(destination, indexSommet) + ":");
-            afficherChemin(source, destination, predecesseurs, indexSommet);
-            System.out.println();
-            System.out.println("Distance : " + distances[source][destination]);
-        } else {
-            System.out.println("Aucun chemin trouvé de " + getNomSommet(source, indexSommet) + " à " + getNomSommet(destination, indexSommet));
+        // Vérifie si les sommets saisis existent dans le graphe
+        if (!grapheConstant.Graphe.indexSommet().containsKey(source) || !grapheConstant.Graphe.indexSommet().containsKey(destination)) {
+            System.out.println("Les sommets saisis ne sont pas valides.");
+            return;
         }
 
-    }
+        int indexSource = grapheConstant.Graphe.indexSommet().get(source);
+        int indexDestination = grapheConstant.Graphe.indexSommet().get(destination);
 
+        // Vérifie si un chemin existe entre les sommets saisis
+        if (grapheConstant.Graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
+            System.out.println("Aucun chemin trouvé entre " + source + " et " + destination);
+            return;
+        }
+
+        System.out.println("Chemin de " + source + " à " + destination + ":");
+        grapheConstant.Graphe.afficherChemin(indexSource, indexDestination);
+        System.out.println("Distance : " + grapheConstant.Graphe.getMatrice()[indexSource][indexDestination]);
+    }
+    /**
+     * Cette méthode affiche tous les plus courts chemins
+     *
+     * @see {@link #afficherChemin(int, int)}
+     */
+    public void afficherPlusCourtsChemins() {
+        int taille = predecesseurs.length;
+
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                if (i != j) {
+                    System.out.println("Plus court chemin de " + getNomSommet(i) + " à " + getNomSommet(j) + ":");
+                    afficherChemin(i, j);
+                    System.out.println();
+                    System.out.println("Distance : " + distances[i][j]);
+                    System.out.println();
+                }
+            }
+        }
+    }
 
     /**
      * @param source
      * @param destination
-     * @param predecesseurs
-     * @param indexSommet
-     *
-     * @see {@link #construireChemin(int, int, double[][], List)}
+     * @see {@link #construireChemin(int, int, List)}
      */
-    public void afficherChemin(int source, int destination, double[][] predecesseurs, Map<String, Integer> indexSommet) {
+    public void afficherChemin(int source, int destination) {
         // Vérifier s'il existe un chemin de la source à la destination
         if (predecesseurs[source][destination] == -1) {
-            System.out.println("Aucun chemin trouvé de " + getNomSommet(source, indexSommet) + " à " + getNomSommet(destination, indexSommet));
+            System.out.println("Aucun chemin trouvé de " + getNomSommet(source) + " à " + getNomSommet(destination));
             return;
         }
 
         List<Integer> chemin = new ArrayList<>();
-        construireChemin(source, destination, predecesseurs, chemin);
+        construireChemin(source, destination, chemin);
 
         // Affiche le chemin
-
-        int i = 0;
-        for (i = 0; i < chemin.size(); i++) {
-            file.enfiler(getNomSommet(chemin.get(i), indexSommet));
-                System.out.print(getNomSommet(chemin.get(i), indexSommet)+" -> ");
-
+        for (int i = 0; i < chemin.size(); i++) {
+            int sommetCourant = chemin.get(i);
+            System.out.print(getNomSommet(sommetCourant));
+            if (i < chemin.size() - 1) {
+                System.out.print(" -> ");
+            }
         }
-        System.out.print(getNomSommet(destination, indexSommet));
-        file.enfiler(getNomSommet(destination, indexSommet));
+        System.out.println();
 
+        System.out.println(getNomSommet(destination));
     }
 
     /**
      * @param source
      * @param destination
-     * @param predecesseurs
      * @param chemin
      */
-    private void construireChemin(int source, int destination, double[][] predecesseurs, List<Integer> chemin) {
-        // Récupére le prédécesseur de la destination dans le chemin
+    private void construireChemin(int source, int destination, List<Integer> chemin) {
+        // Récupère le prédécesseur de la destination dans le chemin
         int predecesseur = (int) predecesseurs[source][destination];
         if (predecesseur != source) {
             // Si le prédécesseur n'est pas la source, construire le chemin récursivement
-            construireChemin(source, predecesseur, predecesseurs, chemin);
+            construireChemin(source, predecesseur, chemin);
         }
-        // J'ajoute le prédécesseur au chemin
+        // Ajoute le prédécesseur et la destination au chemin
         chemin.add(predecesseur);
+        chemin.add(destination);
     }
 
     /**
-     * Cette methode renvoie le nom du sommet a partir de son indice
-     *
-     * @param index
-     * @param indexSommet
-     * @return
+     * @param indice
+     * @return Le nom du sommet correspondant à l'indice donné
      */
-    public String getNomSommet(int index, Map<String, Integer> indexSommet) {
+    private String getNomSommet(int indice) {
         for (Map.Entry<String, Integer> entry : indexSommet.entrySet()) {
-            if (entry.getValue() == index) {
+            if (entry.getValue() == indice) {
                 return entry.getKey();
             }
         }
-        return "";
+        return null;
     }
 
     /**
-     * Cette methode renvoie l'indice du maillion a partir de son nom
-     *
-     * @param nomSommet
+     * @param sommet
      * @param indexSommet
-     * @return
+     * @return L'indice du sommet dans la matrice
      */
-    public int getIndice(String nomSommet, Map<String, Integer> indexSommet) {
-        Integer index = indexSommet.get(nomSommet);
-        if (index != null) {
-            return index;
-        }
-        throw new IllegalArgumentException("Problème : " + nomSommet);
+    private int getIndice(String sommet, Map<String, Integer> indexSommet) {
+        return indexSommet.get(sommet);
     }
+
+    public Map<String, Integer> indexSommet(){
+        return this.indexSommet;
+    }
+
+
 
 
 }

@@ -13,8 +13,9 @@ public class MenuConsoleGraphe{
         newGraphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
 
 
-        System.out.println(newGraphe.plusCourtCheminDijkstraDistance("S1","S21"));
+        System.out.println(newGraphe.plusCourtCheminDijkstraDistance("S1","S30"));
 
+        //double[][] predecesseurs = grapheConstant.Graphe.floydWarshall();
 
         Scanner scanner = new Scanner(System.in);
         int option;
@@ -231,7 +232,7 @@ public class MenuConsoleGraphe{
                                                 Scanner scannerDispensaire2 = new Scanner(System.in);
                                                 optionDispensaire2 = scannerDispensaire2.next();
                                                 scannerDispensaire2.nextLine();
-                                                double[][] predecesseurs = newGraphe.floydWarshall(dispensaire.getNom(),optionDispensaire2);
+
                                             }
 
                                             case 9 -> sortieAnnexe = true;

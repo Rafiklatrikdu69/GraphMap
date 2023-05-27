@@ -4,8 +4,10 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class InterfaceGraphe extends JFrame {
     private Map<LCGraphe.MaillonGraphe, JLabel> sommets;
@@ -42,7 +44,6 @@ public class InterfaceGraphe extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
-
 
 
     private void initComponents() {
@@ -83,7 +84,14 @@ public class InterfaceGraphe extends JFrame {
                     System.out.println("temps : 100");
                     timer.stop();
                     if (graphe != null) {
-                        cp.add(graphe, BorderLayout.EAST);
+                        sommets = new TreeMap<>();
+                        dessinGraphe = new DessinGraphe();
+
+                        //algoPlusCourtsChemins.setSommets(sommets);
+
+                        cp.add(dessinGraphe);
+
+
                     }
 
                     barreChargement.setVisible(false);
@@ -119,7 +127,7 @@ public class InterfaceGraphe extends JFrame {
         menuPanel.setPreferredSize(new Dimension(400, 100));
 
         option1Button = new JButton("Option 1");
-        option2Button = new JButton("Selectionner un dispensaire");
+        option2Button = new JButton("Rechercher un itineraire");
         option3Button = new JButton("Option 3");
 
         menuPanel.setLayout(new GridBagLayout());
@@ -192,10 +200,13 @@ public class InterfaceGraphe extends JFrame {
             }
         });
 
-        option1Button.addActionListener(new ActionListener() {
+        option2Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                option1Button.setEnabled(true);
+                System.out.println("recherche itineraire");
+                AlgoPlusCourtsChemins algoPlusCourtsChemins = new AlgoPlusCourtsChemins();
+                remove(dessinGraphe);
+                cp.add(algoPlusCourtsChemins, BorderLayout.EAST);
             }
         });
     }
@@ -209,6 +220,11 @@ public class InterfaceGraphe extends JFrame {
         }
         super.setEnabled(b);
     }
+
+    public void setSommets(Map<LCGraphe.MaillonGraphe, JLabel> sommets) {
+        this.sommets = sommets;
+    }
+
     private void supprimerGraphe() {
         // Supprimer tous les composants liés au graphe
         if (graphe != null) {
@@ -282,8 +298,6 @@ public class InterfaceGraphe extends JFrame {
 
         cp.revalidate();
     }
-
-
 
 
 }
