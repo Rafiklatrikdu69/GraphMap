@@ -103,9 +103,10 @@ public class DessinGraphe extends JPanel {
                 System.out.println("sommet selectionner : "+sommetSelectionne.getNom());
                // System.out.println("sommet choisis : "+algoPlusCourtsChemins.getChoixSommet());
                 if(InterfaceGraphe.cheminValide) {
+                    InterfaceGraphe.cheminValide = false;
                     AlgoPlusCourtsChemins algoPlusCourtsChemins = new AlgoPlusCourtsChemins();
                     rechercherChemin(sommetSelectionne.getNom(), algoPlusCourtsChemins.getChoixSommet());
-                    InterfaceGraphe.cheminValide = false;
+
 
 
                 }

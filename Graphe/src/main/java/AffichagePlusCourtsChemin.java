@@ -10,7 +10,10 @@ public class AffichagePlusCourtsChemin extends DessinGraphe {
     public AffichagePlusCourtsChemin(Map<LCGraphe.MaillonGraphe, JLabel> sommets) {
         super();
         this.sommets = sommets;
+        sommetEnDeplacement = null;
+        sommetSelectionne = null;
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {
