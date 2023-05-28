@@ -13,6 +13,7 @@ import java.util.*;
  */
 class LCGraphe {
     private static FileF<String> file;
+    protected   List<Integer> chemin;
     static FileF getFile(){
         return file;
     }
