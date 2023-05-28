@@ -11,21 +11,21 @@ import java.util.Map;
 
 public class DessinGraphe extends JPanel {
 
-    private Map<LCGraphe.MaillonGraphe, JLabel> sommets;
+    protected Map<LCGraphe.MaillonGraphe, JLabel> sommets;
     private  double dist;
-    private LCGraphe.MaillonGraphe sommetSelectionne;
+    protected LCGraphe.MaillonGraphe sommetSelectionne;
     private String s;
 
-    private JLabel sommetEnDeplacement;
+    protected JLabel sommetEnDeplacement;
     private int xPos, yPos;
 
     private JPanel panelInfoSommet;
 
     private static final int LABEL_WIDTH = 30;
     private static final int LABEL_HEIGHT = 30;
-    private static final Color DEFAULT_LABEL_COLOR = Color.WHITE;
-    private static final Color SELECTED_LABEL_COLOR = Color.GREEN;
-    private static final Color BACKGROUND_COLOR = Color.BLACK;
+    protected static final Color DEFAULT_LABEL_COLOR = Color.WHITE;
+    protected static final Color SELECTED_LABEL_COLOR = Color.GREEN;
+    protected static final Color BACKGROUND_COLOR = Color.BLACK;
     /**
      * Constructeur de la classe DessinGraphe
      */
@@ -137,7 +137,7 @@ public class DessinGraphe extends JPanel {
                                 JLabel info = new JLabel(infoText);
                                 panelInfoSommet.add(info);
                             }
-                            sommetVoisi = sommetVoisi.suiv;
+                            sommetVoisi = sommetVoisi.getSuivant();
                         }
                     }
                 }

@@ -85,7 +85,7 @@ public class InterfaceGraphe extends JFrame {
                 if (progresse == 100) {
                     timer.stop();
                     if (graphe != null) {
-                        graphe = new DessinGraphe();
+                        graphe = new DessinGrapheRouge();
                         cp.add(graphe);
                     }
 
@@ -222,9 +222,7 @@ public class InterfaceGraphe extends JFrame {
         super.setEnabled(b);
     }
 
-    public void setSommets(Map<LCGraphe.MaillonGraphe, JLabel> sommets) {
-        this.sommets = sommets;
-    }
+
 
     private void supprimerGraphe() {
         // Supprimer tous les composants liés au graphe
@@ -285,7 +283,7 @@ public class InterfaceGraphe extends JFrame {
         barreChargement = new JProgressBar(0, 100);
         barreChargement.setStringPainted(true);
 
-        graphe = new DessinGraphe();
+        graphe = new DessinGrapheRouge();
         graphe.setBorder(BorderFactory.createTitledBorder("Graphe"));
         graphe.setPreferredSize(new Dimension(3000, 200));
 

@@ -73,6 +73,9 @@ class LCGraphe {
         public double getFiabilite() {
             return fiab;
         }
+        public MaillonGrapheSec getSuivant(){
+            return this.suiv;
+        }
 
 
         /**
