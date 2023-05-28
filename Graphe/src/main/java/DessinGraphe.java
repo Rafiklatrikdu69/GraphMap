@@ -107,6 +107,7 @@ public class DessinGraphe extends JPanel {
                     rechercherChemin(sommetSelectionne.getNom(), algoPlusCourtsChemins.getChoixSommet());
                     InterfaceGraphe.cheminValide = false;
 
+
                 }
 
 
@@ -153,6 +154,7 @@ public class DessinGraphe extends JPanel {
                 panelInfoSommet.validate();
                 panelInfoSommet.repaint();
             }
+
 
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -295,10 +297,14 @@ public class DessinGraphe extends JPanel {
         }
 
         System.out.println("Chemin de " + source + " à " + destination + ":");
+        System.out.println("cheminnnnn :::");
       grapheConstant.graphe.afficherChemin(indexSource, indexDestination);
+
+
         System.out.println("Distance : " + grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
         String chemin = String.valueOf(grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
-        AfficherChemin a = new AfficherChemin(chemin);
+        AfficherCheminPanel a = new AfficherCheminPanel(chemin,sommets);
+
     }
 
 }

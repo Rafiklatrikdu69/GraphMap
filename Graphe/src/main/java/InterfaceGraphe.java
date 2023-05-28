@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.TreeMap;
 
 import static javax.swing.JOptionPane.showOptionDialog;
 
@@ -85,7 +84,8 @@ public class InterfaceGraphe extends JFrame {
                 if (progresse == 100) {
                     timer.stop();
                     if (graphe != null) {
-                        graphe = new DessinGrapheRouge();
+
+                        graphe = new DessinGraphe();
                         cp.add(graphe);
                     }
 
@@ -283,7 +283,7 @@ public class InterfaceGraphe extends JFrame {
         barreChargement = new JProgressBar(0, 100);
         barreChargement.setStringPainted(true);
 
-        graphe = new DessinGrapheRouge();
+        graphe = new AffichagePlusCourtsChemin(sommets);
         graphe.setBorder(BorderFactory.createTitledBorder("Graphe"));
         graphe.setPreferredSize(new Dimension(3000, 200));
 

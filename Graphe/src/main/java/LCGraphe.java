@@ -1081,7 +1081,7 @@ class LCGraphe {
             return;
         }
 
-        List<Integer> chemin = new ArrayList<>();
+        chemin = new ArrayList<>();
         construireChemin(source, destination, chemin);
 
         // Affiche le chemin
@@ -1118,7 +1118,7 @@ class LCGraphe {
      * @param indice
      * @return Le nom du sommet correspondant à l'indice donné
      */
-    private String getNomSommet(int indice) {
+   public String getNomSommet(int indice) {
         for (Map.Entry<String, Integer> entry : indexSommet.entrySet()) {
             if (entry.getValue() == indice) {
                 return entry.getKey();
@@ -1126,6 +1126,7 @@ class LCGraphe {
         }
         return null;
     }
+
 
     /**
      * @param sommet
