@@ -283,7 +283,7 @@ public class InterfaceGraphe extends JFrame {
         barreChargement = new JProgressBar(0, 100);
         barreChargement.setStringPainted(true);
 
-        graphe = new AffichagePlusCourtsChemin(sommets);
+        graphe = new DessinGraphe();
         graphe.setBorder(BorderFactory.createTitledBorder("Graphe"));
         graphe.setPreferredSize(new Dimension(3000, 200));
 

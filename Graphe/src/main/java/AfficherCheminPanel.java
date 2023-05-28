@@ -36,6 +36,6 @@ public class AfficherCheminPanel extends JOptionPane {
         JPanel PanelDessin = new JPanel();
         PanelDessin.add(dessinGrapheRouge);
 
-        JOptionPane.showMessageDialog(null, PanelDessin, "Graphe Rouge", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(null, PanelDessin, "Graphe Chemin", JOptionPane.PLAIN_MESSAGE);
     }
 }
