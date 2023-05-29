@@ -1,11 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class AffichagePlusCourtsChemin extends DessinGraphe {

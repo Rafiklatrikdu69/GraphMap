@@ -40,10 +40,10 @@ public class MenuConsoleGraphe{
                     scanner.nextLine();
                     switch (option) {
                         case 1 -> {
-                            LinkedList<LCGraphe.MaillonGraphe> tousLesCentresList = newGraphe.tousLesCentresToList();
+                            List<LCGraphe.MaillonGraphe> tousLesCentresList = newGraphe.tousLesCentresToList();
                             tousLesCentresList.forEach(Centre -> {
                                 StringBuilder stringVoisin = new StringBuilder();
-                                LinkedList<LCGraphe.MaillonGrapheSec> voisinsCentre = Centre.voisinsToList();
+                                List<LCGraphe.MaillonGrapheSec> voisinsCentre = Centre.voisinsToList();
                                 stringVoisin.append("[");
                                 for (int i = 0; i < voisinsCentre.size(); i++) {
                                     if (i == voisinsCentre.size() - 1) {
