@@ -12,7 +12,7 @@ import java.util.Map;
 public class DessinGraphe extends JPanel {
 
     protected Map<LCGraphe.MaillonGraphe, JLabel> sommets;
-    private  double dist;
+    private double dist;
     protected LCGraphe.MaillonGraphe sommetSelectionne;
     private String s;
 
@@ -26,6 +26,7 @@ public class DessinGraphe extends JPanel {
     protected static final Color DEFAULT_LABEL_COLOR = Color.WHITE;
     protected static final Color SELECTED_LABEL_COLOR = Color.GREEN;
     protected static final Color BACKGROUND_COLOR = Color.BLACK;
+
     /**
      * Constructeur de la classe DessinGraphe
      */
@@ -40,7 +41,7 @@ public class DessinGraphe extends JPanel {
     /**
      *
      */
-    private  void initGraphe(){
+    private void initGraphe() {
         LCGraphe.MaillonGraphe tmp = grapheConstant.graphe.getPremier();
 
         int LargeurPanel = getWidth() + 1250 / 2;//largeur de la panel
@@ -98,15 +99,13 @@ public class DessinGraphe extends JPanel {
                 panelInfoSommet.removeAll();
 
 
-
-                double [][] prec = grapheConstant.graphe.floydWarshallDistance();
-                System.out.println("sommet selectionner : "+sommetSelectionne.getNom());
-               // System.out.println("sommet choisis : "+algoPlusCourtsChemins.getChoixSommet());
-                if(InterfaceGraphe.cheminValide) {
+                double[][] prec = grapheConstant.graphe.floydWarshallDistance();
+                System.out.println("sommet selectionner : " + sommetSelectionne.getNom());
+                // System.out.println("sommet choisis : "+algoPlusCourtsChemins.getChoixSommet());
+                if (InterfaceGraphe.cheminValide) {
                     InterfaceGraphe.cheminValide = false;
                     AlgoPlusCourtsChemins algoPlusCourtsChemins = new AlgoPlusCourtsChemins();
                     rechercherChemin(sommetSelectionne.getNom(), algoPlusCourtsChemins.getChoixSommet());
-
 
 
                 }
@@ -131,7 +130,7 @@ public class DessinGraphe extends JPanel {
                         JLabel sommetVoisin = new JLabel("Nom : " + nomSommet + " Type : " + sommet.getType());
                         panelInfoSommet.add(sommetVoisin);
 
-                        LCGraphe.MaillonGrapheSec sommetVoisi = sommet.lVois;
+                        LCGraphe.MaillonGrapheSec sommetVoisi = sommet.getVoisin();
                         String nomSommetSelectionne = sommetSelectionne.getNom();
                         while (sommetVoisi != null) {
                             if (sommetVoisi.getDestination().equals(nomSommetSelectionne)) {
@@ -143,7 +142,6 @@ public class DessinGraphe extends JPanel {
                         }
                     }
                 }
-
 
 
                 panelInfoSommet.setBorder(BorderFactory.createTitledBorder("info"));
@@ -161,6 +159,9 @@ public class DessinGraphe extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 sommetEnDeplacement = null;
+                //  JLabel label = sommets.get(sommetSelectionne);
+
+                // sommets.put(sommetSelectionne, label);
                 repaint();
             }
         });
@@ -194,6 +195,7 @@ public class DessinGraphe extends JPanel {
 
 
                         sommetEnDeplacement.setLocation(x, y);
+                 
 
                         xPos = e.getXOnScreen();
                         yPos = e.getYOnScreen();
@@ -213,7 +215,6 @@ public class DessinGraphe extends JPanel {
     }
 
     /**
-     *
      * @param g the <code>Graphics</code> object to protect
      */
 
@@ -253,8 +254,7 @@ public class DessinGraphe extends JPanel {
                 if (sommetSelectionne == sommet2) {
                     g2d.setColor(SELECTED_LABEL_COLOR);
                     g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
-                }
-                else {
+                } else {
                     g2d.setColor(BACKGROUND_COLOR);
                     g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
                 }
@@ -277,9 +277,7 @@ public class DessinGraphe extends JPanel {
     }
 
 
-
-
-    public void rechercherChemin(String source ,String destination) {
+    public void rechercherChemin(String source, String destination) {
 
 
         // Vérifie si les sommets saisis existent dans le graphe
@@ -299,13 +297,20 @@ public class DessinGraphe extends JPanel {
 
         System.out.println("Chemin de " + source + " à " + destination + ":");
         System.out.println("cheminnnnn :::");
-      grapheConstant.graphe.afficherChemin(indexSource, indexDestination);
+        grapheConstant.graphe.afficherChemin(indexSource, indexDestination);
 
 
         System.out.println("Distance : " + grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
         String chemin = String.valueOf(grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
-        AfficherCheminPanel a = new AfficherCheminPanel(chemin,sommets);
+        AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets,this);
 
+    }
+    public void updateGraph(Map<LCGraphe.MaillonGraphe, JLabel> sommets) {
+        this.sommets = sommets;
+        repaint();
+    }
+    public void setSommets(Map<LCGraphe.MaillonGraphe, JLabel> sommets) {
+        this.sommets = sommets;
     }
 
 }
