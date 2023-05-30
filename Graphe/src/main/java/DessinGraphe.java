@@ -134,14 +134,11 @@ public class DessinGraphe extends JPanel {
         sommets.put(m, label);
         add(label);
     }
-    
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    private void initDessinGraphe(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
         
         int radius;
-       
+        
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
         
@@ -152,7 +149,7 @@ public class DessinGraphe extends JPanel {
         int x1, y1, x2, y2;
         
         for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
-       
+            
             p1 = sommets.get(sommet1);
             x1 = p1.getX() + p1.getWidth() / 2;
             y1 = p1.getY() + p1.getHeight() / 2;
@@ -161,7 +158,7 @@ public class DessinGraphe extends JPanel {
             g2d.fill(new Ellipse2D.Double(x1 - radius, y1 - radius, radius * 2, radius * 2));
             
             for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
-               
+                
                 p2 = sommets.get(sommet2);
                 x2 = p2.getX() + p2.getWidth() / 2;
                 y2 = p2.getY() + p2.getHeight() / 2;
@@ -184,6 +181,12 @@ public class DessinGraphe extends JPanel {
         
         repaint();
     }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+       initDessinGraphe(g);
+    }
 
     
     @Override
@@ -193,7 +196,5 @@ public class DessinGraphe extends JPanel {
     
  
     
-    public void setSommets(Map<LCGraphe.MaillonGraphe, JLabel> sommets) {
-        this.sommets = sommets;
-    }
+ 
 }
