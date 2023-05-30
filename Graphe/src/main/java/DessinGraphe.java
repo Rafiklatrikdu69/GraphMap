@@ -45,7 +45,7 @@ public class DessinGraphe extends JPanel {
      */
     private void initGraphe() {
         LCGraphe.MaillonGraphe tmp = InterfaceGraphe.Graphe.getPremier();
-
+       
         int LargeurPanel = getWidth();//largeur de la panel
 
         int hauteurPanel = getHeight();
@@ -229,7 +229,7 @@ public class DessinGraphe extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         int radius;
-
+       
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         List<LCGraphe.MaillonGraphe> sommetsList = new ArrayList<>(sommets.keySet());

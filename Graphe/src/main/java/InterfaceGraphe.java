@@ -11,7 +11,7 @@ public class InterfaceGraphe extends JFrame {
     private JFrame fenetrePrincipale; // la fenetre
 
     public static JPanel cp;
-    private DessinGraphe graphePanel;
+    private JPanel graphePanel;
     private AccueilPanel accueilPanel;
     private JPanel barreDeChargementPanel;
 
@@ -55,6 +55,7 @@ public class InterfaceGraphe extends JFrame {
     }
 
     private void initContainerDessinGraphePanel(){
+        System.out.println("initialisation du graphe ");
         graphePanel = new DessinGraphe();
         graphePanel.setBorder(BorderFactory.createTitledBorder("Graphe"));
         cp.add(graphePanel, BorderLayout.CENTER);
@@ -84,6 +85,7 @@ public class InterfaceGraphe extends JFrame {
         itemFichier = new JMenu("Fichier");
         itemFenetre = new JMenu("Fenetre");
         itemFonctionnalites = new JMenu("Mode du Graphe");
+
 
 
         // Menu
@@ -143,6 +145,7 @@ public class InterfaceGraphe extends JFrame {
                                 if (progresse == 100) {
                                     timer.stop();
                                     if (graphePanel != null) {
+                                        System.out.println("teste");
                                         chargerNouveauFichier(fichier);
                                     }
                                     barreChargement.setVisible(false);
