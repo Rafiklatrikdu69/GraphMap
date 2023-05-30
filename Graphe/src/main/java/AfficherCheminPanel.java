@@ -32,7 +32,7 @@ public class AfficherCheminPanel extends JOptionPane {
 //affiche le chemin dans un JOption Pane
         int result = showOptionDialog(null, panel, "Chemin Court", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
         //en cours de developpement -> Probleme bug Graphe pas mis a jour !!!
-        dessinGraphe.setSommets(sommet);
+       // dessinGraphe.setSommets(sommet);
         dessinGraphe.repaint();
         AffichagePlusCourtsChemin dessinGrapheRouge = new AffichagePlusCourtsChemin(sommet,dessinGraphe);
         JPanel PanelDessin = new JPanel();
