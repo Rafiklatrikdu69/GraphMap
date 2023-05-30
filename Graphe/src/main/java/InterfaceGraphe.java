@@ -4,166 +4,115 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Map;
 
 import static javax.swing.JOptionPane.showOptionDialog;
 
 public class InterfaceGraphe extends JFrame {
-    private Map<LCGraphe.MaillonGraphe, JLabel> sommets;
-    static JButton hamburgerButton, option1Button, option2Button, option3Button;
-    private JPanel cp, menuPanel, mainPanel, graphe, barre;
+    private JFrame fenetrePrincipale; // la fenetre
 
-    private DessinGraphe dessinGraphe;
-    private boolean menuVisible = false;
+    public static JPanel cp;
+    private DessinGraphe graphePanel;
+    private AccueilPanel accueilPanel;
+    private JPanel barreDeChargementPanel;
+
+    public static JPanel contenuInfoSommetPanel;
+
+    public static JMenuBar menu;
+    private JMenu itemFichier, itemFenetre, itemFonctionnalites;
+    private JMenuItem itemOuvrirFichier, itemFermerFenetre, itemMenuPrincipale;
     static JRadioButton bloquerGraphe;
     private JProgressBar barreChargement;
     private int progresse;
     private Timer timer;
 
+    private Dimension screenSize;
 
-    private boolean occupied;
-
-    private LinkedList<JLabel> labels = new LinkedList<>();
-    private JMenuBar menu;
-    private JMenu fichier, fenetre, fonctionnalites;
-    private JMenuItem option1, option2, option3;
     private File fichierCharge;
-    private String nomFichier;
-    static boolean fenetreDejaOuverte = false;
+    public static LCGraphe Graphe;
+    private Integer nombreRoutes;
+    private Integer nombreCentre;
     static boolean cheminValide = false;
 
     public InterfaceGraphe() {
         super();
+        Graphe = new LCGraphe();
+        fenetrePrincipale = this;
+        accueilPanel = new AccueilPanel(fenetrePrincipale);
+        setContentPane(accueilPanel);
+
+        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = (int) screenSize.getWidth();
+        int screenHeight = (int) screenSize.getHeight();
+        setSize(new Dimension(screenWidth/2,screenHeight/2+200));
 
         initComponents();
 
         setTitle("Graphe");
-        setSize(1920, 1080);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
+    private void initContainerDessinGraphePanel(){
+        graphePanel = new DessinGraphe();
+        graphePanel.setBorder(BorderFactory.createTitledBorder("Graphe"));
+        cp.add(graphePanel, BorderLayout.CENTER);
+    }
+    private void initComposantsInfoSommetPanel(){
+        contenuInfoSommetPanel = new JPanel();
+        contenuInfoSommetPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        contenuInfoSommetPanel.setBorder(BorderFactory.createTitledBorder("Info"));
+        contenuInfoSommetPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 45));
+        cp.add(contenuInfoSommetPanel, BorderLayout.NORTH);
+    }
+
+    private void initComposantsBarreDeChargement(){
+        barreDeChargementPanel = new JPanel();
+        barreDeChargementPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        barreDeChargementPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 45));
+        barreDeChargementPanel.setBorder(BorderFactory.createTitledBorder("Barre de chargement"));
+        cp.add(barreDeChargementPanel, BorderLayout.SOUTH);
+    }
+
 
     private void initComponents() {
-        cp = (JPanel) getContentPane();
+        cp = new JPanel();
         cp.setLayout(new BorderLayout());
 
         menu = new JMenuBar();
-        fichier = new JMenu("Fichier");
-        fenetre = new JMenu("Fenetre");
-        fonctionnalites = new JMenu("Mode du Graphe");
+        itemFichier = new JMenu("Fichier");
+        itemFenetre = new JMenu("Fenetre");
+        itemFonctionnalites = new JMenu("Mode du Graphe");
+
 
         // Menu
-        option1 = new JMenuItem("Ouvrir");
-        option2 = new JMenuItem("Fermer");
+        itemOuvrirFichier = new JMenuItem("Ouvrir");
+        itemFermerFenetre = new JMenuItem("Fermer");
+        itemMenuPrincipale = new JMenuItem("Menu Principale");
 
         bloquerGraphe = new JRadioButton("Bloquer");
-        fonctionnalites.add(bloquerGraphe);
-        menu.add(fonctionnalites);
+        itemFonctionnalites.add(bloquerGraphe);
+        menu.add(itemFonctionnalites);
 
-        fichier.add(option1);
-        fichier.setFont(new Font("Arial", Font.BOLD, 14));
-        fonctionnalites.setFont(new Font("Arial", Font.BOLD, 14));
-        fenetre.setFont(new Font("Arial", Font.BOLD, 14));
+        itemFichier.add(itemOuvrirFichier);
+        itemFichier.setFont(new Font("Arial", Font.BOLD, 14));
+        itemFonctionnalites.setFont(new Font("Arial", Font.BOLD, 14));
+        itemFenetre.setFont(new Font("Arial", Font.BOLD, 14));
         menu.setBackground(Color.GRAY);
-        fenetre.add(option2);
+        itemFenetre.add(itemFermerFenetre);
+        itemFenetre.add(itemMenuPrincipale);
 
-        menu.add(fichier);
-        menu.add(fenetre);
-        menu.add(fonctionnalites);
+        menu.add(itemFichier);
+        menu.add(itemFenetre);
+        menu.add(itemFonctionnalites);
 
         cp.add(menu, BorderLayout.NORTH);
 
-        timer = new Timer(30, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                progresse++;
-                barreChargement.setValue(progresse);
-                if (progresse == 100) {
-                    timer.stop();
-                    if (graphe != null) {
-
-                        graphe = new DessinGraphe();
-                        cp.add(graphe);
-                    }
-
-                    barreChargement.setVisible(false);
-                    cp.revalidate();
-                }
-            }
-        });
-
-        slide();
+        initContainerDessinGraphePanel();
+        initComposantsBarreDeChargement();
+        initComposantsInfoSommetPanel();
         initEventListeners();
-    }
-
-    private void visible() {
-        if (!menuVisible) {
-            mainPanel.add(menuPanel, BorderLayout.WEST);
-            menuVisible = true;
-        } else {
-            mainPanel.remove(menuPanel);
-            menuVisible = false;
-        }
-        revalidate();
-        repaint();
-    }
-
-    public void slide() {
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-
-        menuPanel = new JPanel();
-        mainPanel.setBorder(BorderFactory.createTitledBorder("Menu"));
-        mainPanel.setPreferredSize(new Dimension(400, 100));
-
-        menuPanel.setPreferredSize(new Dimension(400, 100));
-
-        option1Button = new JButton("Option 1");
-        option2Button = new JButton("Rechercher un itineraire");
-        option3Button = new JButton("Option 3");
-
-        menuPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(10, 10, 10, 10);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        menuPanel.add(option1Button, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        menuPanel.add(option2Button, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        menuPanel.add(option3Button, gbc);
-
-        hamburgerButton = new JButton("\u2630");
-        hamburgerButton.setBackground(Color.WHITE); // Couleur du bouton
-
-        hamburgerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                visible();
-                verifeAutorisation();
-            }
-        });
-
-        mainPanel.add(hamburgerButton, BorderLayout.WEST);
-        cp.add(mainPanel, BorderLayout.WEST);
-
-        setVisible(true);
-    }
-
-    public void verifeAutorisation() {
-        if (!bloquerGraphe.isSelected()) {
-            option1Button.setEnabled(false);
-            visible();
-        }
     }
 
     public void demarrerChargement() {
@@ -172,7 +121,7 @@ public class InterfaceGraphe extends JFrame {
     }
 
     public void initEventListeners() {
-        option1.addActionListener(new ActionListener() {
+        itemOuvrirFichier.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fenetreOuvertureFichier = new JFileChooser(new File("."));
@@ -181,7 +130,28 @@ public class InterfaceGraphe extends JFrame {
                     fichier = fenetreOuvertureFichier.getSelectedFile();
                     System.out.println(fichier.getPath());
                     if (fichier.getPath().endsWith(".csv")) {
-                        chargerNouveauFichier(fichier);
+                        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                        barreDeChargementPanel.removeAll();
+                        barreChargement = new JProgressBar(0,100);
+                        barreDeChargementPanel.add(barreChargement);
+                        barreChargement.setStringPainted(true);
+                        timer = new Timer(30, new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                progresse++;
+                                barreChargement.setValue(progresse);
+                                if (progresse == 100) {
+                                    timer.stop();
+                                    if (graphePanel != null) {
+                                        chargerNouveauFichier(fichier);
+                                    }
+                                    barreChargement.setVisible(false);
+                                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                                }
+                            }
+                        });
+
+                        demarrerChargement();
 
                     } else {
                         System.out.println("fichier corrompu");
@@ -190,24 +160,20 @@ public class InterfaceGraphe extends JFrame {
                         int result = showOptionDialog(null, panelCorrompu, "fichier corrompu ! ", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 
                     }
-                    cp.revalidate();
                 }
             }
         });
 
-        option2.addActionListener(new ActionListener() {
+        itemFermerFenetre.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                InterfaceGraphe.fenetreDejaOuverte = false;
             }
         });
-
-        option2Button.addActionListener(new ActionListener() {
+        itemMenuPrincipale.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("recherche itineraire");
-                cheminValide = true;
+                fenetrePrincipale.setContentPane(accueilPanel);
             }
         });
     }
@@ -226,9 +192,9 @@ public class InterfaceGraphe extends JFrame {
 
     private void supprimerGraphe() {
         // Supprimer tous les composants liés au graphe
-        if (graphe != null) {
-            cp.remove(graphe);
-            graphe = null;
+        if (graphePanel != null) {
+            cp.remove(graphePanel);
+            graphePanel = null;
         }
 
         // Supprimer la barre de chargement
@@ -238,7 +204,6 @@ public class InterfaceGraphe extends JFrame {
         }
 
         // Repaint et revalider le contenu du conteneur
-        cp.revalidate();
         cp.repaint();
     }
 
@@ -259,9 +224,6 @@ public class InterfaceGraphe extends JFrame {
     }
 
     private void chargerNouveauFichier(File file) {
-
-        fermerFichier();
-        supprimerGraphe();
         if (fichierCharge != null) {
             int option = JOptionPane.showConfirmDialog(null, "Un fichier est déjà ouvert. Voulez-vous le fermer et en ouvrir un nouveau ?", "Confirmation", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
@@ -274,27 +236,10 @@ public class InterfaceGraphe extends JFrame {
         fichierCharge = file;
 
         if (fichierCharge != null) {
+            Graphe.chargementFichier(fichierCharge.getPath());
            // cp.remove(graphe);
-            grapheConstant.graphe.chargementFichier(fichierCharge.getPath());
         } else {
             return;
         }
-
-        barreChargement = new JProgressBar(0, 100);
-        barreChargement.setStringPainted(true);
-
-        graphe = new DessinGraphe();
-        graphe.setBorder(BorderFactory.createTitledBorder("Graphe"));
-        graphe.setPreferredSize(new Dimension(3000, 200));
-
-        barre = new JPanel();
-        barre.add(barreChargement);
-        barre.setPreferredSize(new Dimension(300, 100));
-        barre.setBorder(BorderFactory.createTitledBorder("Barre de chargement "));
-        demarrerChargement();
-
-        cp.add(barre, BorderLayout.SOUTH);
-      //  cp.add(graphe);
-        cp.revalidate();
     }
 }

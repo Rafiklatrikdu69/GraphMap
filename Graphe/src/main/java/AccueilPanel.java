@@ -3,28 +3,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AccueilInterface extends JFrame {
+public class AccueilPanel extends JPanel {
     private JButton commencer, parametre, quitter;
-
-    /**
-     * @param nom
-     */
-    AccueilInterface(String nom) {
-        initComponents();
-        setTitle(nom);
-        setSize(800, 600);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    private JFrame fenetrePrincipale;
+    AccueilPanel(JFrame fenetrePrincipale){
+        this.fenetrePrincipale = fenetrePrincipale;
+        initAccueilComponents();
+        initAccueilEventListeners();
         setVisible(true);
     }
 
-    /**
-     *
-     */
 
-    private void initComponents() {
-        JPanel cp = (JPanel) getContentPane();
-        cp.setLayout(new BorderLayout());
+    private void initAccueilComponents(){
+        setLayout(new BorderLayout());
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
@@ -50,30 +41,21 @@ public class AccueilInterface extends JFrame {
         centerPanel.add(Box.createVerticalStrut(50));
         centerPanel.add(quitter);
 
-        cp.add(centerPanel, BorderLayout.CENTER);
-
-        initEventListeners();
+        add(centerPanel, BorderLayout.CENTER);
     }
-
-    /**
-     *
-     */
-
-    private void initEventListeners() {
+    private void initAccueilEventListeners(){
         commencer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!InterfaceGraphe.fenetreDejaOuverte) {
-                    InterfaceGraphe interfaceGraphe = new InterfaceGraphe();
-                    InterfaceGraphe.fenetreDejaOuverte = true;
-                }
-
+                setVisible(false);
+                fenetrePrincipale.setContentPane(InterfaceGraphe.cp);
+                fenetrePrincipale.setJMenuBar(InterfaceGraphe.menu);
             }
         });
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                fenetrePrincipale.dispose();
             }
         });
     }

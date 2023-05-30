@@ -20,6 +20,8 @@ public class DessinGraphe extends JPanel {
     private int xPos, yPos;
 
     private JPanel panelInfoSommet;
+    private JLabel nomSommetLabel;
+    private JLabel typeSommetLabel;
 
     private static final int LABEL_WIDTH = 30;
     private static final int LABEL_HEIGHT = 30;
@@ -42,11 +44,11 @@ public class DessinGraphe extends JPanel {
      *
      */
     private void initGraphe() {
-        LCGraphe.MaillonGraphe tmp = grapheConstant.graphe.getPremier();
+        LCGraphe.MaillonGraphe tmp = InterfaceGraphe.Graphe.getPremier();
 
-        int LargeurPanel = getWidth() + 1250 / 2;//largeur de la panel
+        int LargeurPanel = getWidth();//largeur de la panel
 
-        int hauteurPanel = getHeight() + 600 / 2;
+        int hauteurPanel = getHeight();
         int tailleCadre = (int) (Math.sqrt(30) * 30);
         int i = 1;
 
@@ -99,7 +101,7 @@ public class DessinGraphe extends JPanel {
                 panelInfoSommet.removeAll();
 
 
-                double[][] prec = grapheConstant.graphe.floydWarshallDistance();
+                double[][] prec = InterfaceGraphe.Graphe.floydWarshallDistance();
                 System.out.println("sommet selectionner : " + sommetSelectionne.getNom());
                 // System.out.println("sommet choisis : "+algoPlusCourtsChemins.getChoixSommet());
                 if (InterfaceGraphe.cheminValide) {
@@ -111,13 +113,13 @@ public class DessinGraphe extends JPanel {
                 }
 
 
-                JLabel nom = new JLabel("Nom du sommet : " + sommetSelectionne.getNom());
-                JLabel type = new JLabel("Type : " + sommetSelectionne.getType());
+                nomSommetLabel = new JLabel("Nom du sommet : " + sommetSelectionne.getNom());
+                typeSommetLabel = new JLabel("Type : " + sommetSelectionne.getType());
                 System.out.println("Le nom du dispensaire " + sommetSelectionne.getNom() + " Son type : " + sommetSelectionne.getType());
 
 
-                panelInfoSommet.add(nom);
-                panelInfoSommet.add(type);
+                panelInfoSommet.add(nomSommetLabel);
+                panelInfoSommet.add(typeSommetLabel);
                 JLabel infoSommet = new JLabel("Info des sommets voisins:");
                 panelInfoSommet.add(infoSommet);
 
@@ -211,7 +213,6 @@ public class DessinGraphe extends JPanel {
 
         sommets.put(m, label);
         add(label);
-        repaint();
     }
 
     /**
@@ -221,6 +222,10 @@ public class DessinGraphe extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        drawAll(g);
+    }
+
+    private void drawAll(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
 
         int radius;
@@ -281,27 +286,27 @@ public class DessinGraphe extends JPanel {
 
 
         // Vérifie si les sommets saisis existent dans le graphe
-        if (!grapheConstant.graphe.indexSommet().containsKey(source) || !grapheConstant.graphe.indexSommet().containsKey(destination)) {
+        if (!InterfaceGraphe.Graphe.indexSommet().containsKey(source) || !InterfaceGraphe.Graphe.indexSommet().containsKey(destination)) {
             System.out.println("Les sommets saisis ne sont pas valides.");
             return;
         }
 
-        int indexSource = grapheConstant.graphe.indexSommet().get(source);
-        int indexDestination = grapheConstant.graphe.indexSommet().get(destination);
+        int indexSource = InterfaceGraphe.Graphe.indexSommet().get(source);
+        int indexDestination = InterfaceGraphe.Graphe.indexSommet().get(destination);
 
         // Vérifie si un chemin existe entre les sommets saisis
-        if (grapheConstant.graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
+        if (InterfaceGraphe.Graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
             System.out.println("Aucun chemin trouvé entre " + source + " et " + destination);
             return;
         }
 
         System.out.println("Chemin de " + source + " à " + destination + ":");
         System.out.println("cheminnnnn :::");
-        grapheConstant.graphe.afficherChemin(indexSource, indexDestination);
+        InterfaceGraphe.Graphe.afficherChemin(indexSource, indexDestination);
 
 
-        System.out.println("Distance : " + grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
-        String chemin = String.valueOf(grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
+        System.out.println("Distance : " + InterfaceGraphe.Graphe.getMatrice()[indexSource][indexDestination]);
+        String chemin = String.valueOf(InterfaceGraphe.Graphe.getMatrice()[indexSource][indexDestination]);
         AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets,this);
 
     }
