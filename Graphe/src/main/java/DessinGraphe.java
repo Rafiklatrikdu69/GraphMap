@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class DessinGraphe extends JPanel {
@@ -141,9 +142,10 @@ public class DessinGraphe extends JPanel {
         JLabel p1;
         JLabel p2;
         int x1, y1, x2, y2;
-        
+        //Iterator<Map.Entry<LCGraphe.MaillonGraphe, JLabel>> it = sommets.entrySet().iterator();
+       // Iterator it = sommets.entrySet().iterator();
         for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
-            
+           // Map.Entry<LCGraphe.MaillonGraphe, JLabel> entry = (Map.Entry)it.next();
             p1 = sommets.get(sommet1);
             x1 = p1.getX() + p1.getWidth() / 2;
             y1 = p1.getY() + p1.getHeight() / 2;
