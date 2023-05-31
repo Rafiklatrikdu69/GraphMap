@@ -57,7 +57,7 @@ public class InterfaceGraphe extends JFrame {
     
     private void initContainerDessinGraphePanel() {
         graphePanel = new DessinGraphe();
-        contenuGraphePanel.setBorder(BorderFactory.createTitledBorder("bite"));
+        contenuGraphePanel.setBorder(BorderFactory.createTitledBorder("Graphe dessiner"));
         contenuGraphePanel.add(graphePanel, BorderLayout.CENTER);
     }
     
@@ -128,7 +128,8 @@ public class InterfaceGraphe extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fenetreOuvertureFichier = new JFileChooser(new File("."));
-                File fichier;
+                File fichier = new File("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\");
+                fenetreOuvertureFichier.setCurrentDirectory(fichier);
                 if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     fichier = fenetreOuvertureFichier.getSelectedFile();
                     System.out.println(fichier.getPath());
@@ -139,6 +140,7 @@ public class InterfaceGraphe extends JFrame {
                         barreDeChargementPanel.add(barreChargement);
                         barreChargement.setStringPainted(true);
                         
+                        File finalFichier = fichier;
                         timer = new Timer(30, new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -151,7 +153,7 @@ public class InterfaceGraphe extends JFrame {
                                     Graphe = new LCGraphe();
                                     contenuGraphePanel.removeAll();
                                     System.out.println(Graphe.existeCentre("S1"));
-                                    chargerNouveauFichier(fichier);
+                                    chargerNouveauFichier(finalFichier);
                                     initContainerDessinGraphePanel();
 
                                     
