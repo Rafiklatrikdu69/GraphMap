@@ -1091,23 +1091,26 @@ class LCGraphe {
             System.out.println("Aucun chemin trouvé de " + getNomSommet(source) + " à " + getNomSommet(destination));
             return;
         }
-
+        
         chemin = new ArrayList<>();
         construireChemin(source, destination, chemin);
-
-        // Affiche le chemin
+        
+        // Affiche le chemin en excluant les doublons
         for (int i = 0; i < chemin.size(); i++) {
             int sommetCourant = chemin.get(i);
-            System.out.print(getNomSommet(sommetCourant));
-            if (i < chemin.size() - 1) {
-                System.out.print(" -> ");
+            if (i == 0 || sommetCourant != chemin.get(i - 1)) {
+                System.out.print(getNomSommet(sommetCourant));
+                if (i < chemin.size() - 1) {
+                    System.out.print(" -> ");
+                }
             }
         }
         System.out.println();
-
+        
         System.out.println(getNomSommet(destination));
     }
-
+    
+    
     /**
      * @param source
      * @param destination

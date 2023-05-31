@@ -5,23 +5,25 @@ import java.util.Map;
 public class AfficherCheminPanel extends JOptionPane {
     private String autreSommetSelectionne;
     private Map<LCGraphe.MaillonGraphe, JLabel> sommet;
-    private  DessinGraphe dessinGraphe;
+    public   DessinGraphe dessinGraphe;
 
-    public AfficherCheminPanel(String chemin, Map<LCGraphe.MaillonGraphe, JLabel> sommets,DessinGraphe d) {
+     AfficherCheminPanel(String chemin, Map<LCGraphe.MaillonGraphe, JLabel> sommets,DessinGraphe d) {
         this.sommet = sommets;
         this.dessinGraphe = d;
-        JLabel label = new JLabel("Distance : ");
-        JLabel dist = new JLabel(chemin + " km");//ajoute le chemin dans un Jlabel
-
-        StringBuilder chaineChemin = new StringBuilder();//recupere le chemin sous forme de chaine
-        for (int i = 0; i < grapheConstant.graphe.chemin.size(); i++) {
-            int sommetCourant = grapheConstant.graphe.chemin.get(i);//recupere le sommet de la liste contenant le chemin
-            chaineChemin.append(grapheConstant.graphe.getNomSommet(sommetCourant));
-
-            if (i < grapheConstant.graphe.chemin.size() - 1) {
-                chaineChemin.append(" -> ");
-            }
-        }
+          
+          
+          StringBuilder chaineChemin = new StringBuilder();//recupere le chemin sous forme de chaine
+          JLabel label = new JLabel("Distance : ");
+          JLabel dist = new JLabel(chemin + " km");//ajoute le chemin dans un Jlabel
+          for (int i = 0; i < InterfaceGraphe.Graphe.chemin.size(); i++) {
+               int sommetCourant = InterfaceGraphe.Graphe.chemin.get(i);
+               if (i == 0 || sommetCourant != InterfaceGraphe.Graphe.chemin.get(i - 1)) {
+                    chaineChemin.append(InterfaceGraphe.Graphe.getNomSommet(sommetCourant)+" -> ");
+                    if (i < InterfaceGraphe.Graphe.chemin.size() - 1) {
+                         System.out.print(" -> ");
+                    }
+               }
+          }
         JLabel cheminCourt = new JLabel(chaineChemin.toString());//ajoute le chemin dans Jlabel
 
         JPanel panel = new JPanel();
@@ -36,7 +38,7 @@ public class AfficherCheminPanel extends JOptionPane {
         dessinGraphe.repaint();
         AffichagePlusCourtsChemin dessinGrapheRouge = new AffichagePlusCourtsChemin(sommet,dessinGraphe);
         JPanel PanelDessin = new JPanel();
-        //PanelDessin.setPreferredSize(new Dimension(500,500));
+        PanelDessin.setPreferredSize(new Dimension(500,500));
         PanelDessin.add(dessinGrapheRouge);
 
         JOptionPane.showMessageDialog(null, PanelDessin, "Graphe Chemin", JOptionPane.PLAIN_MESSAGE);

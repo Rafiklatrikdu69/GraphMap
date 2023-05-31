@@ -9,18 +9,17 @@ public class InterfaceGraphe extends JFrame {
 	private JFrame fenetrePrincipale; // la fenetre
 	
 	public static JPanel cp;
-	private JPanel graphePanel;
+	
 	private AccueilPanel accueilPanel;
-	private JPanel barreDeChargementPanel;
+	private JPanel barreDeChargementPanel, graphePanel;
 	
 	private static JPanel contenuInfoSommetPanel;
 	
-	 static JMenuBar menu;
+	static JMenuBar menu;
 	private JMenu itemFichier, itemFenetre, itemFonctionnalites, itemOptionFonction;
-	private  JMenuItem itemOuvrirFichier;
-    private JMenuItem itemFermerFenetre;
-    private JMenuItem itemMenuPrincipale;
-    private static JMenuItem itemFonction;
+	private JMenuItem itemFermerFenetre, itemMenuPrincipale, itemOuvrirFichier;
+	
+	private  JMenuItem itemAfficherCheminPlusCourts;
 	static JRadioButton bloquerGraphe;
 	private JProgressBar barreChargement;
 	private int progresse;
@@ -35,7 +34,8 @@ public class InterfaceGraphe extends JFrame {
 	static boolean cheminValide = false;
 	
 	public static JPanel contenuGraphePanel;
-	 static boolean  selected = false; ;
+	static boolean selectedItem = false;
+	;
 	
 	public InterfaceGraphe() {
 		super();
@@ -66,6 +66,8 @@ public class InterfaceGraphe extends JFrame {
 	
 	private void initComposantsInfoSommetPanel() {
 		contenuInfoSommetPanel = new JPanel();
+		contenuInfoSommetPanel.removeAll();
+		contenuInfoSommetPanel.revalidate();
 		contenuInfoSommetPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		contenuInfoSommetPanel.setBorder(BorderFactory.createTitledBorder("Info"));
 		contenuInfoSommetPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 45));
@@ -80,22 +82,26 @@ public class InterfaceGraphe extends JFrame {
 		cp.add(barreDeChargementPanel, BorderLayout.SOUTH);
 	}
 	
-	
+	private void initialisationJMenu(){
+		itemFichier = new JMenu("Fichier");
+		itemFenetre = new JMenu("Fenetre");
+		itemFonctionnalites = new JMenu("Mode du Graphe");
+		itemOptionFonction = new JMenu("Fonctionnalitées");
+	}
+	private void initialisationJMenuItem(){
+		itemOuvrirFichier = new JMenuItem("Ouvrir");
+		itemFermerFenetre = new JMenuItem("Fermer");
+		itemMenuPrincipale = new JMenuItem("Menu Principale");
+		itemAfficherCheminPlusCourts = new JMenuItem("Calculer Itineraire");
+	}
 	private void initComponents() {
 		cp = new JPanel();
 		cp.setLayout(new BorderLayout());
 		
 		menu = new JMenuBar();
-		itemFichier = new JMenu("Fichier");
-		itemFenetre = new JMenu("Fenetre");
-		itemFonctionnalites = new JMenu("Mode du Graphe");
-		itemOptionFonction = new JMenu("Fonctionnalitées");
 		
-		// Menu
-		itemOuvrirFichier = new JMenuItem("Ouvrir");
-		itemFermerFenetre = new JMenuItem("Fermer");
-		itemMenuPrincipale = new JMenuItem("Menu Principale");
-		itemFonction = new JMenuItem("Information Sommet");
+		initialisationJMenu();
+		initialisationJMenuItem();
 		bloquerGraphe = new JRadioButton("Bloquer");
 		itemFonctionnalites.add(bloquerGraphe);
 		menu.add(itemFonctionnalites);
@@ -106,11 +112,11 @@ public class InterfaceGraphe extends JFrame {
 		itemFenetre.setFont(new Font("Arial", Font.BOLD, 14));
 		itemOptionFonction.setFont(new Font("Arial", Font.BOLD, 14));
 		menu.setBackground(Color.GRAY);
-  
+		
 		itemFenetre.add(itemFermerFenetre);
 		itemFenetre.add(itemMenuPrincipale);
-		itemOptionFonction.add(itemFonction);
-  
+		itemOptionFonction.add(itemAfficherCheminPlusCourts);
+		
 		menu.add(itemFichier);
 		menu.add(itemFenetre);
 		menu.add(itemFonctionnalites);
@@ -121,7 +127,7 @@ public class InterfaceGraphe extends JFrame {
 		cp.add(contenuGraphePanel, BorderLayout.CENTER);
 		
 		initComposantsBarreDeChargement();
-		initComposantsInfoSommetPanel();
+		
 		initEventListeners();
 	}
 	
@@ -129,13 +135,15 @@ public class InterfaceGraphe extends JFrame {
 		progresse = 0;
 		timer.start();
 	}
-	private  void initialisationBarreDeChargement(){
+	
+	private void initialisationBarreDeChargement() {
 		barreDeChargementPanel.removeAll();
 		barreChargement = new JProgressBar(0, 100);
 		barreDeChargementPanel.add(barreChargement);
 		barreChargement.setStringPainted(true);
 	}
-	private void initialisationTimer(File fichierCharge){
+	
+	private void initialisationTimer(File fichierCharge) {
 		timer = new Timer(30, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -158,6 +166,7 @@ public class InterfaceGraphe extends JFrame {
 			}
 		});
 	}
+	
 	public void initEventListeners() {
 		itemOuvrirFichier.addActionListener(new ActionListener() {
 			@Override
@@ -172,6 +181,7 @@ public class InterfaceGraphe extends JFrame {
 						initialisationBarreDeChargement();
 						File finalFichier = fichier;
 						initialisationTimer(finalFichier);
+						initComposantsInfoSommetPanel();
 						demarrerChargement();
 					} else {
 						JPanel panelMauvaisFormat = new JPanel();
@@ -194,32 +204,31 @@ public class InterfaceGraphe extends JFrame {
 				fenetrePrincipale.setContentPane(accueilPanel);
 			}
 		});
+		itemAfficherCheminPlusCourts.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cheminValide = itemAfficherCheminPlusCourts.isSelected();
+				System.out.println(cheminValide);
+				cheminValide = true;
+			}
+		});
 	}
-	
 	
 	
 	private void chargerNouveauFichier(File file) {
 		Graphe.chargementFichier(file.getPath());
 	}
-	static boolean getOptionFonction() {
-		itemFonction.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				selected = itemFonction.isSelected();
-				System.out.println(selected);
-				selected = true;
-				
-			}
-		});
-		return selected;
-	}
-	static void setContenuInfoSommetPanel(JLabel nom,JLabel type){
-		contenuInfoSommetPanel.add(nom,BorderLayout.NORTH);
-		contenuInfoSommetPanel.add(type,BorderLayout.SOUTH);
-	}
-	static JPanel getPanelInfoSommet(){
-		return  contenuInfoSommetPanel;
-	}
+	
 
+	
+	static void setContenuInfoSommetPanel(JLabel nom, JLabel type) {
+		contenuInfoSommetPanel.add(nom, BorderLayout.NORTH);
+		contenuInfoSommetPanel.add(type, BorderLayout.SOUTH);
+	}
+	
+	static JPanel getPanelInfoSommet() {
+		return contenuInfoSommetPanel;
+	}
+	
 	
 }

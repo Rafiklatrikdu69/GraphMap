@@ -10,7 +10,7 @@ private  String autreSommetSelectionne;
         // Création des composants de votre boîte de dialogue
         JLabel label = new JLabel("Sélectionnez l'autre sommet:");
         JComboBox<String> comboBoxAutreSommet = new JComboBox<>();
-        LCGraphe.MaillonGraphe m = grapheConstant.graphe.getPremier();
+        LCGraphe.MaillonGraphe m = InterfaceGraphe.Graphe.getPremier();
         while (m!=null){
             comboBoxAutreSommet.addItem(m.getNom());
             m = m.getSuivant();

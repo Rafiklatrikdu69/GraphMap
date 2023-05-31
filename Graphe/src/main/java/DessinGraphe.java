@@ -5,10 +5,12 @@ import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.util.*;
 
+import static javax.swing.JOptionPane.showOptionDialog;
+
 public class DessinGraphe extends JPanel {
 	
 	protected Map<LCGraphe.MaillonGraphe, JLabel> sommets;
-	private LCGraphe.MaillonGraphe sommetSelectionne;
+	protected LCGraphe.MaillonGraphe sommetSelectionne;
 	
 	private JLabel sommetEnDeplacement;
 	private int xPos, yPos;
@@ -82,18 +84,19 @@ public class DessinGraphe extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
 				
-				if (InterfaceGraphe.getOptionFonction()) {
+			
 					System.out.println("sommet cliqué !");
 					sommetSelectionne = m;
 					JLabel label = sommets.get(sommetSelectionne);
 					label.setBackground(SELECTED_LABEL_COLOR);
-					InterfaceGraphe.selected = false;
+					InterfaceGraphe.selectedItem = false;
 					getInfoSommet();
+					calculerCheminPlusCourt();
 					repaint();
 					
 					initialisationTimer(label);
 					
-				}
+				
 			}
 			
 			
@@ -137,6 +140,48 @@ public class DessinGraphe extends JPanel {
 		
 		sommets.put(m, label);
 		add(label);
+	}
+	
+	private void calculerCheminPlusCourt() {
+		if (InterfaceGraphe.cheminValide) {
+              System.out.println("Chemin valide ");
+			double[][] predecesseur = InterfaceGraphe.Graphe.floydWarshallDistance();
+			AlgoPlusCourtsChemins algoPlusCourtsChemins = new AlgoPlusCourtsChemins();
+			rechercherChemin(sommetSelectionne.getNom(), algoPlusCourtsChemins.getChoixSommet());
+			InterfaceGraphe.cheminValide = false;
+		}
+	}
+	
+	public void rechercherChemin(String source, String destination) {
+		
+		
+		// Vérifie si les sommets saisis existent dans le graphe
+		if (!InterfaceGraphe.Graphe.indexSommet().containsKey(source) || !InterfaceGraphe.Graphe.indexSommet().containsKey(destination)) {
+			System.out.println("Les sommets saisis ne sont pas valides.");
+			return;
+		}
+		
+		int indexSource = InterfaceGraphe.Graphe.indexSommet().get(source);
+		int indexDestination = InterfaceGraphe.Graphe.indexSommet().get(destination);
+		
+		// Vérifie si un chemin existe entre les sommets saisis
+		if (InterfaceGraphe.Graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
+              JPanel panelAucunChemin = new JPanel();
+              JLabel chemin = new JLabel("Aucun chemin trouver !");
+              panelAucunChemin.add(chemin);
+              int result = showOptionDialog(null, panelAucunChemin, "Chemin Court", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+              return;
+		
+		}
+		
+		
+         InterfaceGraphe.Graphe.afficherChemin(indexSource, indexDestination);
+		
+		
+		System.out.println("Distance : " + InterfaceGraphe.Graphe.getMatrice()[indexSource][indexDestination]);
+		String chemin = String.valueOf(InterfaceGraphe.Graphe.getMatrice()[indexSource][indexDestination]);
+		AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets, this);
+		
 	}
 	
 	private void getInfoSommet() {
