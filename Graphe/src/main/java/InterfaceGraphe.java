@@ -13,9 +13,9 @@ public class InterfaceGraphe extends JFrame {
 	private AccueilPanel accueilPanel;
 	private JPanel barreDeChargementPanel;
 	
-	public static JPanel contenuInfoSommetPanel;
+	private static JPanel contenuInfoSommetPanel;
 	
-	public static JMenuBar menu;
+	 static JMenuBar menu;
 	private JMenu itemFichier, itemFenetre, itemFonctionnalites, itemOptionFonction;
 	private  JMenuItem itemOuvrirFichier;
     private JMenuItem itemFermerFenetre;
@@ -35,6 +35,7 @@ public class InterfaceGraphe extends JFrame {
 	static boolean cheminValide = false;
 	
 	public static JPanel contenuGraphePanel;
+	 static boolean  selected = false; ;
 	
 	public InterfaceGraphe() {
 		super();
@@ -128,7 +129,35 @@ public class InterfaceGraphe extends JFrame {
 		progresse = 0;
 		timer.start();
 	}
-	
+	private  void initialisationBarreDeChargement(){
+		barreDeChargementPanel.removeAll();
+		barreChargement = new JProgressBar(0, 100);
+		barreDeChargementPanel.add(barreChargement);
+		barreChargement.setStringPainted(true);
+	}
+	private void initialisationTimer(File fichierCharge){
+		timer = new Timer(30, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				progresse++;
+				barreChargement.setValue(progresse);
+				
+				if (progresse == 100) {
+					timer.stop();
+					
+					Graphe = new LCGraphe();
+					contenuGraphePanel.removeAll();
+					System.out.println(Graphe.existeCentre("S1"));
+					chargerNouveauFichier(fichierCharge);
+					initContainerDessinGraphePanel();
+					
+					
+					barreChargement.setVisible(false);
+					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				}
+			}
+		});
+	}
 	public void initEventListeners() {
 		itemOuvrirFichier.addActionListener(new ActionListener() {
 			@Override
@@ -140,39 +169,13 @@ public class InterfaceGraphe extends JFrame {
 					fichier = fenetreOuvertureFichier.getSelectedFile();
 					if (fichier.getPath().endsWith(".csv")) {
 						setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-						barreDeChargementPanel.removeAll();
-						barreChargement = new JProgressBar(0, 100);
-						barreDeChargementPanel.add(barreChargement);
-						barreChargement.setStringPainted(true);
-						
+						initialisationBarreDeChargement();
 						File finalFichier = fichier;
-						timer = new Timer(30, new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								progresse++;
-								barreChargement.setValue(progresse);
-								
-								if (progresse == 100) {
-									timer.stop();
-									
-									Graphe = new LCGraphe();
-									contenuGraphePanel.removeAll();
-									System.out.println(Graphe.existeCentre("S1"));
-									chargerNouveauFichier(finalFichier);
-									initContainerDessinGraphePanel();
-									
-									
-									barreChargement.setVisible(false);
-									setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-								}
-							}
-						});
-						
-						// Appel de demarrerChargement()
+						initialisationTimer(finalFichier);
 						demarrerChargement();
 					} else {
-						JPanel panelCorrompu = new JPanel();
-						int result = showOptionDialog(null, panelCorrompu, "Format de fichier interdit !", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+						JPanel panelMauvaisFormat = new JPanel();
+						int result = showOptionDialog(null, panelMauvaisFormat, "Format de fichier interdit !", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 						
 					}
 				}
@@ -193,25 +196,30 @@ public class InterfaceGraphe extends JFrame {
 		});
 	}
 	
-	@Override
-	public void setEnabled(boolean b) {
-		if (b) {
-			setBackground(Color.BLACK);
-		} else {
-			setBackground(Color.GRAY);
-		}
-		super.setEnabled(b);
-	}
+	
 	
 	private void chargerNouveauFichier(File file) {
 		Graphe.chargementFichier(file.getPath());
 	}
-	public static boolean getOptionFonction(){
-         System.out.println("test");
-         boolean selected = false;
-        if (itemFonction.isSelected()){
-            selected = true;
-        }
-        return selected;
-     }
+	static boolean getOptionFonction() {
+		itemFonction.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selected = itemFonction.isSelected();
+				System.out.println(selected);
+				selected = true;
+				
+			}
+		});
+		return selected;
+	}
+	static void setContenuInfoSommetPanel(JLabel nom,JLabel type){
+		contenuInfoSommetPanel.add(nom,BorderLayout.NORTH);
+		contenuInfoSommetPanel.add(type,BorderLayout.SOUTH);
+	}
+	static JPanel getPanelInfoSommet(){
+		return  contenuInfoSommetPanel;
+	}
+
+	
 }
