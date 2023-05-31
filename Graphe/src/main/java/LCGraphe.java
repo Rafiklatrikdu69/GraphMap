@@ -27,8 +27,9 @@ class LCGraphe {
     public double[][] getMatrice() {
         return this.distances;
     }
-
-
+    
+ 
+    
     public class MaillonGrapheSec {
 
         private double fiab;

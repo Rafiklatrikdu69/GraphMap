@@ -37,6 +37,12 @@ public class LCGrapheTest {
         assertTrue(graphe.existeVoisin("S1", "S12"));
 
     }
+    @Test
+    public void testCentreListe(){
+         LCGraphe graphe = new LCGraphe();
+         graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
+               assertNotNull(graphe.tousLesCentresToList());
+    }
 
 
 
