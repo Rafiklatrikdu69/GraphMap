@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.Random;
 
 import static javax.swing.JOptionPane.showOptionDialog;
 
@@ -31,7 +32,7 @@ public class InterfaceGraphe extends JFrame {
     private Integer nombreCentre;
     static boolean cheminValide = false;
 
-    private JPanel contenuGraphePanel;
+    public static JPanel contenuGraphePanel;
 
     public InterfaceGraphe() {
         super();
@@ -56,7 +57,7 @@ public class InterfaceGraphe extends JFrame {
     
     private void initContainerDessinGraphePanel() {
         graphePanel = new DessinGraphe();
-        graphePanel.setBorder(BorderFactory.createTitledBorder("Graphe"));
+        contenuGraphePanel.setBorder(BorderFactory.createTitledBorder("bite"));
         contenuGraphePanel.add(graphePanel, BorderLayout.CENTER);
     }
     
@@ -109,7 +110,9 @@ public class InterfaceGraphe extends JFrame {
 
         contenuGraphePanel = new JPanel();
         contenuGraphePanel.setLayout(new BorderLayout());
+        contenuGraphePanel.setBorder(BorderFactory.createTitledBorder("Graphe"));
         cp.add(contenuGraphePanel, BorderLayout.CENTER);
+
         initComposantsBarreDeChargement();
         initComposantsInfoSommetPanel();
         initEventListeners();
@@ -198,4 +201,5 @@ public class InterfaceGraphe extends JFrame {
     private void chargerNouveauFichier(File file) {
         Graphe.chargementFichier(file.getPath());
     }
+
 }

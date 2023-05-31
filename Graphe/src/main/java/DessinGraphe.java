@@ -2,10 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class DessinGraphe extends JPanel {
     
@@ -49,12 +46,10 @@ public class DessinGraphe extends JPanel {
         
         
         while (tmp != null) {
+
+            int[] pos = getRandomPositionPourCentre(InterfaceGraphe.contenuGraphePanel);
             
-            double angle = 2 * Math.PI * i / 30;
-            int x = largeurPanel + (int) (tailleCadre * Math.cos(angle));
-            int y = hauteurPanel + (int) (tailleCadre * Math.sin(angle));
-            
-            ajouterSommet(tmp, x, y);
+            ajouterSommet(tmp, pos[0], pos[1]);
             i++;
             //System.out.println(tmp.getNom());
             tmp = tmp.getSuivant();
@@ -146,7 +141,6 @@ public class DessinGraphe extends JPanel {
         while (it.hasNext()) {
             Map.Entry<LCGraphe.MaillonGraphe, JLabel> mapSommet = it.next();
             LCGraphe.MaillonGraphe sommet1 = mapSommet.getKey();
-            JLabel label = mapSommet.getValue();
             
             p1 = sommets.get(sommet1);
             x1 = p1.getX() + p1.getWidth() / 2;
@@ -188,13 +182,33 @@ public class DessinGraphe extends JPanel {
        initDessinGraphe(g);
     }
 
+    private int[] getRandomPositionPourCentre(JPanel container){
+        Random random = new Random();
+        int minX = 5;
+        int maxX = container.getWidth()-30;
+        int randomInRangeX = random.nextInt(maxX - minX + 1) + minX;
+        int minY = 15;
+        int maxY = container.getHeight()-30;
+        int randomInRangeY = random.nextInt(maxY - minY + 1) + minY;
+        while(sommetExisteDansZone(randomInRangeX, randomInRangeY)){
+            randomInRangeX = random.nextInt(maxX - minX + 1) + minX;
+            randomInRangeY = random.nextInt(maxY - minY + 1) + minY;
+        }
+        return new int[]{randomInRangeX, randomInRangeY};
+    }
+    private boolean sommetExisteDansZone(int x, int y) {
+        for (Map.Entry<LCGraphe.MaillonGraphe, JLabel> entry : sommets.entrySet()) {
+            JLabel jLabel = entry.getValue();
+            if (jLabel.getBounds().intersects(new Rectangle(x, y, 30, 30))) {
+                return true;
+            }
+        }
+        return false;
+    }
     
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(100, 100);
     }
-    
- 
-    
- 
+
 }
