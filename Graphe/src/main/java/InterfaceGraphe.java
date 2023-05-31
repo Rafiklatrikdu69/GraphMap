@@ -43,7 +43,7 @@ public class InterfaceGraphe extends JFrame {
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenWidth = (int) screenSize.getWidth();
         int screenHeight = (int) screenSize.getHeight();
-        setSize(new Dimension(screenWidth / 2, screenHeight / 2 + 200));
+        setSize(new Dimension(screenWidth , screenHeight ));
         
         initComponents();
         
