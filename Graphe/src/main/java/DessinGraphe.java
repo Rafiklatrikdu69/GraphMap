@@ -94,6 +94,7 @@ public class DessinGraphe extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
+                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 sommetEnDeplacement = null;
                 repaint();
             }
@@ -102,29 +103,22 @@ public class DessinGraphe extends JPanel {
         label.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 super.mouseDragged(e);
                 if (!InterfaceGraphe.bloquerGraphe.isSelected() && sommetEnDeplacement != null) {
-                    int x = e.getXOnScreen() - xPos + sommetEnDeplacement.getX();
-                    int y = e.getYOnScreen() - yPos + sommetEnDeplacement.getY();
-                    int largeurPanel = getWidth();
-                    int hauteurPanel = getHeight();
                     int labelLargeur = sommetEnDeplacement.getWidth();
                     int labelHauteur = sommetEnDeplacement.getHeight();
-                    
-                    if (x < 0) {
-                        x = 0;
-                    } else if (x > largeurPanel - labelLargeur) {
-                        x = largeurPanel - labelLargeur;
-                    }
-                    
-                    if (y < 0) {
-                        y = 0;
-                    } else if (y > hauteurPanel - labelHauteur) {
-                        y = hauteurPanel - labelHauteur;
-                    }
-                    
-                    sommetEnDeplacement.setLocation(x, y);
-                    
+                    int dx = e.getX() - sommetEnDeplacement.getWidth() / 2;
+                    int dy = e.getY() - sommetEnDeplacement.getHeight() / 2;
+                    int newPosX = sommetEnDeplacement.getX() + dx;
+                    int newPosY = sommetEnDeplacement.getY() + dy;
+                    int maxX = getParent().getWidth() - labelLargeur;
+                    int maxY = getParent().getHeight() - labelHauteur;
+                    newPosX = Math.max(0, Math.min(newPosX, maxX));
+                    newPosY = Math.max(0, Math.min(newPosY, maxY));
+
+                    sommetEnDeplacement.setLocation(newPosX, newPosY);
+
                     xPos = e.getXOnScreen();
                     yPos = e.getYOnScreen();
                 }
@@ -174,7 +168,6 @@ public class DessinGraphe extends JPanel {
                 if (sommet1.estVoisin(sommet2.getNom())) {
                     g2d.setColor(Color.BLACK);
                     g2d.drawLine(x1, y1, x2, y2);
-                    
                 }
             }
         }

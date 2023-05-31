@@ -930,8 +930,6 @@ class LCGraphe {
      * @see {@link #afficherPlusCourtsChemins()}
      * @see {@link  #tailleMatrice()}
      */
-
-
     public double[][] floydWarshallDistance() {
 
         int taille = tailleMatrice();

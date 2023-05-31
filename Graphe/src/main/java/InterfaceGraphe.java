@@ -30,7 +30,9 @@ public class InterfaceGraphe extends JFrame {
     private Integer nombreRoutes;
     private Integer nombreCentre;
     static boolean cheminValide = false;
-    
+
+    private JPanel contenuGraphePanel;
+
     public InterfaceGraphe() {
         super();
         Graphe = new LCGraphe();
@@ -53,11 +55,9 @@ public class InterfaceGraphe extends JFrame {
     }
     
     private void initContainerDessinGraphePanel() {
-        System.out.println("initialisation du graphe ");
         graphePanel = new DessinGraphe();
         graphePanel.setBorder(BorderFactory.createTitledBorder("Graphe"));
-        cp.add(graphePanel, BorderLayout.CENTER);
-        
+        contenuGraphePanel.add(graphePanel, BorderLayout.CENTER);
     }
     
     private void initComposantsInfoSommetPanel() {
@@ -106,9 +106,10 @@ public class InterfaceGraphe extends JFrame {
         menu.add(itemFichier);
         menu.add(itemFenetre);
         menu.add(itemFonctionnalites);
-        
-        cp.add(menu, BorderLayout.NORTH);
-        
+
+        contenuGraphePanel = new JPanel();
+        contenuGraphePanel.setLayout(new BorderLayout());
+        cp.add(contenuGraphePanel, BorderLayout.CENTER);
         initComposantsBarreDeChargement();
         initComposantsInfoSommetPanel();
         initEventListeners();
@@ -143,11 +144,13 @@ public class InterfaceGraphe extends JFrame {
                                 
                                 if (progresse == 100) {
                                     timer.stop();
-                                    
-                                        System.out.println("test");
-                                        System.out.println("teste");
-                                        chargerNouveauFichier(fichier);
-                                        initContainerDessinGraphePanel();
+
+                                    Graphe = new LCGraphe();
+                                    contenuGraphePanel.removeAll();
+                                    System.out.println(Graphe.existeCentre("S1"));
+                                    chargerNouveauFichier(fichier);
+                                    initContainerDessinGraphePanel();
+
                                     
                                     barreChargement.setVisible(false);
                                     setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
