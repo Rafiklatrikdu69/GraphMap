@@ -36,6 +36,7 @@ public class DessinGraphe extends JPanel {
      */
     private void initGraphe() {
       //  InterfaceGraphe.Graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
+        
         LCGraphe.MaillonGraphe tmp = InterfaceGraphe.Graphe.getPremier();
         
         int largeurPanel = 300; // largeur du panel
@@ -47,8 +48,6 @@ public class DessinGraphe extends JPanel {
         }
         
         
-       
-
         while (tmp != null) {
             
             double angle = 2 * Math.PI * i / 30;
@@ -143,9 +142,12 @@ public class DessinGraphe extends JPanel {
         JLabel p2;
         int x1, y1, x2, y2;
         //Iterator<Map.Entry<LCGraphe.MaillonGraphe, JLabel>> it = sommets.entrySet().iterator();
-       // Iterator it = sommets.entrySet().iterator();
-        for (LCGraphe.MaillonGraphe sommet1 : sommets.keySet()) {
-           // Map.Entry<LCGraphe.MaillonGraphe, JLabel> entry = (Map.Entry)it.next();
+        Iterator<Map.Entry<LCGraphe.MaillonGraphe, JLabel>> it = sommets.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<LCGraphe.MaillonGraphe, JLabel> mapSommet = it.next();
+            LCGraphe.MaillonGraphe sommet1 = mapSommet.getKey();
+            JLabel label = mapSommet.getValue();
+            
             p1 = sommets.get(sommet1);
             x1 = p1.getX() + p1.getWidth() / 2;
             y1 = p1.getY() + p1.getHeight() / 2;
@@ -153,7 +155,9 @@ public class DessinGraphe extends JPanel {
             
             g2d.fill(new Ellipse2D.Double(x1 - radius, y1 - radius, radius * 2, radius * 2));
             
-            for (LCGraphe.MaillonGraphe sommet2 : sommets.keySet()) {
+            Iterator<LCGraphe.MaillonGraphe> iterator = sommets.keySet().iterator();
+            while (iterator.hasNext()) {
+                LCGraphe.MaillonGraphe sommet2 = iterator.next();
                 
                 p2 = sommets.get(sommet2);
                 x2 = p2.getX() + p2.getWidth() / 2;
@@ -173,6 +177,7 @@ public class DessinGraphe extends JPanel {
                 }
             }
         }
+        
         
         repaint();
     }
