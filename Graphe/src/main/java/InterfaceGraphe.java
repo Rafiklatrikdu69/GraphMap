@@ -158,7 +158,7 @@ public class InterfaceGraphe extends JFrame {
                         // Appel de demarrerChargement()
                         demarrerChargement();
                     } else {
-                        System.out.println("fichier corrompu");
+                        System.out.println("Format de fichier interdit !");
                         
                         JPanel panelCorrompu = new JPanel();
                         int result = showOptionDialog(null, panelCorrompu, "fichier corrompu ! ", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
