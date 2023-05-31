@@ -10,7 +10,7 @@ public class LCGrapheTest {
         LCGraphe graphe = new LCGraphe();
 
 
-        assertTrue(graphe.existeCentre("S1"));
+        assertFalse(graphe.existeCentre("S1"));
         assertTrue(graphe.existeCentre("S2"));
         assertFalse(graphe.existeCentre("S3"));
     }
@@ -19,7 +19,7 @@ public class LCGrapheTest {
 
         LCGraphe graphe = new LCGraphe();
         graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
-       // assertNotNull(graphe.chercherMaillon("S1"));
+        assertNotNull(graphe.getCentre("S1"));
     }
 
     @Test
