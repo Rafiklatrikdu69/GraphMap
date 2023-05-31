@@ -25,17 +25,15 @@ public class DessinGraphe extends JPanel {
         super();
         sommets = new HashMap<>();
         setLayout(null); // Utiliser un layout null pour positionner les sommets manuellement
-        initGraphe();
+        initialisationGraphe();
     }
     
     /**
      * Méthode pour initialiser le graphe avec les sommets
      */
-    private void initGraphe() {
-      //  InterfaceGraphe.Graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
-        
+    private void initialisationGraphe() {
+     
         LCGraphe.MaillonGraphe tmp = InterfaceGraphe.Graphe.getPremier();
-        
         int largeurPanel = 300; // largeur du panel
         int hauteurPanel = 200; // hauteur du panel
         int tailleCadre = (int) (Math.sqrt(30) * 30);
@@ -49,21 +47,20 @@ public class DessinGraphe extends JPanel {
 
             int[] pos = getRandomPositionPourCentre(InterfaceGraphe.contenuGraphePanel);
             
-            ajouterSommet(tmp, pos[0], pos[1]);
+            initialisationPlacementSommet(tmp, pos[0], pos[1]);
             i++;
-            //System.out.println(tmp.getNom());
             tmp = tmp.getSuivant();
         }
     }
     
+    
     /**
-     * Méthode pour ajouter un sommet avec ses coordonnées
      *
-     * @param m Le sommet
-     * @param x La coordonnée X du sommet
-     * @param y La coordonnée Y du sommet
+     * @param m
+     * @param x
+     * @param y
      */
-    private void ajouterSommet(LCGraphe.MaillonGraphe m, int x, int y) {
+    private void initialisationPlacementSommet(LCGraphe.MaillonGraphe m, int x, int y) {
         JLabel label = new JLabel(m.getNom());
       
         label.setForeground(DEFAULT_LABEL_COLOR);
@@ -83,7 +80,10 @@ public class DessinGraphe extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                sommetSelectionne = m;
+                if(InterfaceGraphe.getOptionFonction()) {
+                    System.out.println("sommet cliquer !");
+                    sommetSelectionne = m;
+                }
             }
             
             @Override
@@ -123,15 +123,17 @@ public class DessinGraphe extends JPanel {
         sommets.put(m, label);
         add(label);
     }
+    
+    /**
+     *
+     * @param g
+     */
     private void initDessinGraphe(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
         
         int radius;
         
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        
-        
         
         JLabel p1;
         JLabel p2;
@@ -176,12 +178,21 @@ public class DessinGraphe extends JPanel {
         repaint();
     }
     
+    /**
+     *
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
        initDessinGraphe(g);
     }
-
+    
+    /**
+     *
+     * @param container
+     * @return
+     */
     private int[] getRandomPositionPourCentre(JPanel container){
         Random random = new Random();
         int minX = 5;
@@ -197,6 +208,7 @@ public class DessinGraphe extends JPanel {
         return new int[]{randomInRangeX, randomInRangeY};
     }
     private boolean sommetExisteDansZone(int x, int y) {
+       ;
         for (Map.Entry<LCGraphe.MaillonGraphe, JLabel> entry : sommets.entrySet()) {
             JLabel jLabel = entry.getValue();
             if (jLabel.getBounds().intersects(new Rectangle(x, y, 30, 30))) {
@@ -206,6 +218,11 @@ public class DessinGraphe extends JPanel {
         return false;
     }
     
+    /**
+     *
+     *
+     * @return
+     */
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(100, 100);
