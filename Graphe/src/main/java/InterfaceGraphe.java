@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
+import static javax.swing.JOptionPane.showOptionDialog;
+
 public class InterfaceGraphe extends JFrame {
 	private JFrame fenetrePrincipale; // la fenetre
 	
@@ -147,10 +149,11 @@ public class InterfaceGraphe extends JFrame {
 
 		contenuAutrePanel.add(contenuFonctionnalitePanel);
 		contenuAutrePanel.add(contenuTousLesCheminsPanel);
+		
 		contenuAutrePanel.add(contenuInfosJScrollPane);
 
 		contenuInfoSommetPanel.add(contenuNomTypeSommetPanel, BorderLayout.NORTH);
-		contenuInfoSommetPanel.add(contenuAutrePanel, BorderLayout.CENTER);
+		contenuInfoSommetPanel.add(contenuAutrePanel, BorderLayout.SOUTH);
 	}
 
 	private void initContainerDessinGraphePanel() {
@@ -259,21 +262,54 @@ public class InterfaceGraphe extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fenetreOuvertureFichier = new JFileChooser(new File("."));
-				File fichier = new File("src/fichiersGraphe");
+				File fichier = new File("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\");
 				fenetreOuvertureFichier.setCurrentDirectory(fichier);
 				if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					fichier = fenetreOuvertureFichier.getSelectedFile();
+					System.out.println(fichier.getPath());
 					if (fichier.getPath().endsWith(".csv")) {
 						setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-						initialisationBarreDeChargement();
-						initialisationTimer(fichier);
+						barreDeChargementPanel.removeAll();
+						barreChargement = new JProgressBar(0, 100);
+						barreDeChargementPanel.add(barreChargement);
+						barreChargement.setStringPainted(true);
+						
+						File finalFichier = fichier;
+						timer = new Timer(30, new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								progresse++;
+								barreChargement.setValue(progresse);
+								
+								if (progresse == 100) {
+									timer.stop();
+									
+									Graphe = new LCGraphe();
+									contenuGraphePanel.removeAll();
+									System.out.println(Graphe.existeCentre("S1"));
+									chargerNouveauFichier(finalFichier);
+									initContainerDessinGraphePanel();
+									
+									
+									barreChargement.setVisible(false);
+									setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+								}
+							}
+						});
+						
+						// Appel de demarrerChargement()
 						demarrerChargement();
 					} else {
-						String messageErreur = "Format invalide !";
-						JOptionPane.showMessageDialog(cp, messageErreur, "Erreur", JOptionPane.ERROR_MESSAGE);
+					
+						System.out.println("Format de fichier interdit !");
+						
+						JPanel panelCorrompu = new JPanel();
+						int result = showOptionDialog(null, panelCorrompu, "fichier corrompu ! ", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+						
 					}
 				}
 			}
+			
 		});
 		itemFermerFenetre.addActionListener(new ActionListener() {
 			@Override
