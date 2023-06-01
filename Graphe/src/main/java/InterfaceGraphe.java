@@ -12,6 +12,9 @@ public class InterfaceGraphe extends JFrame {
 	
 	private AccueilPanel accueilPanel;
 	private JPanel barreDeChargementPanel, graphePanel;
+
+	private JPanel contenuTousInfosPanel;
+	private JPanel contenutInfoGraphePanel;
 	
 	private static JPanel contenuInfoSommetPanel;
 	
@@ -47,7 +50,7 @@ public class InterfaceGraphe extends JFrame {
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int screenWidth = (int) screenSize.getWidth();
 		int screenHeight = (int) screenSize.getHeight();
-		setSize(new Dimension(screenWidth / 2, screenHeight / 2 + 200));
+		setSize(new Dimension(screenWidth / 2 +300, screenHeight / 2 + 200));
 		
 		initComponents();
 		
@@ -57,6 +60,27 @@ public class InterfaceGraphe extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
+
+	private void initContainerTousInfos(){
+
+		contenuTousInfosPanel = new JPanel(new BorderLayout());
+		contenuTousInfosPanel.setPreferredSize(new Dimension((int) screenSize.getWidth()/6, (int) screenSize.getHeight()));
+		contenuTousInfosPanel.setBorder(BorderFactory.createTitledBorder("Info"));
+		contenuTousInfosPanel.setBackground(Color.LIGHT_GRAY);
+		contenutInfoGraphePanel = new JPanel();
+		contenutInfoGraphePanel.setBorder(BorderFactory.createTitledBorder("Info Graphe"));
+		contenutInfoGraphePanel.setOpaque(false);
+
+		contenuInfoSommetPanel = new JPanel();
+		contenuInfoSommetPanel.setOpaque(false);
+		contenuInfoSommetPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		contenuInfoSommetPanel.setBorder(BorderFactory.createTitledBorder("Info Sommet Select"));
+
+		contenuTousInfosPanel.add(contenutInfoGraphePanel, BorderLayout.NORTH);
+		contenuTousInfosPanel.add(contenuInfoSommetPanel, BorderLayout.CENTER);
+
+		cp.add(contenuTousInfosPanel, BorderLayout.EAST);
+	}
 	
 	private void initContainerDessinGraphePanel() {
 		graphePanel = new DessinGraphe();
@@ -64,22 +88,12 @@ public class InterfaceGraphe extends JFrame {
 		contenuGraphePanel.add(graphePanel, BorderLayout.CENTER);
 	}
 	
-	private void initComposantsInfoSommetPanel() {
-		contenuInfoSommetPanel = new JPanel();
-		contenuInfoSommetPanel.removeAll();
-		contenuInfoSommetPanel.revalidate();
-		contenuInfoSommetPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		contenuInfoSommetPanel.setBorder(BorderFactory.createTitledBorder("Info"));
-		contenuInfoSommetPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 45));
-		cp.add(contenuInfoSommetPanel, BorderLayout.NORTH);
-	}
-	
 	private void initComposantsBarreDeChargement() {
 		barreDeChargementPanel = new JPanel();
 		barreDeChargementPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		barreDeChargementPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 45));
 		barreDeChargementPanel.setBorder(BorderFactory.createTitledBorder("Barre de chargement"));
-		cp.add(barreDeChargementPanel, BorderLayout.SOUTH);
+		cp.add(barreDeChargementPanel, BorderLayout.NORTH);
 	}
 	
 	private void initialisationJMenu(){
@@ -127,7 +141,7 @@ public class InterfaceGraphe extends JFrame {
 		cp.add(contenuGraphePanel, BorderLayout.CENTER);
 		
 		initComposantsBarreDeChargement();
-		
+		initContainerTousInfos();
 		initEventListeners();
 	}
 	
@@ -181,7 +195,6 @@ public class InterfaceGraphe extends JFrame {
 						initialisationBarreDeChargement();
 						File finalFichier = fichier;
 						initialisationTimer(finalFichier);
-						initComposantsInfoSommetPanel();
 						demarrerChargement();
 					} else {
 						JPanel panelMauvaisFormat = new JPanel();
