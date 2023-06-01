@@ -1,3 +1,7 @@
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -24,7 +28,8 @@ public class InterfaceGraphe extends JFrame {
 	private static JTextArea contenuInfosTextArea;
 	
 	static JMenuBar menu;
-	private JMenu itemFichier, itemFenetre, itemFonctionnalites, itemOptionFonction;
+	private JRadioButtonMenuItem modeLight, modeDark;
+	private JMenu itemFichier, itemFenetre, itemFonctionnalites, itemOptionFonction, itemChoixTheme;
 	private JMenuItem itemFermerFenetre, itemMenuPrincipale, itemOuvrirFichier;
 	
 	private  JMenuItem itemAfficherCheminPlusCourts;
@@ -173,6 +178,7 @@ public class InterfaceGraphe extends JFrame {
 	private void initialisationJMenu(){
 		itemFichier = new JMenu("Fichier");
 		itemFenetre = new JMenu("Fenetre");
+		itemChoixTheme = new JMenu("Theme");
 		itemFonctionnalites = new JMenu("Mode du Graphe");
 		itemOptionFonction = new JMenu("Fonctionnalitées");
 	}
@@ -182,6 +188,8 @@ public class InterfaceGraphe extends JFrame {
 		itemMenuPrincipale = new JMenuItem("Menu Principale");
 		itemMenuPrincipale.setEnabled(false);
 		itemAfficherCheminPlusCourts = new JMenuItem("Calculer Itineraire");
+		modeLight = new JRadioButtonMenuItem("Light", true);
+		modeDark = new JRadioButtonMenuItem("Dark");
 	}
 	private void initComponents() {
 		cp = new JPanel();
@@ -201,9 +209,17 @@ public class InterfaceGraphe extends JFrame {
 		itemFenetre.setFont(new Font("Arial", Font.BOLD, 14));
 		itemOptionFonction.setFont(new Font("Arial", Font.BOLD, 14));
 		menu.setBackground(Color.GRAY);
-		
-		itemFenetre.add(itemFermerFenetre);
+
+		ButtonGroup groupeBoutons = new ButtonGroup();
+		groupeBoutons.add(modeLight);
+		groupeBoutons.add(modeDark);
+		itemChoixTheme.add(modeLight);
+		itemChoixTheme.add(modeDark);
+
+		itemFenetre.add(itemChoixTheme);
 		itemFenetre.add(itemMenuPrincipale);
+		itemFenetre.add(itemFermerFenetre);
+
 		itemOptionFonction.add(itemAfficherCheminPlusCourts);
 		
 		menu.add(itemFichier);
@@ -236,7 +252,7 @@ public class InterfaceGraphe extends JFrame {
 		barreDeChargementPanel.setVisible(true);
 		contenuGraphePanel.removeAll();
 		contenuTousInfosPanel.setBorder(null);
-		contenuTousInfosPanel.setBackground(null);
+		//contenuTousInfosPanel.setBackground(null);
 		mettreInvisibleComposant();
 		timer = new Timer(30, new ActionListener() {
 			@Override
@@ -246,7 +262,7 @@ public class InterfaceGraphe extends JFrame {
 				if (progresse == 100) {
 					timer.stop();
 					Graphe = new LCGraphe();
-					contenuTousInfosPanel.setBackground(Color.YELLOW);
+					//contenuTousInfosPanel.setBackground(Color.YELLOW);
 					contenuTousInfosPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 					barreDeChargementPanel.setVisible(false);
 					chargerNouveauFichier(fichierCharge);
@@ -269,33 +285,10 @@ public class InterfaceGraphe extends JFrame {
 					System.out.println(fichier.getPath());
 					if (fichier.getPath().endsWith(".csv")) {
 						setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-						barreDeChargementPanel.removeAll();
-						barreChargement = new JProgressBar(0, 100);
-						barreDeChargementPanel.add(barreChargement);
-						barreChargement.setStringPainted(true);
-						
-						File finalFichier = fichier;
-						timer = new Timer(30, new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								progresse++;
-								barreChargement.setValue(progresse);
-								
-								if (progresse == 100) {
-									timer.stop();
-									
-									Graphe = new LCGraphe();
-									contenuGraphePanel.removeAll();
-									System.out.println(Graphe.existeCentre("S1"));
-									chargerNouveauFichier(finalFichier);
-									initContainerDessinGraphePanel();
-									
-									
-									barreChargement.setVisible(false);
-									setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-								}
-							}
-						});
+
+						initialisationBarreDeChargement();
+
+						initialisationTimer(fichier);
 						
 						// Appel de demarrerChargement()
 						demarrerChargement();
@@ -321,6 +314,34 @@ public class InterfaceGraphe extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				fenetrePrincipale.setContentPane(accueilPanel);
+			}
+		});
+		modeLight.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					// Changer le thème en utilisant le nom de classe du look and feel
+					UIManager.setLookAndFeel(new FlatMacLightLaf());
+
+					// Mettre à jour les composants de la fenêtre pour refléter le nouveau thème
+					SwingUtilities.updateComponentTreeUI(fenetrePrincipale);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		modeDark.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					// Changer le thème en utilisant le nom de classe du look and feel
+					UIManager.setLookAndFeel(new FlatMacDarkLaf());
+
+					// Mettre à jour les composants de la fenêtre pour refléter le nouveau thème
+					SwingUtilities.updateComponentTreeUI(fenetrePrincipale);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 		});
 	}
