@@ -17,15 +17,15 @@ public class InterfaceGraphe extends JFrame {
 	private AccueilPanel accueilPanel;
 	private JPanel barreDeChargementPanel, graphePanel;
 
-	private JPanel contenuTousInfosPanel, contenutInfoGraphePanel, contenuInfoSommetPanel;
+	private JPanel contenuTousInfosPanel, contenutInfoGraphePanel,contenuInfoSommetPanel;
 	private JPanel contenuNomTypeSommetPanel, contenuFonctionnalitePanel, contenuTousLesCheminsPanel, contenuAutrePanel;
 
 	private static JLabel nombreRouteLabel, nombreSommetLabel, nomSommetSelectionneLabel, typeSommetSelectionneLabel;
 	private static JButton afficherCheminButton, afficherVoisinsButton;
 	private static JComboBox<String> choixTypeCheminComboBox, choixDestinationComboBox;
 
-	private static JScrollPane contenuInfosJScrollPane;
-	private static JTextArea contenuInfosTextArea;
+
+
 	
 	static JMenuBar menu;
 	private JRadioButtonMenuItem modeLight, modeDark;
@@ -76,14 +76,15 @@ public class InterfaceGraphe extends JFrame {
 		contenuTousInfosPanel.setPreferredSize(new Dimension((int) screenSize.getWidth()/6, (int) screenSize.getHeight()));
 
 		contenutInfoGraphePanel = new JPanel();
-		//contenutInfoGraphePanel.setBorder(BorderFactory.createTitledBorder("Info Graphe"));
+		contenutInfoGraphePanel.setBorder(BorderFactory.createTitledBorder("Info Graphe"));
 		contenutInfoGraphePanel.setOpaque(false);
+		//contenutInfoGraphePanel.setBorder(BorderFactory.createTitledBorder("info Graphe"));
 
 		initContainerInfoSommet();
 
-		contenuTousInfosPanel.add(contenutInfoGraphePanel, BorderLayout.NORTH);
+		contenuTousInfosPanel.add(contenutInfoGraphePanel, BorderLayout.SOUTH);
 		contenuTousInfosPanel.add(contenuInfoSommetPanel, BorderLayout.CENTER);
-
+		contenuTousInfosPanel.setBorder(BorderFactory.createTitledBorder("toutes les infos"));
 		cp.add(contenuTousInfosPanel, BorderLayout.EAST);
 	}
 
@@ -94,18 +95,14 @@ public class InterfaceGraphe extends JFrame {
 
 		contenuNomTypeSommetPanel = new JPanel(new GridBagLayout());
 		contenuNomTypeSommetPanel.setOpaque(false);
-		contenuFonctionnalitePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		contenuFonctionnalitePanel = new JPanel(new BorderLayout());
 		contenuFonctionnalitePanel.setOpaque(false);
 		contenuTousLesCheminsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		contenuTousLesCheminsPanel.setOpaque(false);
-		contenuAutrePanel = new JPanel(new GridLayout(10,1));
+		contenuAutrePanel = new JPanel(new BorderLayout());
 		contenuAutrePanel.setOpaque(false);
 
-		contenuInfosTextArea = new JTextArea();
-		contenuInfosTextArea.setText("smldfkjghdiuyfgbhfdsghsdfjvngbsdkhn,gbkrdeuhbgdkbvsdjkbvdfsjhkbgdskjubngdskjhnbvgfcdskvbgfckjhbdskjhugfb");
-		contenuInfosTextArea.setEditable(false);
-		contenuInfosJScrollPane = new JScrollPane(contenuInfosTextArea);
-		contenuInfosJScrollPane.setVisible(false);
+
 
 
 		nombreSommetLabel = new JLabel("");
@@ -131,8 +128,8 @@ public class InterfaceGraphe extends JFrame {
 		choixDestinationComboBox.setVisible(false);
 		//choixTypeCheminComboBox.addItem("Tout");
 
-		contenutInfoGraphePanel.add(nombreSommetLabel);
-		contenutInfoGraphePanel.add(nombreRouteLabel);
+		//contenutInfoGraphePanel.add(nombreSommetLabel);
+		//contenutInfoGraphePanel.add(nombreRouteLabel);
 
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridx = 0;
@@ -145,20 +142,26 @@ public class InterfaceGraphe extends JFrame {
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.weighty = 1.0;
 		contenuNomTypeSommetPanel.add(typeSommetSelectionneLabel, constraints);
-
-		contenuFonctionnalitePanel.add(afficherVoisinsButton);
-
+		contenuNomTypeSommetPanel.setBorder(BorderFactory.createTitledBorder("type sommet"));
+		contenuFonctionnalitePanel.add(afficherVoisinsButton,BorderLayout.NORTH);
+		JPanel affichageVoisin = new JPanel();
+		affichageVoisin.setBorder(BorderFactory.createTitledBorder("infos des voisins"));
+		contenuFonctionnalitePanel.add(affichageVoisin,BorderLayout.CENTER);
+		contenuFonctionnalitePanel.setBorder(BorderFactory.createTitledBorder("contenu fonction panel"));
 		contenuTousLesCheminsPanel.add(choixTypeCheminComboBox);
 		contenuTousLesCheminsPanel.add(choixDestinationComboBox);
 		contenuTousLesCheminsPanel.add(afficherCheminButton);
+		contenuTousLesCheminsPanel.setBorder(BorderFactory.createTitledBorder("contenu chemin"));
 
-		contenuAutrePanel.add(contenuFonctionnalitePanel);
-		contenuAutrePanel.add(contenuTousLesCheminsPanel);
+		contenuAutrePanel.add(contenuFonctionnalitePanel,BorderLayout.NORTH);
+		contenuAutrePanel.add(contenuTousLesCheminsPanel,BorderLayout.CENTER);
 		
-		contenuAutrePanel.add(contenuInfosJScrollPane);
+
+		contenuAutrePanel.setBorder(BorderFactory.createTitledBorder("contenu autre panel"));
 
 		contenuInfoSommetPanel.add(contenuNomTypeSommetPanel, BorderLayout.NORTH);
-		contenuInfoSommetPanel.add(contenuAutrePanel, BorderLayout.SOUTH);
+		contenuInfoSommetPanel.add(contenuAutrePanel, BorderLayout.CENTER);
+		contenuInfoSommetPanel.setBorder(BorderFactory.createTitledBorder("contenu information"));
 	}
 
 	private void initContainerDessinGraphePanel() {
@@ -251,7 +254,7 @@ public class InterfaceGraphe extends JFrame {
 	private void initialisationTimer(File fichierCharge) {
 		barreDeChargementPanel.setVisible(true);
 		contenuGraphePanel.removeAll();
-		contenuTousInfosPanel.setBorder(null);
+		contenuTousInfosPanel.setBorder(BorderFactory.createTitledBorder("contenu info Graphe"));
 		//contenuTousInfosPanel.setBackground(null);
 		mettreInvisibleComposant();
 		timer = new Timer(30, new ActionListener() {
@@ -293,11 +296,8 @@ public class InterfaceGraphe extends JFrame {
 						// Appel de demarrerChargement()
 						demarrerChargement();
 					} else {
-					
-						System.out.println("Format de fichier interdit !");
-						
 						JPanel panelCorrompu = new JPanel();
-						int result = showOptionDialog(null, panelCorrompu, "fichier corrompu ! ", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+						int result = showOptionDialog(null, panelCorrompu, "Format fichier invalide ! ", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 						
 					}
 				}
@@ -359,7 +359,7 @@ public class InterfaceGraphe extends JFrame {
 		choixTypeCheminComboBox.setVisible(false);
 		choixDestinationComboBox.setVisible(false);
 		afficherVoisinsButton.setVisible(false);
-		contenuInfosJScrollPane.setVisible(false);
+		
 	}
 	public static void mettreVisibleComposant(String nom, String type){
 		nomSommetSelectionneLabel.setText("Dispensaire "+nom);
@@ -368,7 +368,7 @@ public class InterfaceGraphe extends JFrame {
 		choixTypeCheminComboBox.setVisible(true);
 		choixDestinationComboBox.setVisible(true);
 		afficherVoisinsButton.setVisible(true);
-		contenuInfosJScrollPane.setVisible(true);
+	
 	}
 
 	public static JButton getAfficherCheminButton() {
