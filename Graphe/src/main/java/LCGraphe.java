@@ -552,6 +552,11 @@ class LCGraphe {
 
                     String nom = parts[0]; // prends le nom du sommet
                     String type = parts[1];// prends le type du sommet
+                    switch (type){
+                        case "M": type = "Maternité";break;
+                        case "N": type = "Centre de nutrition";break;
+                        case "O": type = "Opératoire";break;
+                    }
                     ajoutCentre(nom, type); // et on ajoute le sommet au Graphe
 
                     for (int i = 2; i < parts.length; i++) { // parcours toutes les arretes du sommet actuel
