@@ -17,6 +17,9 @@ public class InterfaceGraphe extends JFrame {
 	private static JLabel nombreRouteLabel, nombreSommetLabel, nomSommetSelectionneLabel, typeSommetSelectionneLabel;
 	private static JButton afficherCheminButton, afficherVoisinsButton;
 	private static JComboBox<String> choixTypeCheminComboBox, choixDestinationComboBox;
+
+	private static JScrollPane contenuInfosJScrollPane;
+	private static JTextArea contenuInfosTextArea;
 	
 	static JMenuBar menu;
 	private JMenu itemFichier, itemFenetre, itemFonctionnalites, itemOptionFonction;
@@ -91,6 +94,13 @@ public class InterfaceGraphe extends JFrame {
 		contenuAutrePanel = new JPanel(new GridLayout(10,1));
 		contenuAutrePanel.setOpaque(false);
 
+		contenuInfosTextArea = new JTextArea();
+		contenuInfosTextArea.setText("smldfkjghdiuyfgbhfdsghsdfjvngbsdkhn,gbkrdeuhbgdkbvsdjkbvdfsjhkbgdskjubngdskjhnbvgfcdskvbgfckjhbdskjhugfb");
+		contenuInfosTextArea.setEditable(false);
+		contenuInfosJScrollPane = new JScrollPane(contenuInfosTextArea);
+		contenuInfosJScrollPane.setVisible(false);
+
+
 		nombreSommetLabel = new JLabel("");
 		nombreRouteLabel = new JLabel("");
 		nomSommetSelectionneLabel = new JLabel("");
@@ -137,10 +147,12 @@ public class InterfaceGraphe extends JFrame {
 
 		contenuAutrePanel.add(contenuFonctionnalitePanel);
 		contenuAutrePanel.add(contenuTousLesCheminsPanel);
+		contenuAutrePanel.add(contenuInfosJScrollPane);
 
 		contenuInfoSommetPanel.add(contenuNomTypeSommetPanel, BorderLayout.NORTH);
 		contenuInfoSommetPanel.add(contenuAutrePanel, BorderLayout.CENTER);
 	}
+
 	private void initContainerDessinGraphePanel() {
 		graphePanel = new DessinGraphe();
 		//contenuGraphePanel.setBorder(BorderFactory.createTitledBorder("Graphe dessiner"));
@@ -290,6 +302,7 @@ public class InterfaceGraphe extends JFrame {
 		choixTypeCheminComboBox.setVisible(false);
 		choixDestinationComboBox.setVisible(false);
 		afficherVoisinsButton.setVisible(false);
+		contenuInfosJScrollPane.setVisible(false);
 	}
 	public static void mettreVisibleComposant(String nom, String type){
 		nomSommetSelectionneLabel.setText("Dispensaire "+nom);
@@ -298,6 +311,7 @@ public class InterfaceGraphe extends JFrame {
 		choixTypeCheminComboBox.setVisible(true);
 		choixDestinationComboBox.setVisible(true);
 		afficherVoisinsButton.setVisible(true);
+		contenuInfosJScrollPane.setVisible(true);
 	}
 
 	public static JButton getAfficherCheminButton() {
