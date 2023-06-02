@@ -10,6 +10,7 @@ import java.io.File;
 import static javax.swing.JOptionPane.showOptionDialog;
 
 public class InterfaceGraphe extends JFrame {
+	private CardLayout cardLayout;
 	private JFrame fenetrePrincipale; // la fenetre
 	
 	public static JPanel cp;
@@ -17,7 +18,7 @@ public class InterfaceGraphe extends JFrame {
 	private AccueilPanel accueilPanel;
 	private JPanel barreDeChargementPanel, graphePanel;
 
-	private JPanel contenuTousInfosPanel, contenutInfoGraphePanel,contenuInfoSommetPanel;
+	private JPanel contenuTousInfosPanel, contenutInfoGraphePanel,contenuInfoSommetPanel,allPanel;
 	private JPanel contenuNomTypeSommetPanel, contenuFonctionnalitePanel, contenuTousLesCheminsPanel, contenuAutrePanel;
 
 	private static JLabel nombreRouteLabel, nombreSommetLabel, nomSommetSelectionneLabel, typeSommetSelectionneLabel;
@@ -55,7 +56,10 @@ public class InterfaceGraphe extends JFrame {
 		fenetrePrincipale = this;
 		accueilPanel = new AccueilPanel(fenetrePrincipale);
 		setContentPane(accueilPanel);
-		
+		cardLayout = new CardLayout();
+		allPanel = new JPanel();
+		allPanel.setLayout(new BorderLayout());
+		allPanel.setBorder(BorderFactory.createTitledBorder("panel principale"));
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int screenWidth = (int) screenSize.getWidth();
 		int screenHeight = (int) screenSize.getHeight();
@@ -71,21 +75,47 @@ public class InterfaceGraphe extends JFrame {
 	}
 
 	private void initContainerTousInfos(){
+		JPanel card = new JPanel(cardLayout);
+		card.setBorder(BorderFactory.createTitledBorder("card layout"));
 		contenuTousInfosPanel = new JPanel(new BorderLayout());
 		contenuTousInfosPanel.setOpaque(false);
 		contenuTousInfosPanel.setPreferredSize(new Dimension((int) screenSize.getWidth()/6, (int) screenSize.getHeight()));
 
 		contenutInfoGraphePanel = new JPanel();
+		JPanel panelSuivant = new JPanel();
+		JButton suivant = new JButton("Suivant");
+		
+		JButton precedent = new JButton("Précédent");
+		
+		suivant.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.previous(card);
+			}
+		});
+		precedent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.next(card);
+			}
+		});
 		contenutInfoGraphePanel.setBorder(BorderFactory.createTitledBorder("Info Graphe"));
 		contenutInfoGraphePanel.setOpaque(false);
+		contenutInfoGraphePanel.add(suivant);
+		contenutInfoGraphePanel.add(precedent);
 		//contenutInfoGraphePanel.setBorder(BorderFactory.createTitledBorder("info Graphe"));
 
 		initContainerInfoSommet();
+		
 
-		contenuTousInfosPanel.add(contenutInfoGraphePanel, BorderLayout.SOUTH);
+		//contenuTousInfosPanel.add(contenutInfoGraphePanel, BorderLayout.SOUTH);
 		contenuTousInfosPanel.add(contenuInfoSommetPanel, BorderLayout.CENTER);
+		card.add(contenuTousInfosPanel,"panel de base ");
+		card.add(contenuTousLesCheminsPanel,"panel Suivant");
+		
 		contenuTousInfosPanel.setBorder(BorderFactory.createTitledBorder("toutes les infos"));
-		cp.add(contenuTousInfosPanel, BorderLayout.EAST);
+		allPanel.add(contenutInfoGraphePanel,BorderLayout.SOUTH);
+		allPanel.add(card,BorderLayout.NORTH);
+		cp.add(allPanel, BorderLayout.EAST);
 	}
 
 	private void initContainerInfoSommet(){
@@ -152,9 +182,9 @@ public class InterfaceGraphe extends JFrame {
 		contenuTousLesCheminsPanel.add(choixDestinationComboBox);
 		contenuTousLesCheminsPanel.add(afficherCheminButton);
 		contenuTousLesCheminsPanel.setBorder(BorderFactory.createTitledBorder("contenu chemin"));
-
+		
 		contenuAutrePanel.add(contenuFonctionnalitePanel,BorderLayout.NORTH);
-		contenuAutrePanel.add(contenuTousLesCheminsPanel,BorderLayout.CENTER);
+		//contenuAutrePanel.add(contenuTousLesCheminsPanel,BorderLayout.CENTER);
 		
 
 		contenuAutrePanel.setBorder(BorderFactory.createTitledBorder("contenu autre panel"));
