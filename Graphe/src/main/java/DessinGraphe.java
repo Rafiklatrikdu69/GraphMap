@@ -1,34 +1,53 @@
 import javax.swing.*;
-import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Ellipse2D;
 import java.util.*;
 
 import static javax.swing.JOptionPane.showOptionDialog;
 
 public class DessinGraphe extends JPanel {
 
-    protected Map<LCGraphe.MaillonGraphe, JLabel> sommets;
-    protected LCGraphe.MaillonGraphe sommetSelectionne;
+    private Map<LCGraphe.MaillonGraphe, SommetVisuel> sommets;
+    private ArrayList<AreteVisuel> listAretes;
 
-    private JLabel sommetEnDeplacement;
+    private LCGraphe.MaillonGraphe sommetSelectionne;
 
-    private static final int LABEL_WIDTH = 30;
-    private static final int LABEL_HEIGHT = 30;
-    protected static final Color DEFAULT_LABEL_COLOR = Color.WHITE;
-    protected static final Color SELECTED_LABEL_COLOR = Color.GREEN;
-    protected static final Color BACKGROUND_COLOR = Color.BLACK;
-    private Timer timer;
+    private SommetVisuel sommetEnDeplacement;
+
+    private static final int SOMMET_WIDTH = 40;
+    private static final int SOMMET_HEIGHT = 40;
+    public Color DEFAUT_COULEUR_SOMMET = Color.BLACK;
+    public Color COULEUR_ARETE = Color.BLACK;
+    public Color COULEUR_TEXTE_SOMMET = Color.WHITE;
+    public Color COULEUR_SOMMET_SELECT = Color.BLUE;
 
     /**
      * Constructeur de la classe DessinGraphe
      */
     public DessinGraphe() {
         super();
+        listAretes = new ArrayList<>();
         sommets = new HashMap<>();
         setLayout(null); // Utiliser un layout null pour positionner les sommets manuellement
         initialisationGraphe();
+    }
+
+    /**
+     * @param g the <code>Graphics</code> object to protect
+     */
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        dessinerArete(g);
+    }
+
+    private void dessinerArete(Graphics g){
+        listAretes.forEach(areteVisuel -> {
+            g.setColor(areteVisuel.getColorLine());
+            g.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
+            repaint();
+        });
     }
 
     /**
@@ -37,14 +56,25 @@ public class DessinGraphe extends JPanel {
     private void initialisationGraphe() {
         LCGraphe.MaillonGraphe tmp = InterfaceGraphe.Graphe.getPremier();
         InterfaceGraphe.getChoixDestinationComboBox().removeAllItems();
-        int i = 1;
         while (tmp != null) {
             int[] pos = getRandomPositionPourSommet(InterfaceGraphe.contenuGraphePanel);
             initialisationPlacementSommet(tmp, pos[0], pos[1]);
             InterfaceGraphe.getChoixDestinationComboBox().addItem(tmp.getNom());
-            i++;
             tmp = tmp.getSuivant();
         }
+        initialisationPlacementArete();
+    }
+
+    private void initialisationPlacementArete(){
+        sommets.forEach((sommet, sommetVisuel) -> {
+            LCGraphe.MaillonGrapheSec voisins = sommet.getVoisin();
+            while (voisins != null){
+                AreteVisuel arete = new AreteVisuel(sommetVisuel, sommets.get(InterfaceGraphe.Graphe.getCentre(voisins.getDestination())));
+                arete.setColorLine(COULEUR_ARETE);
+                listAretes.add(arete);
+                voisins = voisins.getSuivant();
+            }
+        });
     }
 
     /**
@@ -53,34 +83,41 @@ public class DessinGraphe extends JPanel {
      * @param y
      */
     private void initialisationPlacementSommet(LCGraphe.MaillonGraphe m, int x, int y) {
-        JLabel label = new JLabel(m.getNom());
 
-        label.setForeground(DEFAULT_LABEL_COLOR);
-        label.setBounds(x, y, LABEL_WIDTH, LABEL_HEIGHT);
-        label.setHorizontalAlignment(SwingConstants.CENTER);
+        SommetVisuel dessinPanel = new SommetVisuel(m, SOMMET_HEIGHT/2);
+        dessinPanel.setPreferredSize(new Dimension(SOMMET_WIDTH, SOMMET_HEIGHT));
+        dessinPanel.setCouleurCentre(DEFAUT_COULEUR_SOMMET);
+        dessinPanel.setCouleurTexte(COULEUR_TEXTE_SOMMET);
+        dessinPanel.setBounds(x, y, SOMMET_WIDTH, SOMMET_HEIGHT);
 
-        label.addMouseListener(new MouseAdapter() {
+        dessinPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                sommetEnDeplacement = label;
-                repaint();
+                sommetEnDeplacement = dessinPanel;
             }
 
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                if(sommetSelectionne != null){
+                    sommets.get(sommetSelectionne).setCouleurCentre(DEFAUT_COULEUR_SOMMET);
+                }
                 if(sommetSelectionne != null && sommetSelectionne.equals(m)){
-                    sommets.get(sommetSelectionne).setBackground(BACKGROUND_COLOR);
-                    InterfaceGraphe.mettreInvisibleComposant();
+                    InterfaceGraphe.mettreInvisibleComposantSommet();
                     sommetSelectionne = null;
                 } else {
                     sommetSelectionne = m;
-                    sommets.get(sommetSelectionne).setBackground(SELECTED_LABEL_COLOR);
-                    InterfaceGraphe.mettreVisibleComposant(sommetSelectionne.getNom(), sommetSelectionne.getType());
+
+                    InterfaceGraphe.modelInfosVoisins.setRowCount(0);
+
+                    sommetSelectionne.voisinsToList().forEach(voisin -> {
+                        InterfaceGraphe.modelInfosVoisins.addRow(new Object[]{voisin.getDestination(), (int) voisin.getDistance() + "Km", (int)voisin.getDuree()+" min", (int) voisin.getFiabilite()*10+"%"});
+                    });
+                    sommets.get(sommetSelectionne).setCouleurCentre(COULEUR_SOMMET_SELECT);
+                    InterfaceGraphe.mettreVisibleComposantSommet(sommetSelectionne.getNom(), sommetSelectionne.getType());
                     calculerCheminPlusCourt();
                 }
-                repaint();
             }
 
 
@@ -89,16 +126,15 @@ public class DessinGraphe extends JPanel {
                 super.mouseReleased(e);
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 sommetEnDeplacement = null;
-                repaint();
             }
         });
 
-        label.addMouseMotionListener(new MouseMotionAdapter() {
+        dessinPanel.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 super.mouseDragged(e);
                 if (!InterfaceGraphe.bloquerGraphe.isSelected() && sommetEnDeplacement != null) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                     int dx = e.getX() - sommetEnDeplacement.getWidth() / 2;
                     int dy = e.getY() - sommetEnDeplacement.getHeight() / 2;
                     int newPosX = sommetEnDeplacement.getX() + dx;
@@ -107,14 +143,13 @@ public class DessinGraphe extends JPanel {
                     int maxY = getParent().getHeight() - (sommetEnDeplacement.getHeight());
                     newPosX = Math.max(0, Math.min(newPosX, maxX));
                     newPosY = Math.max(0, Math.min(newPosY, maxY));
-
                     sommetEnDeplacement.setLocation(newPosX, newPosY);
                 }
             }
         });
 
-        sommets.put(m, label);
-        add(label);
+        add(dessinPanel);
+        sommets.put(m, dessinPanel);
     }
 
     private void calculerCheminPlusCourt() {
@@ -155,70 +190,8 @@ public class DessinGraphe extends JPanel {
 
         System.out.println("Distance : " + InterfaceGraphe.Graphe.getMatrice()[indexSource][indexDestination]);
         String chemin = String.valueOf(InterfaceGraphe.Graphe.getMatrice()[indexSource][indexDestination]);
-        AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets, this);
+        //AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets, this);
 
-    }
-
-    /**
-     * @param g
-     */
-    private void initDessinGraphe(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-
-        int radius;
-
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        JLabel p1;
-        JLabel p2;
-        int x1, y1, x2, y2;
-        //Iterator<Map.Entry<LCGraphe.MaillonGraphe, JLabel>> it = sommets.entrySet().iterator();
-        Iterator<Map.Entry<LCGraphe.MaillonGraphe, JLabel>> it = sommets.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<LCGraphe.MaillonGraphe, JLabel> mapSommet = it.next();
-            LCGraphe.MaillonGraphe sommet1 = mapSommet.getKey();
-
-            p1 = sommets.get(sommet1);
-            x1 = p1.getX() + p1.getWidth() / 2;
-            y1 = p1.getY() + p1.getHeight() / 2;
-            radius = p1.getWidth() / 2;
-
-            g2d.fill(new Ellipse2D.Double(x1 - radius, y1 - radius, radius * 2, radius * 2));
-
-            Iterator<LCGraphe.MaillonGraphe> iterator = sommets.keySet().iterator();
-            while (iterator.hasNext()) {
-                LCGraphe.MaillonGraphe sommet2 = iterator.next();
-
-                p2 = sommets.get(sommet2);
-                x2 = p2.getX() + p2.getWidth() / 2;
-                y2 = p2.getY() + p2.getHeight() / 2;
-
-                if (sommetSelectionne == sommet2) {
-                    g2d.setColor(SELECTED_LABEL_COLOR);
-                    g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
-                } else {
-                    g2d.setColor(BACKGROUND_COLOR);
-                    g2d.fill(new Ellipse2D.Double(x2 - radius, y2 - radius, radius * 2, radius * 2));
-                }
-
-                if (sommet1.estVoisin(sommet2.getNom())) {
-                    g2d.setColor(Color.BLACK);
-                    g2d.drawLine(x1, y1, x2, y2);
-                }
-            }
-        }
-
-
-        repaint();
-    }
-
-    /**
-     * @param g the <code>Graphics</code> object to protect
-     */
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        initDessinGraphe(g);
     }
 
     /**
@@ -241,15 +214,49 @@ public class DessinGraphe extends JPanel {
     }
 
     private boolean sommetExisteDansZone(int x, int y) {
-        ;
-        for (Map.Entry<LCGraphe.MaillonGraphe, JLabel> entry : sommets.entrySet()) {
-            JLabel jLabel = entry.getValue();
-            if (jLabel.getBounds().intersects(new Rectangle(x, y, 30, 30))) {
+        for (Map.Entry<LCGraphe.MaillonGraphe, SommetVisuel> entry : sommets.entrySet()) {
+            SommetVisuel jPanel = entry.getValue();
+            if (jPanel.getBounds().intersects(new Rectangle(x, y, SOMMET_WIDTH, SOMMET_HEIGHT))) {
                 return true;
             }
         }
         return false;
     }
+
+    public void miseAJourDessin(){
+        sommets.forEach((maillonGraphe, sommetVisuel) -> {
+            if(maillonGraphe.equals(sommetSelectionne)){
+                sommetVisuel.setCouleurCentre(COULEUR_SOMMET_SELECT);
+            } else {
+                sommetVisuel.setCouleurCentre(DEFAUT_COULEUR_SOMMET);
+            }
+            sommetVisuel.setCouleurTexte(COULEUR_TEXTE_SOMMET);
+        });
+        listAretes.forEach(areteVisuel -> {
+            areteVisuel.setColorLine(COULEUR_ARETE);
+        });
+    }
+
+    public void setDefautCouleurSommet(Color defautCouleurSommet) {
+        DEFAUT_COULEUR_SOMMET = defautCouleurSommet;
+        repaint();
+    }
+
+    public void setCouleurArete(Color couleurArete) {
+        COULEUR_ARETE = couleurArete;
+        repaint();
+    }
+
+    public void setCouleurTexteSommet(Color couleurTexteSommet) {
+        COULEUR_TEXTE_SOMMET = couleurTexteSommet;
+        repaint();
+    }
+
+    public void setCouleurSommetSelect(Color couleurSommetSelect) {
+        COULEUR_SOMMET_SELECT = couleurSommetSelect;
+        repaint();
+    }
+
 
     /**
      * @return
