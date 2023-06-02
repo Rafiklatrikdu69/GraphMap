@@ -4,10 +4,10 @@ import java.util.Map;
 
 public class AfficherCheminPanel extends JOptionPane {
     private String autreSommetSelectionne;
-    private Map<LCGraphe.MaillonGraphe, JLabel> sommet;
+    private Map<LCGraphe.MaillonGraphe, JPanel> sommet;
     public   DessinGraphe dessinGraphe;
 
-     AfficherCheminPanel(String chemin, Map<LCGraphe.MaillonGraphe, JLabel> sommets,DessinGraphe d) {
+     AfficherCheminPanel(String chemin, Map<LCGraphe.MaillonGraphe, JPanel> sommets,DessinGraphe d) {
         this.sommet = sommets;
         this.dessinGraphe = d;
           
@@ -36,10 +36,8 @@ public class AfficherCheminPanel extends JOptionPane {
         //en cours de developpement -> Probleme bug Graphe pas mis a jour !!!
        // dessinGraphe.setSommets(sommet);
         dessinGraphe.repaint();
-        AffichagePlusCourtsChemin dessinGrapheRouge = new AffichagePlusCourtsChemin(sommet,dessinGraphe);
         JPanel PanelDessin = new JPanel();
         PanelDessin.setPreferredSize(new Dimension(500,500));
-        PanelDessin.add(dessinGrapheRouge);
 
         JOptionPane.showMessageDialog(null, PanelDessin, "Graphe Chemin", JOptionPane.PLAIN_MESSAGE);
     }
