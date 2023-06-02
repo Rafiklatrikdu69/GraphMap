@@ -166,8 +166,8 @@ class LCGraphe {
          *
          * @return LinkedList<MaillonGrapheSec>
          */
-        public List<MaillonGrapheSec> voisinsToList() {
-            List<MaillonGrapheSec> listeMaillon = new LinkedList<>();
+        public ArrayList<MaillonGrapheSec> voisinsToList() {
+            ArrayList<MaillonGrapheSec> listeMaillon = new ArrayList<>();
             MaillonGrapheSec tmp = this.lVois;
             while (tmp != null) {
                 listeMaillon.add(tmp);
