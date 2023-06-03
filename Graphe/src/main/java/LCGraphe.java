@@ -1044,23 +1044,23 @@ class LCGraphe {
 
 
         // Vérifie si les sommets saisis existent dans le graphe
-        if (!grapheConstant.graphe.indexSommet().containsKey(source) || !grapheConstant.graphe.indexSommet().containsKey(destination)) {
+        if (!indexSommet().containsKey(source) || !indexSommet().containsKey(destination)) {
             System.out.println("Les sommets saisis ne sont pas valides.");
             return;
         }
 
-        int indexSource = grapheConstant.graphe.indexSommet().get(source);
-        int indexDestination = grapheConstant.graphe.indexSommet().get(destination);
+        int indexSource = indexSommet().get(source);
+        int indexDestination = indexSommet().get(destination);
 
         // Vérifie si un chemin existe entre les sommets saisis
-        if (grapheConstant.graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
+        if (getPredecesseurs()[indexSource][indexDestination] == -1) {
             System.out.println("Aucun chemin trouvé entre " + source + " et " + destination);
             return;
         }
 
         System.out.println("Chemin de " + source + " à " + destination + ":");
-        grapheConstant.graphe.afficherChemin(indexSource, indexDestination);
-        System.out.println("Distance : " + grapheConstant.graphe.getMatrice()[indexSource][indexDestination]);
+       afficherChemin(indexSource, indexDestination);
+        System.out.println("Distance : " + getMatrice()[indexSource][indexDestination]);
     }
 
     /**
