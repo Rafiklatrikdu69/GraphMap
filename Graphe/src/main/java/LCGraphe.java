@@ -15,6 +15,7 @@ import Exception.*;
 class LCGraphe {
 
     protected List<Integer> chemin;
+    private double[][] fiabilite;
     
     private double[][] matrice;
     private double[][] distances;
@@ -1011,7 +1012,7 @@ class LCGraphe {
                 if (i != j && matrice[i][j] != Double.POSITIVE_INFINITY) {
                     predecesseurs[i][j] = i;
                 } else {
-                    predecesseurs[i][j] = -1;
+                    predecesseurs[i][j] = i;
                 }
             }
         }
@@ -1093,10 +1094,36 @@ class LCGraphe {
      */
     public void afficherChemin(int source, int destination) {
         // Vérifier s'il existe un chemin de la source à la destination
-        if (predecesseurs[source][destination] == -1) {
-            System.out.println("Aucun chemin trouvé de " + getNomSommet(source) + " à " + getNomSommet(destination));
+        if (distances[source][destination] == Double.POSITIVE_INFINITY) {
+            System.out.println("Il n'existe pas de chemin entre " + getNomSommet(source) + " et " + getNomSommet(destination));
             return;
         }
+        
+        
+        chemin = new ArrayList<>();
+        construireChemin(source, destination, chemin);
+        
+        // Affiche le chemin en excluant les doublons
+        for (int i = 0; i < chemin.size(); i++) {
+            int sommetCourant = chemin.get(i);
+            if (i == 0 || sommetCourant != chemin.get(i - 1)) {
+                System.out.print(getNomSommet(sommetCourant));
+                if (i < chemin.size() - 1) {
+                    System.out.print(" -> ");
+                }
+            }
+        }
+        System.out.println();
+        
+        System.out.println(getNomSommet(destination));
+    }
+    public void afficherCheminFiable(int source, int destination) {
+        // Vérifier s'il existe un chemin de la source à la destination
+        if (fiabilite[source][destination] == Double.POSITIVE_INFINITY) {
+            System.out.println("Il n'existe pas de chemin entre " + getNomSommet(source) + " et " + getNomSommet(destination));
+            return;
+        }
+        
         
         chemin = new ArrayList<>();
         construireChemin(source, destination, chemin);
@@ -1165,6 +1192,238 @@ class LCGraphe {
     public Map<String, Integer> indexSommet() {
         return this.indexSommet;
     }
+    public double[][] floydWarshallFiabilite(){
+        
+        int taille = tailleMatrice();
+        matrice = new double[taille][taille];
+        fiabilite = new double[taille][taille];
+        // Initialisation de la matrice, sur la diagonale on ne met que des 0 sinon la valeur infinie
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                if (i == j) {
+                    matrice[i][j] = 0;
+                } else {
+                    matrice[i][j] = Double.POSITIVE_INFINITY;
+                }
+            }
+        }
+        
+        indexSommet = new TreeMap<>();
+        MaillonGraphe tmp = this.getPremier();
+        
+        int index = 0;
+        while (tmp != null) {
+            String nomSommet = tmp.nom; // Stocke le nom dans une variable
+            indexSommet.put(nomSommet, index); // Affecte dans le hashMap le sommet ainsi que son indice
+            index++;
+            tmp = tmp.getSuivant(); // Passe au sommet suivant
+        }
+        
+        tmp = this.premier;
+        while (tmp != null) {
+            // Récupère le maillon de la liste principale
+            String source = tmp.nom;
+            MaillonGrapheSec voisins = tmp.lVois;
+            while (voisins != null) {
+                // Récupère le maillon de la liste des voisins
+            /*
+            S1 -> S2 ->S3. S1 est le maillon principale et les autres maillons sont les voisins de S1
+            S2 -> S2 -S5
+            matrice :
+            S1[0, S2, S3, S4]
+            S2[S1, 0, S4, S5]
+            etc...
+            Il ne doit y avoir que des zéros sur la diagonale
+            sinon il y a des circuits absorbants, c'est-à-dire qu'il y a des valeurs négatives
+            et donc l'algorithme ne permet pas de trouver des plus courts chemins
+            */
+                String destination = voisins.getDestination(); // Récupère le voisin qui est relié au sommet principal
+               
+                double fiable = voisins.getFiabilite()/10;
+                int indexSource = getIndice(source, indexSommet); // Récupère l'indice du sommet de la liste principale
+                int indexDestination = getIndice(destination, indexSommet); // Récupère l'indice du sommet voisin
+                
+              
+                fiabilite[indexSource][indexDestination] = fiable;
+                
+                voisins = voisins.getSuivant(); // On passe au voisin suivant
+            }
+            
+            tmp = tmp.getSuivant(); // On passe au maillon suivant jusqu'à la fin de la liste chaînée
+        }
+        
+        distances = new double[taille][taille];
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                distances[i][j] = matrice[i][j]; // Copie des valeurs de la  matrice vers distances
+            }
+        }
+        
+        
+        predecesseurs = new double[taille][taille];
+        //initialisation de la matrice des predecesseurs
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                if (i != j && matrice[i][j] != Double.POSITIVE_INFINITY) {
+                    predecesseurs[i][j] = i;
+                } else {
+                    predecesseurs[i][j] = i;
+                }
+            }
+        }
+     
+        //debut de l'algorithme de recherche
+        for (int k = 0; k < taille; k++) {
+            for (int i = 0; i < taille; i++) {
+                for (int j = 0; j < taille; j++) {
+                   
+                    double nouvelleFiabilite = fiabilite[i][k] * fiabilite[k][j];
+                    if (nouvelleFiabilite > fiabilite[i][j]) {
+                       
+                        fiabilite[i][j] = nouvelleFiabilite;
+                        predecesseurs[i][j] = predecesseurs[k][j];
+                    }
+                }
+            }
+        }
+        
+        afficherCheminFiable();//affiche les plus courts chemins
+        
+        
+        return predecesseurs;
+    }
+    public void afficherPlusCourtsFiableChemins() {
+        int taille = predecesseurs.length;
+        
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                if (i != j) {
+                    System.out.println("Chemin de " + getNomSommet(i) + " à " + getNomSommet(j) + ":");
+                    afficherChemin(i, j);
+                    System.out.println();
+                    System.out.println("Distance : " + distances[i][j] + " Km");
+                    System.out.println("Fiabilité : " + fiabilite[i][j]*100+"%"); // Ajout de l'affichage de la fiabilité
+                    System.out.println();
+                }
+            }
+        }
+    }
+    public void afficherCheminFiable() {
+        int taille = fiabilite.length;
+        
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                if (i != j) {
+                    System.out.println("Fiabilité du chemin de " + getNomSommet(i) + " à " + getNomSommet(j) + ":");
+                    afficherCheminFiable(i,j);
+                    System.out.println("Fiabilité : " + fiabilite[i][j] * 100 + "%");
+                    System.out.println();
+                }
+            }
+        }
+    }
+    
+    public double[][] floydWarshallDistance_Fiable(){
+        
+        int taille = tailleMatrice();
+        matrice = new double[taille][taille];
+        fiabilite = new double[taille][taille];
+        // Initialisation de la matrice, sur la diagonale on ne met que des 0 sinon la valeur infinie
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                if (i == j) {
+                    matrice[i][j] = 0;
+                } else {
+                    matrice[i][j] = Double.POSITIVE_INFINITY;
+                }
+            }
+        }
+        
+        indexSommet = new TreeMap<>();
+        MaillonGraphe tmp = this.getPremier();
+        
+        int index = 0;
+        while (tmp != null) {
+            String nomSommet = tmp.nom; // Stocke le nom dans une variable
+            indexSommet.put(nomSommet, index); // Affecte dans le hashMap le sommet ainsi que son indice
+            index++;
+            tmp = tmp.getSuivant(); // Passe au sommet suivant
+        }
+        
+        tmp = this.premier;
+        while (tmp != null) {
+            // Récupère le maillon de la liste principale
+            String source = tmp.nom;
+            MaillonGrapheSec voisins = tmp.lVois;
+            while (voisins != null) {
+                // Récupère le maillon de la liste des voisins
+            /*
+            S1 -> S2 ->S3. S1 est le maillon principale et les autres maillons sont les voisins de S1
+            S2 -> S2 -S5
+            matrice :
+            S1[0, S2, S3, S4]
+            S2[S1, 0, S4, S5]
+            etc...
+            Il ne doit y avoir que des zéros sur la diagonale
+            sinon il y a des circuits absorbants, c'est-à-dire qu'il y a des valeurs négatives
+            et donc l'algorithme ne permet pas de trouver des plus courts chemins
+            */
+                String destination = voisins.getDestination(); // Récupère le voisin qui est relié au sommet principal
+                double distance = voisins.getDistance(); // Récupère la distance
+                double fiable = voisins.getFiabilite()/10;
+                int indexSource = getIndice(source, indexSommet); // Récupère l'indice du sommet de la liste principale
+                int indexDestination = getIndice(destination, indexSommet); // Récupère l'indice du sommet voisin
+                
+                matrice[indexSource][indexDestination] = distance; // On affecte la distance à l'indice
+                fiabilite[indexSource][indexDestination] = fiable;
+                
+                voisins = voisins.getSuivant(); // On passe au voisin suivant
+            }
+            
+            tmp = tmp.getSuivant(); // On passe au maillon suivant jusqu'à la fin de la liste chaînée
+        }
+        
+        distances = new double[taille][taille];
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                distances[i][j] = matrice[i][j]; // Copie des valeurs de la  matrice vers distances
+            }
+        }
+        
+        
+        predecesseurs = new double[taille][taille];
+        //initialisation de la matrice des predecesseurs
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                if (i != j && matrice[i][j] != Double.POSITIVE_INFINITY) {
+                    predecesseurs[i][j] = i;
+                } else {
+                    predecesseurs[i][j] = i;
+                }
+            }
+        }
+        
+        //debut de l'algorithme de recherche
+        for (int k = 0; k < taille; k++) {
+            for (int i = 0; i < taille; i++) {
+                for (int j = 0; j < taille; j++) {
+                    double nouvelleDistance = distances[i][k] + distances[k][j];
+                    double nouvelleFiabilite = fiabilite[i][k] * fiabilite[k][j];
+                    if (nouvelleDistance < distances[i][j] && nouvelleFiabilite > fiabilite[i][j]) {
+                        distances[i][j] = nouvelleDistance;
+                        fiabilite[i][j] = nouvelleFiabilite;
+                        predecesseurs[i][j] = predecesseurs[k][j];
+                    }
+                }
+            }
+        }
+        
+        afficherPlusCourtsFiableChemins();//affiche les plus courts chemins
+        
+        
+        return predecesseurs;
+    }
+    
 
 
 }
