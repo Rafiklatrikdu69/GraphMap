@@ -7,7 +7,7 @@ import java.util.List;
 import static javax.swing.JOptionPane.showOptionDialog;
 
 public class DessinGraphe extends JPanel {
-	
+	public static double[][] predecesseur = InterfaceGraphe.Graphe.floydWarshallDistance();
 	private Map<LCGraphe.MaillonGraphe, SommetVisuel> sommets;
 	private List<AreteVisuel> listAretes;
 	
@@ -168,14 +168,16 @@ public class DessinGraphe extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String selectChoixChemin = (String) InterfaceGraphe.getChoixTypeCheminComboBox().getSelectedItem();
 				if (selectChoixChemin.equals("Distance")) {
-					InterfaceGraphe.infoChemin.setRowCount(0);
-					double[][] predecesseur = InterfaceGraphe.Graphe.floydWarshallDistance();
+					
 					String selectedOption = (String) InterfaceGraphe.getChoixDestinationComboBox().getSelectedItem();
 					rechercherChemin(sommetSelectionne.getNom(), selectedOption);
 					int sommetCourant = 0;
 					int tailleChemin = InterfaceGraphe.Graphe.chemin.size();
 					String sommetCour = "";
 					Object[] ligne;
+					
+					// Réinitialisez le nombre de lignes à zéro pour supprimer toutes les données existantes
+					InterfaceGraphe.infoChemin.setRowCount(0);
 					
 					if (tailleChemin > 1) {
 						double distanceTotale = 0;
@@ -204,8 +206,6 @@ public class DessinGraphe extends JPanel {
 						ligne = new Object[]{"Distance Totale", distanceTotale +" Km"};
 						InterfaceGraphe.infoChemin.addRow(ligne);
 					}
-					
-					
 				}
 			}
 		});

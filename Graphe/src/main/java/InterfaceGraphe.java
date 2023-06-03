@@ -227,6 +227,7 @@ public class InterfaceGraphe extends JFrame {
 		//affichageVoisinPanel.setBorder(BorderFactory.createTitledBorder("infos des voisins"));
 	}
 	private void initContainerChemin() {
+		
 		String[] colonne = {"Chemin", "Distance"};
 		String choixChemin = (String) getChoixTypeCheminComboBox().getSelectedItem();
 		if(choixChemin.equals("Fiabilité")) {
@@ -236,7 +237,12 @@ public class InterfaceGraphe extends JFrame {
 		infoChemin = new DefaultTableModel(new Object[][]{}, colonne);
 		tableInfoChemin = new JTable(infoChemin);
 		tableInfoChemin.setModel(InterfaceGraphe.infoChemin);
-		tableInfoChemin.setEnabled(false);
+		// Réinitialisez le nombre de lignes à zéro pour supprimer toutes les données existantes
+		infoChemin.setRowCount(0);
+		
+		// Mettez à jour les colonnes du modèle de tableau
+		infoChemin.setColumnIdentifiers(colonne);
+		
 		// Ajouter une ligne de données avec des valeurs fictives
 		
 		
@@ -244,6 +250,7 @@ public class InterfaceGraphe extends JFrame {
 		info.add(new JScrollPane(tableInfoChemin), BorderLayout.CENTER);
 		info.setBorder(BorderFactory.createTitledBorder("Chemin"));
 		contenuTousLesCheminsPanel.add(info, BorderLayout.CENTER);
+		infoChemin.setRowCount(0);
 	}
 	
 	
