@@ -20,6 +20,8 @@ public class InterfaceGraphe extends JFrame {
 	private DessinGraphe graphePanel;
 
 	public static DefaultTableModel modelInfosVoisins;
+	public  static  DefaultTableModel infoChemin;
+	public static  JTable tableInfoChemin;
 	public static JTable tableInfosVoisins;
 	private JScrollPane affichageVoisinScrollPane;
 
@@ -62,10 +64,6 @@ public class InterfaceGraphe extends JFrame {
 	public static JPanel contenuGraphePanel;
 	static boolean selectedItem = false;
 	
-	
-	/**
-	 *
-	 */
 	public InterfaceGraphe() {
 		super();
 		fenetrePrincipale = this;
@@ -149,7 +147,7 @@ public class InterfaceGraphe extends JFrame {
 		contenuFonctionnalitePanel = new JPanel(new BorderLayout());
 		contenuFonctionnalitePanel.setOpaque(false);
 		
-		contenuTousLesCheminsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		contenuTousLesCheminsPanel = new JPanel(new BorderLayout());
 		contenuTousLesCheminsPanel.setOpaque(false);
 		
 		contenuAutrePanel = new JPanel(new BorderLayout());
@@ -186,12 +184,17 @@ public class InterfaceGraphe extends JFrame {
 		contenuNomTypeSommetPanel.add(typeSommetSelectionneLabel, constraints);
 		//contenuNomTypeSommetPanel.setBorder(BorderFactory.createTitledBorder("Sommet"));
 		initContainerInfosVoisins();
-
+	
 		contenuFonctionnalitePanel.add(affichageVoisinPanel,BorderLayout.CENTER);
-		contenuTousLesCheminsPanel.add(choixTypeCheminComboBox);
-		contenuTousLesCheminsPanel.add(choixDestinationComboBox);
-		contenuTousLesCheminsPanel.add(afficherCheminButton);
-		//contenuTousLesCheminsPanel.setBorder(BorderFactory.createTitledBorder("contenu chemin"));
+		JPanel nord = new JPanel(new BorderLayout() );
+		nord.add(choixTypeCheminComboBox,BorderLayout.WEST);
+		nord.add(choixDestinationComboBox,BorderLayout.EAST);
+		nord.add(afficherCheminButton,BorderLayout.SOUTH);
+		contenuTousLesCheminsPanel.add(nord,BorderLayout.NORTH);
+
+	
+		contenuTousLesCheminsPanel.setBorder(BorderFactory.createTitledBorder("contenu chemin"));
+		initContainerChemin();
 		
 		contenuAutrePanel.add(contenuFonctionnalitePanel,BorderLayout.NORTH);
 		//contenuAutrePanel.add(contenuTousLesCheminsPanel,BorderLayout.CENTER);
@@ -214,6 +217,25 @@ public class InterfaceGraphe extends JFrame {
 		affichageVoisinPanel.add(affichageVoisinScrollPane, BorderLayout.CENTER);
 		//affichageVoisinPanel.setBorder(BorderFactory.createTitledBorder("infos des voisins"));
 	}
+	private void initContainerChemin() {
+		String[] colonne = {"Destination", "Distance"};
+		infoChemin = new DefaultTableModel(new Object[][] {}, colonne);
+		tableInfoChemin = new JTable(infoChemin);
+		
+		// Ajouter une ligne de données avec des valeurs fictives
+		Object[] ligne1 = {"Valeur 1", "Valeur 2"};
+		infoChemin.addRow(ligne1);
+		
+		JPanel info = new JPanel(new BorderLayout());
+		info.add(new JScrollPane(tableInfoChemin), BorderLayout.CENTER);
+		info.setBorder(BorderFactory.createTitledBorder("Chemin"));
+		contenuTousLesCheminsPanel.add(info, BorderLayout.CENTER);
+	}
+	
+	
+	
+	
+	
 	
 	/**
 	 *
