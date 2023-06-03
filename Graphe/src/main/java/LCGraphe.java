@@ -19,7 +19,7 @@ class LCGraphe {
     private double[][] matrice;
     private double[][] distances;
     private double[][] predecesseurs;
-    private Map<String, Integer> indexSommet;
+    public static Map<String, Integer> indexSommet;
 
     public double[][] getPredecesseurs() {
         return this.predecesseurs;

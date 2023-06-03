@@ -162,13 +162,55 @@ public class DessinGraphe extends JPanel {
 	}
 	
 	private void calculerCheminPlusCourt() {
-		if (InterfaceGraphe.cheminValide) {
-			System.out.println("Chemin valide ");
-			double[][] predecesseur = InterfaceGraphe.Graphe.floydWarshallDistance();
-			AlgoPlusCourtsChemins algoPlusCourtsChemins = new AlgoPlusCourtsChemins();
-			rechercherChemin(sommetSelectionne.getNom(), algoPlusCourtsChemins.getChoixSommet());
-			InterfaceGraphe.cheminValide = false;
-		}
+		InterfaceGraphe.getAfficherCheminButton().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String selectChoixChemin = (String) InterfaceGraphe.getChoixTypeCheminComboBox().getSelectedItem();
+				if (selectChoixChemin.equals("Distance")) {
+					InterfaceGraphe.infoChemin.setRowCount(0);
+					double[][] predecesseur = InterfaceGraphe.Graphe.floydWarshallDistance();
+					String selectedOption = (String) InterfaceGraphe.getChoixDestinationComboBox().getSelectedItem();
+					rechercherChemin(sommetSelectionne.getNom(), selectedOption);
+					int sommetCourant = 0;
+					int tailleChemin = InterfaceGraphe.Graphe.chemin.size();
+					String sommetCour = "";
+					Object[] ligne;
+					
+					if (tailleChemin > 1) {
+						double distanceTotale = 0;
+						double distanceCourante = 0;
+						
+						int sommetPrecedent = InterfaceGraphe.Graphe.chemin.get(0);
+						sommetCourant = InterfaceGraphe.Graphe.chemin.get(1);
+						
+						for (int i = 1; i < tailleChemin; i++) {
+							if (sommetCourant != sommetPrecedent) {
+								double distanceEntreSommet = InterfaceGraphe.Graphe.getMatrice()[InterfaceGraphe.Graphe.indexSommet().get(InterfaceGraphe.Graphe.getNomSommet(sommetPrecedent))][InterfaceGraphe.Graphe.indexSommet().get(InterfaceGraphe.Graphe.getNomSommet(sommetCourant))];
+								distanceCourante = distanceEntreSommet;
+								distanceTotale += distanceEntreSommet;
+								
+								sommetCour = InterfaceGraphe.Graphe.getNomSommet(sommetCourant);
+								ligne = new Object[]{sommetCour, distanceCourante+" Km"};
+								InterfaceGraphe.infoChemin.addRow(ligne);
+							}
+							
+							if (i < tailleChemin - 1) {
+								sommetPrecedent = sommetCourant;
+								sommetCourant = InterfaceGraphe.Graphe.chemin.get(i + 1);
+							}
+						}
+						
+						ligne = new Object[]{"Distance Totale", distanceTotale +" Km"};
+						InterfaceGraphe.infoChemin.addRow(ligne);
+					}
+					
+					
+				}
+			}
+		});
+		
+		
 	}
 	
 	public void rechercherChemin(String source, String destination) {
@@ -197,7 +239,6 @@ public class DessinGraphe extends JPanel {
 		InterfaceGraphe.Graphe.afficherChemin(indexSource, indexDestination);
 		
 		
-		System.out.println("Distance : " + InterfaceGraphe.Graphe.getMatrice()[indexSource][indexDestination]);
 		String chemin = String.valueOf(InterfaceGraphe.Graphe.getMatrice()[indexSource][indexDestination]);
 		//AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets, this);
 		
