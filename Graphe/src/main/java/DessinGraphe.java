@@ -40,6 +40,7 @@ public class DessinGraphe extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		dessinerArete(g);
+		
 	}
 	
 	private void dessinerArete(Graphics g) {
@@ -243,6 +244,22 @@ public class DessinGraphe extends JPanel {
 		//AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets, this);
 		
 	}
+	private void dessinerChemin(Graphics g) {
+		if (InterfaceGraphe.Graphe.chemin != null) {
+			g.setColor(Color.RED); // Couleur du chemin
+			
+			
+			
+			for (Integer sommet : InterfaceGraphe.Graphe.chemin) {
+				SommetVisuel sommetVisuel = sommets.get(InterfaceGraphe.Graphe.getNomSommet(sommet));
+				sommetVisuel.setCouleurCentre(Color.WHITE);
+				repaint();
+				
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * Cette methode tire au hasard une position pour placer le sommet dans le Jpanel en recuperant ca largeur et ca hauteur

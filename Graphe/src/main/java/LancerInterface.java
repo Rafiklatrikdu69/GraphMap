@@ -1,5 +1,6 @@
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import  com.formdev.flatlaf.intellijthemes.FlatSpacegrayIJTheme;
 
 import javax.swing.*;
 

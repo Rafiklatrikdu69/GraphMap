@@ -1,7 +1,9 @@
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-
+import  com.formdev.flatlaf.intellijthemes.FlatSpacegrayIJTheme;
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -41,10 +43,6 @@ public class InterfaceGraphe extends JFrame {
 	private static JLabel nombreRouteLabel, nombreSommetLabel, nomSommetSelectionneLabel, typeSommetSelectionneLabel;
 	private static JButton afficherCheminButton;
 	private static JComboBox<String> choixTypeCheminComboBox, choixDestinationComboBox;
-
-
-
-	
 	static JMenuBar menu;
 	private JRadioButtonMenuItem modeLight, modeDark;
 	private JMenu itemFichier;
@@ -53,26 +51,23 @@ public class InterfaceGraphe extends JFrame {
 	private static JMenu itemOptionFonction;
 	private static JMenu itemChoixTheme;
 	private JMenuItem itemFermerFenetre, itemMenuPrincipale, itemOuvrirFichier;
-	
 	private  JMenuItem itemAfficherCheminPlusCourts;
 	static JRadioButton bloquerGraphe;
 	private JProgressBar barreChargement;
 	private int progresse;
 	private Timer timer;
-	
 	private Dimension screenSize;
-	
 	private File fichierCharge;
 	public static LCGraphe Graphe;
 	private Integer nombreRoutes;
 	private Integer nombreCentre;
 	static boolean cheminValide = false;
-	
 	public static JPanel contenuGraphePanel;
 	static boolean selectedItem = false;
-	
+	private JToolBar toolBar;
 	public InterfaceGraphe() {
 		super();
+		toolBar = new JToolBar();
 		fenetrePrincipale = this;
 		accueilPanel = new AccueilPanel(fenetrePrincipale);
 		setContentPane(accueilPanel);
@@ -137,7 +132,10 @@ public class InterfaceGraphe extends JFrame {
 		allPanel.add(contenuNomTypeSommetPanel, BorderLayout.NORTH);
 		allPanel.add(contenuButtonSuivPrec,BorderLayout.SOUTH);
 		allPanel.add(cardPanelInfos,BorderLayout.CENTER);
-		cp.add(allPanel, BorderLayout.EAST);
+		toolBar.add(allPanel);
+		toolBar.setFloatable(true);
+		cp.add(toolBar, BorderLayout.EAST);
+		
 	}
 	
 	/**
@@ -464,7 +462,7 @@ public class InterfaceGraphe extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					// Changer le thème en utilisant le nom de classe du look and feel
-					UIManager.setLookAndFeel(new FlatMacDarkLaf());
+					UIManager.setLookAndFeel(new FlatSpacegrayIJTheme());
 
 					// Mettre à jour les composants de la fenêtre pour refléter le nouveau thème
 					SwingUtilities.updateComponentTreeUI(fenetrePrincipale);
