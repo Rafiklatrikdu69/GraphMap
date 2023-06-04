@@ -168,7 +168,7 @@ public class DessinGraphe extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String selectChoixChemin = (String) InterfaceGraphe.getChoixTypeCheminComboBox().getSelectedItem();
-				if (selectChoixChemin.equals("Distance")) {
+				if (selectChoixChemin.equals(ChoixTypeChemin.DISTANCE.getAttribut())) {
 					
 					String selectedOption = (String) InterfaceGraphe.getChoixDestinationComboBox().getSelectedItem();
 					rechercherChemin(sommetSelectionne.getNom(), selectedOption);
