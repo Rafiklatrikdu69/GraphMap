@@ -932,7 +932,7 @@ class LCGraphe {
 
     /**
      * Cette methode implemente l'algorithme de floyd warshall qui permet
-     * de trouver tout les plus chemins de tous les sommets
+     * de trouver tout les plus courts chemins de tous les sommets
      *
      * @return predecesseurs : double[][]
      * @see {@link #getIndice(String, Map)}
@@ -1267,7 +1267,7 @@ class LCGraphe {
                 if (i != j && matrice[i][j] != Double.POSITIVE_INFINITY) {
                     predecesseurs[i][j] = i;
                 } else {
-                    predecesseurs[i][j] = i;
+                    predecesseurs[i][j] = 0;
                 }
             }
         }
