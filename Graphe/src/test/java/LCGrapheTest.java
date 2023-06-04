@@ -43,9 +43,13 @@ public class LCGrapheTest {
          graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
                assertNotNull(graphe.tousLesCentresToList());
     }
+@Test
+     public void testgetNomSommet(){
+     LCGraphe graphe = new LCGraphe();
+     graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
+   //assertEquals(new Boolean[]{graphe.getNomSommet(2).equals("S2")});
+}
+     
 
-
-
-
-
+     
 }

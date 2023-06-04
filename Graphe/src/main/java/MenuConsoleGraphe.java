@@ -15,8 +15,8 @@ public class MenuConsoleGraphe{
 
 
 
-        double[][] predecesseurs = newGraphe.floydWarshallDistance_Fiable();
-        System.out.println(newGraphe.plusCourtCheminDijkstraFiabilite("S1","S3"));
+        double[][] predecesseurs = newGraphe.floydWarshallDistance();
+        System.out.println(newGraphe.plusCourtCheminDijkstraDistance("S1","S3"));
         Scanner scanner = new Scanner(System.in);
         int option;
         boolean sortie = false;
