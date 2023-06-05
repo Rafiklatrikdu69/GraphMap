@@ -41,7 +41,28 @@ public class DessinGraphe extends JPanel {
 		super.paintComponent(g);
 		dessinerArete(g);
 		
+		
+		for (int i = 0; i < InterfaceGraphe.Graphe.chemin.size(); i++) {
+			Integer sommet = InterfaceGraphe.Graphe.chemin.get(i);
+			SommetVisuel sommetVisuel = sommets.get(sommet);
+			if (sommetVisuel != null) {
+				if (i == 0) {
+					
+					g.setColor(Color.RED);
+					g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
+				} else if (i == InterfaceGraphe.Graphe.chemin.size() - 1) {
+					
+					g.setColor(Color.RED);
+					g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
+				} else {
+					
+					g.setColor(Color.YELLOW);
+					g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
+				}
+			}
+		}
 	}
+	
 	
 	private void dessinerArete(Graphics g) {
 		listAretes.forEach(areteVisuel -> {
@@ -208,6 +229,7 @@ public class DessinGraphe extends JPanel {
 						InterfaceGraphe.infoChemin.addRow(ligne);
 					}
 				}
+			
 			}
 		});
 		
@@ -244,19 +266,22 @@ public class DessinGraphe extends JPanel {
 		//AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets, this);
 		
 	}
-	private void dessinerChemin(Graphics g) {
-		if (InterfaceGraphe.Graphe.chemin != null) {
+	private void dessinerChemin(Graphics g, List<Integer> chemin) {
+		if (chemin != null) {
 			g.setColor(Color.RED); // Couleur du chemin
 			
-			
-			
-			for (Integer sommet : InterfaceGraphe.Graphe.chemin) {
-				SommetVisuel sommetVisuel = sommets.get(InterfaceGraphe.Graphe.getNomSommet(sommet));
-				sommetVisuel.setCouleurCentre(Color.WHITE);
-				repaint();
+			for (int i = 0; i < chemin.size() - 1; i++) {
+				Integer sommet1 = chemin.get(i);
+				Integer sommet2 = chemin.get(i + 1);
 				
+				SommetVisuel sommetVisuel1 = sommets.get(sommet1);
+				SommetVisuel sommetVisuel2 = sommets.get(sommet2);
+				
+				g.drawLine(sommetVisuel1.getX(), sommetVisuel1.getY(), sommetVisuel2.getX(), sommetVisuel2.getY());
 			}
 		}
+	
+
 	}
 	
 	

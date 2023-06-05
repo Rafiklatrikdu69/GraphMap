@@ -14,7 +14,7 @@ import Exception.*;
  */
 class LCGraphe {
 
-    protected List<Integer> chemin;
+    public static List<Integer> chemin;
     private double[][] fiabilite;
     
     private double[][] matrice;
