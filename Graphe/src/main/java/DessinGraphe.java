@@ -30,7 +30,7 @@ public class DessinGraphe extends JPanel {
 	public DessinGraphe(LCGraphe graphe) {
 		super();
 		this.graphe = graphe;
-		predecesseur = graphe.floydWarshallDistance();
+		predecesseur = graphe.floydWarshallFiabilite();
 		listAretes = new ArrayList<>();
 		sommets = new HashMap<>();//Map pour associe chaque maillon de la liste avec un Jpanel
 		setLayout(null); // Utiliser un layout null pour positionner les sommets manuellement
@@ -218,55 +218,60 @@ public class DessinGraphe extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String selectChoixChemin = (String) InterfaceGraphe.getChoixTypeCheminComboBox().getSelectedItem();
-				if (selectChoixChemin.equals(ChoixTypeChemin.DISTANCE.getAttribut())) {
+				if (selectChoixChemin.equals(ChoixTypeChemin.FIABILITE.getAttribut())) {
 					
 					List<Integer> chemin = graphe.getChemin();
 					
 					String selectedOption = (String) InterfaceGraphe.getChoixDestinationComboBox().getSelectedItem();
-					rechercherChemin(sommetSelectionne.getNom(), selectedOption);
-					int sommetCourant = 0;
+					//rechercherChemin(sommetSelectionne.getNom(), selectedOption);
+					
+					
 					int tailleChemin = chemin.size();
-					String sommetCour = "";
+				
 					Object[] ligne;
 					
-					// Réinitialisez le nombre de lignes à zéro pour supprimer toutes les données existantes
+					
 					InterfaceGraphe.infoChemin.setRowCount(0);
 					
 					if (tailleChemin > 1) {
-						double distanceTotale = 0;
-						double distanceCourante = 0;
+						double fiabiliteTotale = 1.0; // Initialisez la fiabilité totale à 1.0
+						
+						
+						
+						double fiabiliteCourante = 0.0;
 						
 						int sommetPrecedent = chemin.get(0);
-						sommetCourant = chemin.get(1);
-						
 						
 						for (int i = 1; i < tailleChemin; i++) {
+							int sommetCourant = chemin.get(i);
+							
 							if (sommetCourant != sommetPrecedent) {
-								double distanceEntreSommet = graphe.getMatrice()[graphe.indexSommet().get(graphe.getNomSommet(sommetPrecedent))][graphe.indexSommet().get(graphe.getNomSommet(sommetCourant))];
-								distanceCourante = distanceEntreSommet;
-								distanceTotale += distanceEntreSommet;
+								double fiabilite = graphe.getFiabilite()[graphe.indexSommet().get(graphe.getNomSommet(sommetPrecedent))][graphe.indexSommet().get(graphe.getNomSommet(sommetCourant))];
+								fiabiliteCourante = fiabilite;
+								fiabiliteTotale *= fiabilite;
 								
 								AreteVisuel areteVisuel = getArete(graphe.getNomSommet(sommetCourant), graphe.getNomSommet(sommetPrecedent));
 								
-								areteVisuel.setCouleurLigne(Color.RED);
-								
-								sommetCour = graphe.getNomSommet(sommetCourant);
-								ligne = new Object[]{sommetCour, distanceCourante + " Km"};
+								String sommetCour = graphe.getNomSommet(sommetCourant);
+								ligne = new Object[]{sommetCour, fiabiliteCourante * 100 + " Km"};
 								InterfaceGraphe.infoChemin.addRow(ligne);
 							}
 							
-							if (i < tailleChemin - 1) {
+							sommetPrecedent = sommetCourant;
+						
+						
+						
+						
+						if (i < tailleChemin - 1) {
 								sommetPrecedent = sommetCourant;
-								sommetCourant = chemin.get(i + 1);
+							
 							}
 						}
-						
-						ligne = new Object[]{"Distance Totale", distanceTotale + " Km"};
-						InterfaceGraphe.infoChemin.addRow(ligne);
+					
 					}
 					//calculerCheminPlusCourt();
-					colorChemin();
-					repaint();
+					//colorChemin();
+					//repaint();
 				}
 				
 			}
@@ -299,31 +304,15 @@ public class DessinGraphe extends JPanel {
 		}
 		
 		
-		graphe.afficherChemin(indexSource, indexDestination);
+		//graphe.afficherChemin(indexSource, indexDestination);
 		
 		
-		String chemin = String.valueOf(graphe.getMatrice()[indexSource][indexDestination]);
+		//String chemin = String.valueOf(graphe.getMatrice()[indexSource][indexDestination]);
 		//AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets, this);
 		
 	}
 	
-	private void dessinerChemin(Graphics g, List<Integer> chemin) {
-		if (chemin != null) {
-			g.setColor(Color.RED); // Couleur du chemin
-			
-			for (int i = 0; i < chemin.size() - 1; i++) {
-				Integer sommet1 = chemin.get(i);
-				Integer sommet2 = chemin.get(i + 1);
-				
-				SommetVisuel sommetVisuel1 = sommets.get(sommet1);
-				SommetVisuel sommetVisuel2 = sommets.get(sommet2);
-				
-				g.drawLine(sommetVisuel1.getX(), sommetVisuel1.getY(), sommetVisuel2.getX(), sommetVisuel2.getY());
-			}
-		}
-		
-		
-	}
+
 	
 	/**
 	 * Cette methode tire au hasard une position pour placer le sommet dans le Jpanel en recuperant ca largeur et ca hauteur
@@ -397,7 +386,7 @@ public class DessinGraphe extends JPanel {
 	
 	public void changerGraphe(LCGraphe nouveauGraphe) {
 		this.graphe = nouveauGraphe;
-		predecesseur = nouveauGraphe.floydWarshallDistance();
+		//predecesseur = nouveauGraphe.floydWarshallFiabilite();
 		sommetSelectionne = null;
 		listAretes = new ArrayList<>();
 		this.removeAll();
@@ -429,3 +418,7 @@ public class DessinGraphe extends JPanel {
 	}
 	
 }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1fa9e8f18700564d801ba0e893350f6f969be7f6

@@ -224,7 +224,7 @@ public class InterfaceGraphe extends JFrame {
 	}
 	private void initContainerChemin() {
 		
-		String[] colonne = {"Chemin", "Distance"};
+		String[] colonne = {"Chemin", "Fiabilité"};
 		String choixChemin = (String) getChoixTypeCheminComboBox().getSelectedItem();
 		if(choixChemin.equals("Fiabilité")) {
 			colonne[1] = "Fiabilité";
