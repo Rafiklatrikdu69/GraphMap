@@ -42,7 +42,7 @@ public class DessinGraphe extends JPanel {
 		for(Integer indice : graphe.chemin){
 			estDansChemin(indice);
 		}
-	
+		
 	}
 	
 	private boolean estDansChemin(int indiceSommet) {
@@ -55,7 +55,7 @@ public class DessinGraphe extends JPanel {
 		}
 		return false;
 	}
-
+	
 	
 	/**
 	 * @param g the <code>Graphics</code> object to protect
@@ -162,7 +162,7 @@ public class DessinGraphe extends JPanel {
 				actionPerformedClickDessinPanel(m);
 				calculerCheminPlusCourt();
 				repaint();
-		
+				
 			}
 			
 			
