@@ -7,7 +7,8 @@ import java.util.List;
 import static javax.swing.JOptionPane.showOptionDialog;
 
 public class DessinGraphe extends JPanel {
-	public static double[][] predecesseur = InterfaceGraphe.Graphe.floydWarshallDistance();
+	public double[][] predecesseur;
+	private LCGraphe graphe;
 	private Map<LCGraphe.MaillonGraphe, SommetVisuel> sommets;
 	private List<AreteVisuel> listAretes;
 	
@@ -25,8 +26,10 @@ public class DessinGraphe extends JPanel {
 	/**
 	 * Constructeur de la classe DessinGraphe
 	 */
-	public DessinGraphe() {
+	public DessinGraphe(LCGraphe graphe) {
 		super();
+		this.graphe = graphe;
+		predecesseur = graphe.floydWarshallDistance();
 		listAretes = new ArrayList<>();
 		sommets = new HashMap<>();//Map pour associe chaque maillon de la liste avec un Jpanel
 		setLayout(null); // Utiliser un layout null pour positionner les sommets manuellement
@@ -40,18 +43,16 @@ public class DessinGraphe extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		dessinerArete(g);
+		List<Integer> chemin = graphe.getChemin();
 		
-		
-		for (int i = 0; i < InterfaceGraphe.Graphe.chemin.size(); i++) {
-			Integer sommet = InterfaceGraphe.Graphe.chemin.get(i);
+		for (int i = 0; i < chemin.size(); i++) {
+			Integer sommet = chemin.get(i);
 			SommetVisuel sommetVisuel = sommets.get(sommet);
 			if (sommetVisuel != null) {
 				if (i == 0) {
-					
 					g.setColor(Color.RED);
 					g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
-				} else if (i == InterfaceGraphe.Graphe.chemin.size() - 1) {
-					
+				} else if (i == chemin.size() - 1) {
 					g.setColor(Color.RED);
 					g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
 				} else {
@@ -77,7 +78,7 @@ public class DessinGraphe extends JPanel {
 	 */
 	private void initialisationGraphe() {
 		
-		LCGraphe.MaillonGraphe tmp = InterfaceGraphe.Graphe.getPremier();
+		LCGraphe.MaillonGraphe tmp = graphe.getPremier();
 		InterfaceGraphe.getChoixDestinationComboBox().removeAllItems();
 		while (tmp != null) {
 			int[] pos = getRandomPositionPourSommet(InterfaceGraphe.contenuGraphePanel);
@@ -93,14 +94,16 @@ public class DessinGraphe extends JPanel {
 		sommets.forEach((sommet, sommetVisuel) -> {
 			LCGraphe.MaillonGrapheSec voisins = sommet.getVoisin();//recupere le voisin de la liste
 			while (voisins != null) {
-				AreteVisuel arete = new AreteVisuel(sommetVisuel, sommets.get(InterfaceGraphe.Graphe.getCentre(voisins.getDestination())));/*creer un nouvelle arrete entre le sommet
+				AreteVisuel arete = new AreteVisuel(sommetVisuel, sommets.get(graphe.getCentre(voisins.getDestination())));/*creer un nouvelle arrete entre le sommet
                 de depart et le voisin*/
 				arete.setCouleurLigne(COULEUR_ARETE);
 				listAretes.add(arete);
+
 				voisins = voisins.getSuivantMaillonSec();//passe au maillon suivant
 			}
 		});
 	}
+
 	
 	/**
 	 * @param m
@@ -145,6 +148,7 @@ public class DessinGraphe extends JPanel {
 					
 					// Met en évidence le sommet sélectionné visuellement
 					sommets.get(sommetSelectionne).setCouleurCentre(COULEUR_SOMMET_SELECT);
+					listAretes.get(1).setCouleurLigne(Color.BLUE);
 					InterfaceGraphe.mettreVisibleComposantSommet(sommetSelectionne.getNom(), sommetSelectionne.getType());
 					calculerCheminPlusCourt();
 				}
@@ -190,11 +194,13 @@ public class DessinGraphe extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String selectChoixChemin = (String) InterfaceGraphe.getChoixTypeCheminComboBox().getSelectedItem();
 				if (selectChoixChemin.equals(ChoixTypeChemin.DISTANCE.getAttribut())) {
+
+					List<Integer> chemin = graphe.getChemin();
 					
 					String selectedOption = (String) InterfaceGraphe.getChoixDestinationComboBox().getSelectedItem();
 					rechercherChemin(sommetSelectionne.getNom(), selectedOption);
 					int sommetCourant = 0;
-					int tailleChemin = InterfaceGraphe.Graphe.chemin.size();
+					int tailleChemin = chemin.size();
 					String sommetCour = "";
 					Object[] ligne;
 					
@@ -205,23 +211,29 @@ public class DessinGraphe extends JPanel {
 						double distanceTotale = 0;
 						double distanceCourante = 0;
 						
-						int sommetPrecedent = InterfaceGraphe.Graphe.chemin.get(0);
-						sommetCourant = InterfaceGraphe.Graphe.chemin.get(1);
+						int sommetPrecedent = chemin.get(0);
+						sommetCourant = chemin.get(1);
+
+
 						
 						for (int i = 1; i < tailleChemin; i++) {
 							if (sommetCourant != sommetPrecedent) {
-								double distanceEntreSommet = InterfaceGraphe.Graphe.getMatrice()[InterfaceGraphe.Graphe.indexSommet().get(InterfaceGraphe.Graphe.getNomSommet(sommetPrecedent))][InterfaceGraphe.Graphe.indexSommet().get(InterfaceGraphe.Graphe.getNomSommet(sommetCourant))];
+								double distanceEntreSommet = graphe.getMatrice()[graphe.indexSommet().get(graphe.getNomSommet(sommetPrecedent))][graphe.indexSommet().get(graphe.getNomSommet(sommetCourant))];
 								distanceCourante = distanceEntreSommet;
 								distanceTotale += distanceEntreSommet;
+
+								AreteVisuel areteVisuel = getArete(graphe.getNomSommet(sommetCourant), graphe.getNomSommet(sommetPrecedent));
+
+								areteVisuel.setCouleurLigne(Color.RED);
 								
-								sommetCour = InterfaceGraphe.Graphe.getNomSommet(sommetCourant);
+								sommetCour = graphe.getNomSommet(sommetCourant);
 								ligne = new Object[]{sommetCour, distanceCourante+" Km"};
 								InterfaceGraphe.infoChemin.addRow(ligne);
 							}
 							
 							if (i < tailleChemin - 1) {
 								sommetPrecedent = sommetCourant;
-								sommetCourant = InterfaceGraphe.Graphe.chemin.get(i + 1);
+								sommetCourant = chemin.get(i + 1);
 							}
 						}
 						
@@ -240,16 +252,18 @@ public class DessinGraphe extends JPanel {
 		
 		
 		// Vérifie si les sommets saisis existent dans le graphe
-		if (!InterfaceGraphe.Graphe.indexSommet().containsKey(source) || !InterfaceGraphe.Graphe.indexSommet().containsKey(destination)) {
+		if (!graphe.indexSommet().containsKey(source) || !graphe.indexSommet().containsKey(destination)) {
 			System.out.println("Les sommets saisis ne sont pas valides.");
 			return;
 		}
 		
-		int indexSource = InterfaceGraphe.Graphe.indexSommet().get(source);
-		int indexDestination = InterfaceGraphe.Graphe.indexSommet().get(destination);
+		int indexSource = graphe.indexSommet().get(source);
+		int indexDestination = graphe.indexSommet().get(destination);
+
+
 		
 		// Vérifie si un chemin existe entre les sommets saisis
-		if (InterfaceGraphe.Graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
+		if (graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
 			JPanel panelAucunChemin = new JPanel();
 			JLabel chemin = new JLabel("Aucun chemin trouver !");
 			panelAucunChemin.add(chemin);
@@ -259,10 +273,10 @@ public class DessinGraphe extends JPanel {
 		}
 		
 		
-		InterfaceGraphe.Graphe.afficherChemin(indexSource, indexDestination);
+		graphe.afficherChemin(indexSource, indexDestination);
 		
 		
-		String chemin = String.valueOf(InterfaceGraphe.Graphe.getMatrice()[indexSource][indexDestination]);
+		String chemin = String.valueOf(graphe.getMatrice()[indexSource][indexDestination]);
 		//AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets, this);
 		
 	}
@@ -283,9 +297,7 @@ public class DessinGraphe extends JPanel {
 	
 
 	}
-	
-	
-	
+
 	/**
 	 * Cette methode tire au hasard une position pour placer le sommet dans le Jpanel en recuperant ca largeur et ca hauteur
 	 *
@@ -355,7 +367,31 @@ public class DessinGraphe extends JPanel {
 		COULEUR_SOMMET_SELECT = couleurSommetSelect;
 		repaint();
 	}
-	
+
+	public void changerGraphe(LCGraphe nouveauGraphe){
+		this.graphe = nouveauGraphe;
+		predecesseur = nouveauGraphe.floydWarshallDistance();
+		sommetSelectionne = null;
+		listAretes = new ArrayList<>();
+		this.removeAll();
+		sommetEnDeplacement = null;
+		sommets = new HashMap<>();
+		initialisationGraphe();
+	}
+
+	private AreteVisuel getArete(String nomSommet, String nomSommetDestination){
+		AreteVisuel areteVisuel = null;
+		AreteVisuel tmp;
+		int i = 0;
+		while (areteVisuel == null && i<listAretes.size()){
+			tmp = listAretes.get(i);
+			if((tmp.getSommetVisuel1().getSommetGraphe().getNom().equals(nomSommet) && tmp.getSommetVisuel2().getSommetGraphe().getNom().equals(nomSommetDestination)) || (tmp.getSommetVisuel2().getSommetGraphe().getNom().equals(nomSommet) && tmp.getSommetVisuel1().getSommetGraphe().getNom().equals(nomSommetDestination))){
+				areteVisuel = tmp;
+			}
+			i++;
+		}
+		return areteVisuel;
+	}
 	
 	/**
 	 * @return

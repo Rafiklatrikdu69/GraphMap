@@ -57,7 +57,7 @@ public class InterfaceGraphe extends JFrame {
 	private Timer timer;
 	private Dimension screenSize;
 	private File fichierCharge;
-	public static LCGraphe Graphe;
+	private LCGraphe Graphe;
 	private Integer nombreRoutes;
 	private Integer nombreCentre;
 	static boolean cheminValide = false;
@@ -140,7 +140,6 @@ public class InterfaceGraphe extends JFrame {
 	/**
 	 *
 	 */
-
 	private void initContainerInfoSommet(){
 		contenuInfoSommetPanel = new JPanel(new BorderLayout());
 		contenuInfoSommetPanel.setOpaque(false);
@@ -250,17 +249,17 @@ public class InterfaceGraphe extends JFrame {
 		infoChemin.setRowCount(0);
 	}
 	
-	
-	
-	
-	
-	
 	/**
 	 *
 	 */
 
 	private void initContainerDessinGraphePanel() {
-		graphePanel = new DessinGraphe();
+		if(graphePanel == null){
+			graphePanel = new DessinGraphe(Graphe);
+		} else {
+			graphePanel.changerGraphe(Graphe);
+		}
+
 		//contenuGraphePanel.setBorder(BorderFactory.createTitledBorder("Graphe dessiner"));
 		contenuGraphePanel.setOpaque(false);
 		contenuGraphePanel.add(graphePanel, BorderLayout.CENTER);

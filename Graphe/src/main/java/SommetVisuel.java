@@ -66,7 +66,7 @@ public class SommetVisuel extends JPanel {
      *
      * @return
      */
-    public LCGraphe.MaillonGraphe getCentreGraphe() {
+    public LCGraphe.MaillonGraphe getSommetGraphe() {
         return centre;
     }
     

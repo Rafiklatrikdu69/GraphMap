@@ -14,13 +14,13 @@ import Exception.*;
  */
 class LCGraphe {
 
-    public static List<Integer> chemin;
+    public List<Integer> chemin;
     private double[][] fiabilite;
     
     private double[][] matrice;
     private double[][] distances;
     private double[][] predecesseurs;
-    public static Map<String, Integer> indexSommet;
+    public Map<String, Integer> indexSommet;
 
     public double[][] getPredecesseurs() {
         return this.predecesseurs;
@@ -1423,7 +1423,20 @@ class LCGraphe {
         
         return predecesseurs;
     }
-    
 
+    public List<Integer> getChemin() {
+        return chemin;
+    }
 
+    public double[][] getFiabilite() {
+        return fiabilite;
+    }
+
+    public double[][] getDistances() {
+        return distances;
+    }
+
+    public Map<String, Integer> getIndexSommet() {
+        return indexSommet;
+    }
 }
