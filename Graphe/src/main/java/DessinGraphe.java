@@ -35,7 +35,17 @@ public class DessinGraphe extends JPanel {
 		setLayout(null); // Utiliser un layout null pour positionner les sommets manuellement
 		initialisationGraphe();
 	}
+	private boolean estDansChemin(int indiceSommet){
+	Map<Integer,Boolean> verifePresenceChemin = new HashMap<>();
+	for (Integer indice : graphe.chemin){
+		verifePresenceChemin.put(indice,false);
+	}
+	if (!verifePresenceChemin.get(indiceSommet)){
+		verifePresenceChemin.put(indiceSommet,true);
+	}
 	
+	return  verifePresenceChemin.get(indiceSommet);
+	}
 	/**
 	 * @param g the <code>Graphics</code> object to protect
 	 */
@@ -43,32 +53,39 @@ public class DessinGraphe extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		dessinerArete(g);
-		List<Integer> chemin = graphe.getChemin();
-		
-		for (int i = 0; i < chemin.size(); i++) {
-			Integer sommet = chemin.get(i);
-			SommetVisuel sommetVisuel = sommets.get(sommet);
-			if (sommetVisuel != null) {
-				if (i == 0) {
-					g.setColor(Color.RED);
-					g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
-				} else if (i == chemin.size() - 1) {
-					g.setColor(Color.RED);
-					g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
-				} else {
-					
-					g.setColor(Color.YELLOW);
-					g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
-				}
-			}
-		}
+	
 	}
 	
 	
 	private void dessinerArete(Graphics g) {
+		List<Integer> chemin = graphe.getChemin();
+		
+	
 		listAretes.forEach(areteVisuel -> {
+			System.out.println(areteVisuel.getCouleurLigne());
 			g.setColor(areteVisuel.getCouleurLigne());
+			
 			g.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
+			if(chemin!=null){
+				for (int i = 0; i < chemin.size(); i++) {
+					Integer sommet = chemin.get(i);
+					SommetVisuel sommetVisuel = sommets.get(sommet);
+					if (sommetVisuel != null) {
+						if (i == 0) {
+							g.setColor(Color.RED);
+							g.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
+						} else if (i == chemin.size() - 1) {
+							g.setColor(Color.RED);
+							g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
+						} else {
+							
+							g.setColor(Color.YELLOW);
+							g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
+						}
+					}
+				}
+			}
+			
 			repaint();
 		});
 	}
