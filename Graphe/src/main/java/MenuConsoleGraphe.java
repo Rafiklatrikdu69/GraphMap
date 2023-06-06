@@ -11,21 +11,19 @@ public class MenuConsoleGraphe{
     public static void main(String[] args){
 
         newGraphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
-<<<<<<< HEAD
+
 
 
 
 
         double[][] predecesseurs = newGraphe.floydWarshallDistance();
         System.out.println(newGraphe.plusCourtCheminDijkstraDistance("S1","S3"));
-=======
+
         
         
         
         
-        double[][] predecesseurs = newGraphe.floydWarshallDistance();
-        System.out.println(newGraphe.plusCourtCheminDijkstraFiabilite("S1","S3"));
->>>>>>> feature/cheminAffichage
+       
         Scanner scanner = new Scanner(System.in);
         int option;
         boolean sortie = false;
