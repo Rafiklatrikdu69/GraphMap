@@ -41,6 +41,31 @@ public class DessinGraphe extends JPanel {
 		for (Integer indice : graphe.chemin) {
 			estDansChemin(indice);
 		}
+<<<<<<< HEAD
+=======
+		
+	}
+	
+	private boolean estDansChemin(int indiceSommet) {
+		for (Map.Entry<LCGraphe.MaillonGraphe, SommetVisuel> entry : sommets.entrySet()) {
+			SommetVisuel sommetVisuel = entry.getValue();
+			if (sommetVisuel.getSommetGraphe().getNom().equals(graphe.getNomSommet(indiceSommet))) {
+				sommetVisuel.setCouleurCentre(Color.RED);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * @param g the <code>Graphics</code> object to protect
+	 */
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		dessinerArete(g);
+>>>>>>> feature/affichageChemin
 		
 	}
 	private void estDansChemin(int indiceSommet) {
@@ -124,7 +149,7 @@ public class DessinGraphe extends JPanel {
 				actionPerformedClickDessinPanel(m);
 				calculerCheminPlusCourt();
 				repaint();
-		
+				
 			}
 			
 			
