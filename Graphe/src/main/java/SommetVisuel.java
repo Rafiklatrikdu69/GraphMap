@@ -59,7 +59,7 @@ public class SommetVisuel extends JPanel {
 
     public void setCouleurCentre(Color couleur) {
         this.couleurCentre = couleur;
-        repaint();
+        
     }
     
     /**
