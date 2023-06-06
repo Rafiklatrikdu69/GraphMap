@@ -37,96 +37,30 @@ public class DessinGraphe extends JPanel {
 		initialisationGraphe();
 		
 	}
-	private boolean estDansChemin(int indiceSommet){
-	Map<Integer,Boolean> verifePresenceChemin = new HashMap<>();
-	for (Integer indice : graphe.chemin){
-		
-	}
-	
-<<<<<<< HEAD
-	return  verifePresenceChemin.get(indiceSommet);
-	}
-=======
-	private void colorChemin() {
-		for(Integer indice : graphe.chemin){
+	private void colorChemin () {
+		for (Integer indice : graphe.chemin) {
 			estDansChemin(indice);
 		}
-	
-	}
-	
-	private boolean estDansChemin(int indiceSommet) {
-		for (Map.Entry<LCGraphe.MaillonGraphe, SommetVisuel> entry : sommets.entrySet()) {
-			SommetVisuel sommetVisuel = entry.getValue();
-			if (sommetVisuel.getSommetGraphe().getNom().equals(graphe.getNomSommet(indiceSommet))) {
-				sommetVisuel.setCouleurCentre(Color.RED);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	
->>>>>>> feature/affichageChemin
-	/**
-	 * @param g the <code>Graphics</code> object to protect
-	 */
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		dessinerArete(g);
-<<<<<<< HEAD
-	
-=======
 		
->>>>>>> feature/affichageChemin
 	}
-	
-	
-	private void dessinerArete(Graphics g) {
+	private void estDansChemin(int indiceSommet) {
+		
+		for (Integer indice : graphe.chemin) {
+			estDansChemin(indice);
+		}
+		
+	}
+	private void dessinerArete (Graphics g){
 		List<Integer> chemin = graphe.getChemin();
 		
-<<<<<<< HEAD
-	
-=======
 		
->>>>>>> feature/affichageChemin
 		listAretes.forEach(areteVisuel -> {
 			System.out.println(areteVisuel.getCouleurLigne());
 			g.setColor(areteVisuel.getCouleurLigne());
 			
 			g.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
-<<<<<<< HEAD
-			if(chemin!=null){
-=======
-			/*if (chemin != null) {
->>>>>>> feature/affichageChemin
-				for (int i = 0; i < chemin.size(); i++) {
-					Integer sommet = chemin.get(i);
-					SommetVisuel sommetVisuel = sommets.get(sommet);
-					if (sommetVisuel != null) {
-						if (i == 0) {
-							g.setColor(Color.RED);
-							g.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
-						} else if (i == chemin.size() - 1) {
-							g.setColor(Color.RED);
-							g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
-						} else {
-							
-							g.setColor(Color.YELLOW);
-							g.fillOval(sommetVisuel.getX() - 5, sommetVisuel.getY() - 5, 20, 20);
-						}
-					}
-				}
-			}
-<<<<<<< HEAD
-			
-			repaint();
-=======
-			*/
 			
 			
-			
->>>>>>> feature/affichageChemin
 		});
 	}
 	
@@ -160,6 +94,7 @@ public class DessinGraphe extends JPanel {
 			}
 		});
 	}
+	
 	
 	
 	/**
@@ -255,7 +190,11 @@ public class DessinGraphe extends JPanel {
 			
 		}
 	}
-	
+	@Override
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		dessinerArete(g);
+	}
 	private void calculerCheminPlusCourt() {
 		InterfaceGraphe.getAfficherCheminButton().addActionListener(new ActionListener() {
 			
