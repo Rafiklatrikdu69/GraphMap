@@ -1,6 +1,5 @@
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-import  com.formdev.flatlaf.intellijthemes.FlatSpacegrayIJTheme;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -462,7 +461,7 @@ public class InterfaceGraphe extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					// Changer le thème en utilisant le nom de classe du look and feel
-					UIManager.setLookAndFeel(new FlatSpacegrayIJTheme());
+					UIManager.setLookAndFeel(new FlatMacDarkLaf());
 
 					// Mettre à jour les composants de la fenêtre pour refléter le nouveau thème
 					SwingUtilities.updateComponentTreeUI(fenetrePrincipale);
