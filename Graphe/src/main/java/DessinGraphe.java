@@ -418,7 +418,4 @@ public class DessinGraphe extends JPanel {
 	}
 	
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 1fa9e8f18700564d801ba0e893350f6f969be7f6
