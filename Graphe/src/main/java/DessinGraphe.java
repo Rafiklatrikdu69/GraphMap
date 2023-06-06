@@ -41,21 +41,11 @@ public class DessinGraphe extends JPanel {
 		for (Integer indice : graphe.chemin) {
 			estDansChemin(indice);
 		}
-<<<<<<< HEAD
-=======
+
 		
 	}
 	
-	private boolean estDansChemin(int indiceSommet) {
-		for (Map.Entry<LCGraphe.MaillonGraphe, SommetVisuel> entry : sommets.entrySet()) {
-			SommetVisuel sommetVisuel = entry.getValue();
-			if (sommetVisuel.getSommetGraphe().getNom().equals(graphe.getNomSommet(indiceSommet))) {
-				sommetVisuel.setCouleurCentre(Color.RED);
-				return true;
-			}
-		}
-		return false;
-	}
+	
 	
 	
 	/**
@@ -65,14 +55,20 @@ public class DessinGraphe extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		dessinerArete(g);
->>>>>>> feature/affichageChemin
+
 		
 	}
-	private void estDansChemin(int indiceSommet) {
+	private boolean estDansChemin(int indiceSommet) {
 		
-		for (Integer indice : graphe.chemin) {
-			estDansChemin(indice);
+		for (Map.Entry<LCGraphe.MaillonGraphe, SommetVisuel> entry : sommets.entrySet()) {
+			SommetVisuel sommetVisuel = entry.getValue();
+			if (sommetVisuel.getSommetGraphe().getNom().equals(graphe.getNomSommet(indiceSommet))) {
+				sommetVisuel.setCouleurCentre(Color.RED);
+				return true;
+			}
 		}
+		return false;
+		
 		
 	}
 	private void dessinerArete (Graphics g){
@@ -215,11 +211,7 @@ public class DessinGraphe extends JPanel {
 			
 		}
 	}
-	@Override
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		dessinerArete(g);
-	}
+	
 	private void calculerCheminPlusCourt() {
 		InterfaceGraphe.getAfficherCheminButton().addActionListener(new ActionListener() {
 			
