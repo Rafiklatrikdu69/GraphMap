@@ -76,7 +76,7 @@ class LCGraphe {
             return fiab;
         }
 
-        public MaillonGrapheSec getSuivant() {
+        public MaillonGrapheSec getSuivantMaillonSec() {
             return this.suiv;
         }
 
@@ -173,7 +173,7 @@ class LCGraphe {
             MaillonGrapheSec tmp = this.lVois;
             while (tmp != null) {
                 listeMaillon.add(tmp);
-                tmp = tmp.getSuivant();
+                tmp = tmp.getSuivantMaillonSec();
             }
             assert listeMaillon != null;
             return listeMaillon;
@@ -190,7 +190,7 @@ class LCGraphe {
                 if (tmp.getDestination().equals(nomVoisin)) {
                     voisin = tmp;
                 }
-                tmp = tmp.getSuivant();
+                tmp = tmp.getSuivantMaillonSec();
             }
             return voisin;
         }
@@ -206,7 +206,7 @@ class LCGraphe {
                 if (tmp.getDestination().equals(nomVoisin)) {
                     verife = true;
                 }
-                tmp = tmp.getSuivant();
+                tmp = tmp.getSuivantMaillonSec();
             }
             return verife;
         }
@@ -221,7 +221,7 @@ class LCGraphe {
             StringBuilder s = new StringBuilder();
             while (tmp != null) {
                 s.append("Destination : ").append(tmp.getDestination()).append(" [Fiabilité : ").append(tmp.getFiabilite() * 10).append("%, Distance : ").append(tmp.getDistance()).append("Km, Durée : ").append(tmp.getDuree()).append(" minutes]\n");
-                tmp = tmp.getSuivant();
+                tmp = tmp.getSuivantMaillonSec();
 
             }
             return s.toString();
@@ -274,12 +274,12 @@ class LCGraphe {
         MaillonGrapheSec tmp1 = maillonCentre1.lVois;
         while (tmp1 != null) {
             voisins1.add(tmp1.getDestination());
-            tmp1 = tmp1.getSuivant();
+            tmp1 = tmp1.getSuivantMaillonSec();
         }
         MaillonGrapheSec tmp2 = maillonCentre2.lVois;
         while (tmp2 != null) {
             voisins2.add(tmp2.getDestination());
-            tmp2 = tmp2.getSuivant();
+            tmp2 = tmp2.getSuivantMaillonSec();
         }
         List<String> voisinsCommuns = new ArrayList<>(voisins1);
         voisinsCommuns.retainAll(voisins2);//ne retiens que les elements communs au deux liste
@@ -295,7 +295,7 @@ class LCGraphe {
                     distance2 = true;
                     break;
                 }
-                tmp3 = tmp3.getSuivant();
+                tmp3 = tmp3.getSuivantMaillonSec();
             }
             if (distance2) {
                 break;
@@ -383,7 +383,7 @@ class LCGraphe {
                 tmp2.setFiabilite(fiab);
                 check = true;
             } else {
-                tmp2 = tmp2.getSuivant();
+                tmp2 = tmp2.getSuivantMaillonSec();
             }
         }
 
@@ -406,7 +406,7 @@ class LCGraphe {
                 tmp2.setFiabilite(fiab);
                 check = true;
             }
-            tmp2 = tmp2.getSuivant();
+            tmp2 = tmp2.getSuivantMaillonSec();
         }
     }
 
@@ -430,7 +430,7 @@ class LCGraphe {
             if (tmp2.getDestination().equals(nomDestinataire)) {
                 verifeExistence = true;
             }
-            tmp2 = tmp2.getSuivant();
+            tmp2 = tmp2.getSuivantMaillonSec();
         }
         return verifeExistence;
     }
@@ -491,7 +491,7 @@ class LCGraphe {
             tmp2 = tmp.getVoisin();
             while (tmp2 != null) {
                 if (ensembleArrete.contains(tmp2)) {
-                    tmp2 = tmp2.getSuivant();
+                    tmp2 = tmp2.getSuivantMaillonSec();
                 }
             }
             tmp = tmp.getSuivant();
@@ -991,7 +991,7 @@ class LCGraphe {
 
                 matrice[indexSource][indexDestination] = distance; // On affecte la distance à l'indice
 
-                voisins = voisins.getSuivant(); // On passe au voisin suivant
+                voisins = voisins.getSuivantMaillonSec(); // On passe au voisin suivant
             }
 
             tmp = tmp.getSuivant(); // On passe au maillon suivant jusqu'à la fin de la liste chaînée
@@ -1246,7 +1246,7 @@ class LCGraphe {
               
                 fiabilite[indexSource][indexDestination] = fiable;
                 
-                voisins = voisins.getSuivant(); // On passe au voisin suivant
+                voisins = voisins.getSuivantMaillonSec(); // On passe au voisin suivant
             }
             
             tmp = tmp.getSuivant(); // On passe au maillon suivant jusqu'à la fin de la liste chaînée
@@ -1377,7 +1377,7 @@ class LCGraphe {
                 matrice[indexSource][indexDestination] = distance; // On affecte la distance à l'indice
                 fiabilite[indexSource][indexDestination] = fiable;
                 
-                voisins = voisins.getSuivant(); // On passe au voisin suivant
+                voisins = voisins.getSuivantMaillonSec(); // On passe au voisin suivant
             }
             
             tmp = tmp.getSuivant(); // On passe au maillon suivant jusqu'à la fin de la liste chaînée

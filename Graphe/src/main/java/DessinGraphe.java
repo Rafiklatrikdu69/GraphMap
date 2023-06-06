@@ -97,7 +97,7 @@ public class DessinGraphe extends JPanel {
                 de depart et le voisin*/
 				arete.setCouleurLigne(COULEUR_ARETE);
 				listAretes.add(arete);
-				voisins = voisins.getSuivant();//passe au maillon suivant
+				voisins = voisins.getSuivantMaillonSec();//passe au maillon suivant
 			}
 		});
 	}
