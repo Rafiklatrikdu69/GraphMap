@@ -1,3 +1,5 @@
+import LCGraphe.Graphe;
+
 import java.io.IOException;
 import java.lang.String;
 import java.text.DecimalFormat;
@@ -5,7 +7,7 @@ import java.util.*;
 import java.util.Scanner;
 
 public class MenuConsoleGraphe{
-    private static LCGraphe newGraphe = new LCGraphe();
+    private static Graphe newGraphe = new Graphe();
     private static   String optionDispensaire2;
     
     public static void main(String[] args){
@@ -17,7 +19,7 @@ public class MenuConsoleGraphe{
         
         
         double[][] predecesseurs = newGraphe.floydWarshallFiabilite();
-        System.out.println(newGraphe.plusCourtCheminDijkstraFiabilite("S1","S3"));
+        System.out.println(newGraphe.getCheminDijkstra().get("S1").getCheminsFiabiliteTo("S3"));
         
         
         
@@ -47,10 +49,10 @@ public class MenuConsoleGraphe{
                 scanner.nextLine();
                 switch (option) {
                     case 1 -> {
-                        List<LCGraphe.MaillonGraphe> tousLesCentresList = newGraphe.tousLesCentresToList();
+                        List<Graphe.MaillonGraphe> tousLesCentresList = newGraphe.tousLesCentresToList();
                         tousLesCentresList.forEach(Centre -> {
                             StringBuilder stringVoisin = new StringBuilder();
-                            List<LCGraphe.MaillonGrapheSec> voisinsCentre = Centre.voisinsToList();
+                            List<Graphe.MaillonGrapheSec> voisinsCentre = Centre.voisinsToList();
                             stringVoisin.append("[");
                             for (int i = 0; i < voisinsCentre.size(); i++) {
                                 if (i == voisinsCentre.size() - 1) {
@@ -78,7 +80,7 @@ public class MenuConsoleGraphe{
                         if (!newGraphe.existeCentre(optionDispensaire)) {
                             System.out.println("Le dispensaire " + optionDispensaire + " n'existe pas !");
                         } else {
-                            LCGraphe.MaillonGraphe dispensaire = newGraphe.getCentre(optionDispensaire);
+                            Graphe.MaillonGraphe dispensaire = newGraphe.getCentre(optionDispensaire);
                             int optionFonctionDispensaire;
                             Scanner scannerFonctionDispensaire = new Scanner(System.in);
                             do {
@@ -119,7 +121,7 @@ public class MenuConsoleGraphe{
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
                                             }
                                             else if (dispensaire.estVoisin(optionDispensaire2)) {
-                                                LCGraphe.MaillonGrapheSec voisinOfDispensaire = dispensaire.getVoisin(optionDispensaire2);
+                                                Graphe.MaillonGrapheSec voisinOfDispensaire = dispensaire.getVoisin(optionDispensaire2);
                                                 System.out.println(dispensaire.getNom()+"-"+voisinOfDispensaire.toString());
                                             }
                                             else {
@@ -149,7 +151,7 @@ public class MenuConsoleGraphe{
                                             if (!newGraphe.existeCentre(optionDispensaire2)) {
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
                                             } else {
-                                                LinkedHashMap<String, Double> plusCourtChemin = newGraphe.plusCourtCheminDijkstraFiabilite(dispensaire.getNom(),optionDispensaire2);
+                                                LinkedHashMap<String, Double> plusCourtChemin = newGraphe.getCheminDijkstra().get(dispensaire.getNom()).getCheminsFiabiliteTo(optionDispensaire2);
                                                 StringBuilder affichage = new StringBuilder();
                                                 affichage.append("\n");
                                                 int compteur = 0;
@@ -180,7 +182,7 @@ public class MenuConsoleGraphe{
                                             if (!newGraphe.existeCentre(optionDispensaire2)) {
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
                                             } else {
-                                                LinkedHashMap<String, Double> plusCourtChemin = newGraphe.plusCourtCheminDijkstraDistance(dispensaire.getNom(),optionDispensaire2);
+                                                LinkedHashMap<String, Double> plusCourtChemin = newGraphe.getCheminDijkstra().get(dispensaire.getNom()).getCheminsDistanceTo(optionDispensaire2);
                                                 StringBuilder affichage = new StringBuilder();
                                                 affichage.append("\n");
                                                 int compteur = 0;
@@ -211,7 +213,7 @@ public class MenuConsoleGraphe{
                                             if (!newGraphe.existeCentre(optionDispensaire2)) {
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
                                             } else {
-                                                LinkedHashMap<String, Double> plusCourtChemin = newGraphe.plusCourtCheminDijkstraDuree(dispensaire.getNom(),optionDispensaire2);
+                                                LinkedHashMap<String, Double> plusCourtChemin = newGraphe.getCheminDijkstra().get(dispensaire.getNom()).getCheminsDureeTo(optionDispensaire2);
                                                 StringBuilder affichage = new StringBuilder();
                                                 affichage.append("\n");
                                                 int compteur = 0;

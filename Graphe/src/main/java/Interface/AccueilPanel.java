@@ -1,3 +1,5 @@
+package Interface;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -5,9 +7,9 @@ import java.awt.event.ActionListener;
 
 public class AccueilPanel extends JPanel {
     private JButton commencer, parametre, quitter;
-    private JFrame fenetrePrincipale;
-    AccueilPanel(JFrame fenetrePrincipale){
-        this.fenetrePrincipale = fenetrePrincipale;
+    private InterfaceGraphe interfaceGraphe;
+    AccueilPanel(InterfaceGraphe interfaceGraphe){
+        this.interfaceGraphe = interfaceGraphe;
         initAccueilComponents();
         initAccueilEventListeners();
         setVisible(true);
@@ -48,14 +50,14 @@ public class AccueilPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
-                fenetrePrincipale.setContentPane(InterfaceGraphe.cp);
-                fenetrePrincipale.setJMenuBar(InterfaceGraphe.menu);
+                interfaceGraphe.setContentPane(interfaceGraphe.getCp());
+                interfaceGraphe.setJMenuBar(interfaceGraphe.getMenu());
             }
         });
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fenetrePrincipale.dispose();
+                interfaceGraphe.dispose();
             }
         });
     }

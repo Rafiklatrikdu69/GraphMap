@@ -1,9 +1,13 @@
+package Interface;
+
+import LCGraphe.Graphe;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class SommetVisuel extends JPanel {
 
-    private LCGraphe.MaillonGraphe centre;
+    private Graphe.MaillonGraphe centre;
     private int rayon;
     private int x;
     private int y;
@@ -15,7 +19,7 @@ public class SommetVisuel extends JPanel {
      * @param centre
      * @param rayon
      */
-    public SommetVisuel(LCGraphe.MaillonGraphe centre, int rayon) {
+    public SommetVisuel(Graphe.MaillonGraphe centre, int rayon) {
         this.rayon = rayon;
         this.centre = centre;
         setOpaque(false);
@@ -66,7 +70,7 @@ public class SommetVisuel extends JPanel {
      *
      * @return
      */
-    public LCGraphe.MaillonGraphe getSommetGraphe() {
+    public Graphe.MaillonGraphe getSommetGraphe() {
         return centre;
     }
     

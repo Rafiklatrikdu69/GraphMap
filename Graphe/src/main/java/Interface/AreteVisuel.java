@@ -1,3 +1,7 @@
+package Interface;
+
+import Interface.SommetVisuel;
+
 import java.awt.*;
 
 public class AreteVisuel {
