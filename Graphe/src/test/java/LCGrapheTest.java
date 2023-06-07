@@ -1,3 +1,4 @@
+import LCGraphe.Graphe;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -7,7 +8,7 @@ public class LCGrapheTest {
 
     @Test
     public void testAjouterSommet() {
-        LCGraphe graphe = new LCGraphe();
+        Graphe graphe = new Graphe();
 
 
         assertFalse(graphe.existeCentre("S1"));
@@ -17,14 +18,14 @@ public class LCGrapheTest {
     @Test
    public void testChercheMaillon() {
 
-        LCGraphe graphe = new LCGraphe();
+        Graphe graphe = new Graphe();
         graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
         assertNotNull(graphe.getCentre("S1"));
     }
 
     @Test
     public void testExisteCentre() {
-        LCGraphe graphe = new LCGraphe();
+        Graphe graphe = new Graphe();
         graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
         assertTrue("Sommet existant", graphe.existeCentre("S5"));
         assertTrue("Sommet inexistant", graphe.existeCentre("S31"));
@@ -32,20 +33,20 @@ public class LCGrapheTest {
 
     @Test
     public void testVoisin() {
-        LCGraphe graphe = new LCGraphe();
+        Graphe graphe = new Graphe();
         graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
         assertTrue(graphe.existeVoisin("S1", "S12"));
 
     }
     @Test
     public void testCentreListe(){
-         LCGraphe graphe = new LCGraphe();
+         Graphe graphe = new Graphe();
          graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
                assertNotNull(graphe.tousLesCentresToList());
     }
 @Test
      public void testgetNomSommet(){
-     LCGraphe graphe = new LCGraphe();
+     Graphe graphe = new Graphe();
      graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
    //assertEquals(new Boolean[]{graphe.getNomSommet(2).equals("S2")});
 }
