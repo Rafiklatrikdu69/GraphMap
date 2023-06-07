@@ -1,3 +1,5 @@
+package Interface;
+
 public enum ChoixTypeChemin {
 	FIABILITE("Fiabilité"),
 	DISTANCE("Distance"),

@@ -1,74 +1,83 @@
+package Interface;
+
+import Interface.InfosSommetPanel.AfficherCheminPanel;
+import LCGraphe.Graphe;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static javax.swing.JOptionPane.showOptionDialog;
 
 public class InterfaceGraphe extends JFrame {
 	private CardLayout cardLayout;
-	private JFrame fenetrePrincipale; // la fenetre
-	
-	public static JPanel cp;
+	private InterfaceGraphe fenetrePrincipale; // la fenetre
+
+	private String[] colonneIdentifiersChemin;
+
+	public JPanel cp;
 	
 	private AccueilPanel accueilPanel;
 	private JPanel barreDeChargementPanel,nord;
 	private DessinGraphe graphePanel;
 
-	public static DefaultTableModel modelInfosVoisins;
-	public  static  DefaultTableModel infoChemin;
-	public static  JTable tableInfoChemin;
-	public static JTable tableInfosVoisins;
+	private JLabel labelTitreVoisin;
+	private DefaultTableModel modelInfosVoisins;
+	private JTable tableInfosVoisins;
+
+
+	private DefaultTableModel infoChemin;
+
 	private JScrollPane affichageVoisinScrollPane;
 
-	private static JButton boutonSuivant, boutonPrecedent;
+	private JButton boutonSuivant, boutonPrecedent;
 
-	private JPanel allPanel;
-	private static JPanel affichageVoisinPanel;
+	private JPanel panelAllInfos;
+
+
 	private JPanel contenuNomTypeSommetPanel;
-	private JPanel contenuFonctionnalitePanel;
-	private static JPanel contenuTousLesCheminsPanel;
-	private JPanel contenuAutrePanel;
-	private JPanel contenuTousInfosPanel;
-	private JPanel contenuButtonSuivPrec;
 	private JPanel contenuInfoSommetPanel;
+	private JPanel affichageVoisinPanel;
+
+	private JPanel contenuTousLesCheminsPanel;
+	private AfficherCheminPanel tableCheminsPanel;
+	private JPanel contenuButtonSuivPrec;
+
 	private JPanel cardPanelInfos;
 
-	private static JLabel nombreRouteLabel, nombreSommetLabel, nomSommetSelectionneLabel, typeSommetSelectionneLabel;
-	private static JButton afficherCheminButton;
-	private static JComboBox<String> choixTypeCheminComboBox, choixDestinationComboBox;
-	static JMenuBar menu;
+	private JLabel nombreRouteLabel, nombreSommetLabel, nomSommetSelectionneLabel, typeSommetSelectionneLabel;
+	private JButton afficherCheminButton;
+	private JComboBox<String> choixTypeCheminComboBox, choixDestinationComboBox;
+	private JMenuBar menu;
 	private JRadioButtonMenuItem modeLight, modeDark;
 	private JMenu itemFichier;
 	private JMenu itemFenetre;
-	private static JMenu itemFonctionnalites;
-	private static JMenu itemOptionFonction;
-	private static JMenu itemChoixTheme;
+	private JMenu itemFonctionnalites;
+	private JMenu itemOptionFonction;
+	private JMenu itemChoixTheme;
 	private JMenuItem itemFermerFenetre, itemMenuPrincipale, itemOuvrirFichier;
 	private  JMenuItem itemAfficherCheminPlusCourts;
 	static JRadioButton bloquerGraphe;
 	private JProgressBar barreChargement;
-	private int progresse;
+	private boolean end;
+	private int progress;
 	private Timer timer;
 	private Dimension screenSize;
 	private File fichierCharge;
-	private LCGraphe Graphe;
+	private LCGraphe.Graphe graphe;
 	private Integer nombreRoutes;
 	private Integer nombreCentre;
-	static boolean cheminValide = false;
-	public static JPanel contenuGraphePanel;
-	static boolean selectedItem = false;
-	private JToolBar toolBar;
+	private JPanel contenuGraphePanel;
 	public InterfaceGraphe() {
 		super();
-		toolBar = new JToolBar();
-		fenetrePrincipale = this;
-		accueilPanel = new AccueilPanel(fenetrePrincipale);
+		accueilPanel = new AccueilPanel(this);
 		setContentPane(accueilPanel);
 
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -91,80 +100,103 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 */
 	private void initComponents() {
+		// la panel qui contient tout.
 		cp = new JPanel();
 		cp.setLayout(new BorderLayout());
 
+		// Le panel qui contient le graphe.
 		contenuGraphePanel = new JPanel();
 		contenuGraphePanel.setLayout(new BorderLayout());
-		cp.add(contenuGraphePanel, BorderLayout.CENTER);
-		initBarreDeMenu();
-		initComposantsBarreDeChargement();
-		initContainerTousInfos();
-		initEventListeners();
+		cp.add(contenuGraphePanel, BorderLayout.CENTER); // ajouter le panel dans le content panel au centre
+		initBarreDeMenu(); // On initie la barre du haut avec Fichier, Fenetre, Mode du Graphe, Fonctionnalité
+		initComposantsBarreDeChargement(); // On initie la panel qui contient la barre de chargement
+		initContainerTousInfos(); // On initie le panel qui contient les infos du sommet selectionné qui est droite
+		initEventListeners(); // On initie toutes les actions des boutons...
 	}
 	
 	/**
 	 *
 	 */
 	private void initContainerTousInfos(){
-		cardLayout = new CardLayout();
-		allPanel = new JPanel(new BorderLayout());
-		cardPanelInfos = new JPanel(cardLayout);
-		//cardPanelInfos.setBorder(BorderFactory.createTitledBorder("card layout"));
-		cardPanelInfos.setPreferredSize(new Dimension((int) screenSize.getWidth()/6, (int) screenSize.getHeight()));
-		contenuTousInfosPanel = new JPanel(new BorderLayout());
-		contenuTousInfosPanel.setOpaque(false);
-		//Panel Bouton
-		contenuButtonSuivPrec = new JPanel();
-		boutonSuivant = new JButton("Suivant");
-		boutonPrecedent = new JButton("Précédent");
-		contenuButtonSuivPrec.setOpaque(false);
-		contenuButtonSuivPrec.add(boutonPrecedent);
-		contenuButtonSuivPrec.add(boutonSuivant);
-	
-		initContainerInfoSommet();
+		panelAllInfos = new JPanel(new BorderLayout()); // ce panel contient le card layout, le nom du sommet et son type.
+		//On met un minimum de dimension de ce panel pour qu'il est la place d'afficher le contenu
+		panelAllInfos.setPreferredSize(new Dimension((int) screenSize.getWidth()/6, (int) screenSize.getHeight()));
 
-		cardPanelInfos.add(contenuInfoSommetPanel,"panel de base ");
+		cardLayout = new CardLayout(); // ce card layout sert à changer de fenetre entre "Afficher les Voisins" et "Faire un Chemin"
+		cardPanelInfos = new JPanel(cardLayout); // on met le card layout dans son panel
+
+		initContainerNomTypeSommet();
+
+		//Panel Bouton
+		contenuButtonSuivPrec = new JPanel(); // ce panel contient les boutons Suivant et Précédent pour changer de fenetre.
+		boutonSuivant = new JButton("Suivant"); // Suivant
+		boutonPrecedent = new JButton("Précédent"); // Précédent
+		contenuButtonSuivPrec.add(boutonPrecedent); // Ajout
+		contenuButtonSuivPrec.add(boutonSuivant); // Ajout
+	
+		initContainersInfoSommet(); // Panel
+
+		cardPanelInfos.add(contenuInfoSommetPanel,"panel de base");
 		cardPanelInfos.add(contenuTousLesCheminsPanel,"panel Suivant");
 
-		allPanel.setBorder(BorderFactory.createTitledBorder("Panel Infos"));
-		allPanel.add(contenuNomTypeSommetPanel, BorderLayout.NORTH);
-		allPanel.add(contenuButtonSuivPrec,BorderLayout.SOUTH);
-		allPanel.add(cardPanelInfos,BorderLayout.CENTER);
-		toolBar.add(allPanel);
-		toolBar.setFloatable(true);
-		cp.add(toolBar, BorderLayout.EAST);
-		
+		panelAllInfos.setBorder(BorderFactory.createTitledBorder("Panel Infos"));
+		panelAllInfos.add(contenuNomTypeSommetPanel, BorderLayout.NORTH);
+		panelAllInfos.add(contenuButtonSuivPrec,BorderLayout.SOUTH);
+		panelAllInfos.add(cardPanelInfos,BorderLayout.CENTER);
+		cp.add(panelAllInfos, BorderLayout.EAST);
 	}
-	
-	/**
-	 *
-	 */
-	private void initContainerInfoSommet(){
-		contenuInfoSommetPanel = new JPanel(new BorderLayout());
-		contenuInfoSommetPanel.setOpaque(false);
 
-		contenuNomTypeSommetPanel = new JPanel(new GridBagLayout());
-		contenuNomTypeSommetPanel.setOpaque(false);
-		
-		contenuFonctionnalitePanel = new JPanel(new BorderLayout());
-		contenuFonctionnalitePanel.setOpaque(false);
-		
-		contenuTousLesCheminsPanel = new JPanel(new BorderLayout());
-		contenuTousLesCheminsPanel.setOpaque(false);
-		
-		contenuAutrePanel = new JPanel(new BorderLayout());
-		contenuAutrePanel.setOpaque(false);
-
-		
-		nombreSommetLabel = new JLabel("");
-		nombreRouteLabel = new JLabel("");
-		
+	private void initContainerNomTypeSommet(){
 		nomSommetSelectionneLabel = new JLabel("");
 		Font font = new Font("Arial", Font.PLAIN, 25);
 		nomSommetSelectionneLabel.setFont(font);
 		typeSommetSelectionneLabel = new JLabel("");
 
+		contenuNomTypeSommetPanel = new JPanel(new GridBagLayout());
+
+		GridBagConstraints constraints = new GridBagConstraints();
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.weighty = 1.0;
+		contenuNomTypeSommetPanel.add(nomSommetSelectionneLabel, constraints);
+
+		constraints.gridy = 1;
+
+		contenuNomTypeSommetPanel.add(typeSommetSelectionneLabel, constraints);
+	}
+	
+	/**
+	 *
+	 */
+	private void initContainersInfoSommet(){
+		contenuInfoSommetPanel = new JPanel(new BorderLayout());
+		initContainerInfosVoisins();
+		initContainerChemin();
+	}
+	
+	/**
+	 *
+	 */
+	private void initContainerInfosVoisins(){
+		String[] colonneAttribut = {"Destination", "Distance", "Durée", "Fiabilité"};
+		labelTitreVoisin = new JLabel("Liste des voisins");
+		labelTitreVoisin.setHorizontalAlignment(SwingConstants.CENTER);
+		modelInfosVoisins = new DefaultTableModel(colonneAttribut, 0);
+		tableInfosVoisins = new JTable(modelInfosVoisins);
+		
+		affichageVoisinScrollPane = new JScrollPane(tableInfosVoisins);
+
+		affichageVoisinPanel = new JPanel(new BorderLayout());
+		affichageVoisinPanel.setBorder(new EmptyBorder(10,0,0,0));
+		affichageVoisinPanel.add(labelTitreVoisin, BorderLayout.NORTH);
+		affichageVoisinPanel.add(affichageVoisinScrollPane, BorderLayout.CENTER);
+
+		contenuInfoSommetPanel.add(affichageVoisinPanel, BorderLayout.CENTER);
+	}
+	private void initContainerChemin() {
+		tableCheminsPanel = new AfficherCheminPanel();
 		afficherCheminButton = new JButton("Afficher chemin");
 
 		choixTypeCheminComboBox = new JComboBox<>();
@@ -174,94 +206,36 @@ public class InterfaceGraphe extends JFrame {
 
 		choixDestinationComboBox = new JComboBox<>();
 
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.weighty = 1.0;
-		contenuNomTypeSommetPanel.add(nomSommetSelectionneLabel, constraints);
-		constraints.gridx = 0;
-		constraints.gridy = 1;
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.weighty = 1.0;
-		contenuNomTypeSommetPanel.add(typeSommetSelectionneLabel, constraints);
-		//contenuNomTypeSommetPanel.setBorder(BorderFactory.createTitledBorder("Sommet"));
-		initContainerInfosVoisins();
-	
-		contenuFonctionnalitePanel.add(affichageVoisinPanel,BorderLayout.CENTER);
-		 nord = new JPanel(new BorderLayout() );
-		
+
+		String choixChemin = (String) getChoixTypeCheminComboBox().getSelectedItem();
+		if(choixChemin != null){
+			tableCheminsPanel.updateColonne(choixChemin);
+		}
+
+		nord = new JPanel(new GridLayout(2,1));
+
 		nord.add(choixTypeCheminComboBox,BorderLayout.WEST);
 		nord.add(choixDestinationComboBox,BorderLayout.EAST);
 		nord.add(afficherCheminButton,BorderLayout.SOUTH);
+
+		contenuTousLesCheminsPanel = new JPanel(new BorderLayout());
 		contenuTousLesCheminsPanel.add(nord,BorderLayout.NORTH);
+		contenuTousLesCheminsPanel.add(tableCheminsPanel, BorderLayout.CENTER);
 
-	
 		contenuTousLesCheminsPanel.setBorder(BorderFactory.createTitledBorder("contenu chemin"));
-		initContainerChemin();
-		
-		contenuAutrePanel.add(contenuFonctionnalitePanel,BorderLayout.NORTH);
-		//contenuAutrePanel.add(contenuTousLesCheminsPanel,BorderLayout.CENTER);
-
-
-		contenuInfoSommetPanel.add(contenuAutrePanel, BorderLayout.CENTER);
-		//contenuInfoSommetPanel.setBorder(BorderFactory.createTitledBorder("contenu information"));
 	}
 	
 	/**
 	 *
 	 */
-	private void initContainerInfosVoisins(){
-
-		String[] colonneAttribut = {"Destination", "Distance", "Durée", "Fiabilité"};
-		modelInfosVoisins = new DefaultTableModel(colonneAttribut, 0);
-		tableInfosVoisins = new JTable(modelInfosVoisins);
-		
-		affichageVoisinScrollPane = new JScrollPane(tableInfosVoisins);
-		affichageVoisinPanel = new JPanel(new BorderLayout());
-		affichageVoisinPanel.add(affichageVoisinScrollPane, BorderLayout.CENTER);
-		//affichageVoisinPanel.setBorder(BorderFactory.createTitledBorder("infos des voisins"));
-	}
-	private void initContainerChemin() {
-		
-		String[] colonne = {"Chemin", "Fiabilité"};
-		String choixChemin = (String) getChoixTypeCheminComboBox().getSelectedItem();
-		if(choixChemin.equals("Fiabilité")) {
-			colonne[1] = "Fiabilité";
-			
-		}
-		infoChemin = new DefaultTableModel(new Object[][]{}, colonne);
-		tableInfoChemin = new JTable(infoChemin);
-		tableInfoChemin.setModel(InterfaceGraphe.infoChemin);
-		// Réinitialisez le nombre de lignes à zéro pour supprimer toutes les données existantes
-		infoChemin.setRowCount(0);
-		
-		// Mettez à jour les colonnes du modèle de tableau
-		infoChemin.setColumnIdentifiers(colonne);
-		
-		// Ajouter une ligne de données avec des valeurs fictives
-		
-		
-		JPanel info = new JPanel(new BorderLayout());
-		info.add(new JScrollPane(tableInfoChemin), BorderLayout.CENTER);
-		info.setBorder(BorderFactory.createTitledBorder("Chemin"));
-		contenuTousLesCheminsPanel.add(info, BorderLayout.CENTER);
-		infoChemin.setRowCount(0);
-	}
-	
-	/**
-	 *
-	 */
-
 	private void initContainerDessinGraphePanel() {
+		contenuGraphePanel.removeAll();
 		if(graphePanel == null){
-			graphePanel = new DessinGraphe(Graphe);
+			graphePanel = new DessinGraphe(graphe, this);
 		} else {
-			graphePanel.changerGraphe(Graphe);
+			graphePanel.changerGraphe(graphe);
 		}
-
 		//contenuGraphePanel.setBorder(BorderFactory.createTitledBorder("Graphe dessiner"));
-		contenuGraphePanel.setOpaque(false);
 		contenuGraphePanel.add(graphePanel, BorderLayout.CENTER);
 	}
 	
@@ -269,23 +243,24 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 */
 	private void initBarreDeMenu(){
+		Font fontBarreMenu = new Font("Arial", Font.BOLD, 14);
 		initialisationJMenu();
 		initialisationJMenuItem();
 		menu = new JMenuBar();
 		bloquerGraphe = new JRadioButton("Bloquer");
 		itemFonctionnalites.add(bloquerGraphe);
-		itemFonctionnalites.setFont(new Font("Arial", Font.BOLD, 14));
+		itemFonctionnalites.setFont(fontBarreMenu);
 
 		itemFichier.add(itemOuvrirFichier);
-		itemFichier.setFont(new Font("Arial", Font.BOLD, 14));
+		itemFichier.setFont(fontBarreMenu);
 
 		itemFenetre.add(itemChoixTheme);
 		itemFenetre.add(itemMenuPrincipale);
 		itemFenetre.add(itemFermerFenetre);
-		itemFenetre.setFont(new Font("Arial", Font.BOLD, 14));
+		itemFenetre.setFont(fontBarreMenu);
 
 		itemOptionFonction.add(itemAfficherCheminPlusCourts);
-		itemOptionFonction.setFont(new Font("Arial", Font.BOLD, 14));
+		itemOptionFonction.setFont(fontBarreMenu);
 
 		ButtonGroup groupeBoutons = new ButtonGroup();
 		groupeBoutons.add(modeLight);
@@ -338,7 +313,8 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 */
 	public void demarrerChargement() {
-		progresse = 0;
+		progress = 0;
+		end = false;
 		timer.start();
 	}
 	
@@ -351,6 +327,8 @@ public class InterfaceGraphe extends JFrame {
 		barreDeChargementPanel.add(barreChargement);
 		barreChargement.setStringPainted(true);
 	}
+
+	///////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 *
@@ -361,18 +339,18 @@ public class InterfaceGraphe extends JFrame {
 		contenuGraphePanel.removeAll();
 		mettreInvisibleComposantSommet();
 		mettreInvisibleComposantGraphe();
+		graphe = new Graphe();
 		timer = new Timer(30, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				progresse++;
-				barreChargement.setValue(progresse);
-				if (progresse == 100) {
+				progress++;
+				barreChargement.setValue(progress);
+
+				if (progress== 100) {
 					timer.stop();
-					Graphe = new LCGraphe();
-					//contenuTousInfosPanel.setBackground(Color.YELLOW);
 					barreDeChargementPanel.setVisible(false);
+					graphe.chargementFichier(fichierCharge.getPath());
 					mettreVisibleComposantGraphe();
-					chargerNouveauFichier(fichierCharge);
 					initContainerDessinGraphePanel();
 					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				}
@@ -476,24 +454,135 @@ public class InterfaceGraphe extends JFrame {
 				}
 			}
 		});
-	}
-	
-	/**
-	 *
-	 * @param file
-	 */
+		choixTypeCheminComboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				colonneIdentifiersChemin = new String[]{"Chemin", (String) choixTypeCheminComboBox.getSelectedItem()};
+			}
+		});
+		afficherCheminButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setActionListenerToAfficherChemins();
 
-	private void chargerNouveauFichier(File file) {
-		Graphe.chargementFichier(file.getPath());
+			}
+		});
+
 	}
+
+	private void setActionListenerToAfficherChemins(){
+		String selectChoixChemin = (String) choixTypeCheminComboBox.getSelectedItem();
+		Graphe.MaillonGraphe sommetSelect = graphePanel.getSommetSelectionne();
+		String destination = (String) choixDestinationComboBox.getSelectedItem();
+		if (selectChoixChemin.equals(ChoixTypeChemin.FIABILITE.getAttribut())) {
+
+			// On reset la table
+			tableCheminsPanel.resetTable();
+			tableCheminsPanel.updateColonne(selectChoixChemin);
+
+			java.util.List<Integer> chemin = graphe.getChemin();
+
+			int tailleChemin = chemin.size();
+
+			Object[] ligne;
+
+			if (tailleChemin > 1) {
+				double fiabiliteTotale = 1.0; // Initialisez la fiabilité totale à 1.0
+
+				double fiabiliteCourante = 0.0;
+
+				int sommetPrecedent = chemin.get(0);
+
+				for (int i = 1; i < tailleChemin; i++) {
+					int sommetCourant = chemin.get(i);
+
+					if (sommetCourant != sommetPrecedent) {
+						double fiabilite = graphe.getFiabilite()[graphe.indexSommet().get(graphe.getNomSommet(sommetPrecedent))][graphe.indexSommet().get(graphe.getNomSommet(sommetCourant))];
+						fiabiliteCourante = fiabilite;
+						fiabiliteTotale *= fiabilite;
+
+
+						AreteVisuel areteVisuel = graphePanel.getArete(graphe.getNomSommet(sommetCourant), graphe.getNomSommet(sommetPrecedent));
+
+						String sommetCour = graphe.getNomSommet(sommetCourant);
+						System.out.println(sommetCour+ " : "+fiabiliteCourante * 100 + " Km");
+						tableCheminsPanel.addDataInTable(sommetCour, fiabiliteCourante * 100 + " Km");
+					}
+
+					sommetPrecedent = sommetCourant;
+
+
+
+
+					if (i < tailleChemin - 1) {
+						sommetPrecedent = sommetCourant;
+
+					}
+				}
+
+			}
+			//calculerCheminPlusCourt();
+			//colorChemin();
+			//repaint();
+		}
+		else if (selectChoixChemin.equals((ChoixTypeChemin.DISTANCE.getAttribut()))) {
+			tableCheminsPanel.resetTable();
+			tableCheminsPanel.updateColonne(selectChoixChemin);
+			LinkedHashMap<String, Double> chemin = graphe.getCheminDijkstra().get(sommetSelect.getNom()).getCheminsDistanceTo(destination);
+			if(chemin!=null){
+				int distanceTotale = 0;
+
+				for (Map.Entry<String, Double> entry : chemin.entrySet()) {
+					String nomSommet = entry.getKey();
+					double distance = entry.getValue();
+					distanceTotale += (int) distance;
+					if(!nomSommet.equals(sommetSelect.getNom())){
+						tableCheminsPanel.addDataInTable(nomSommet,distanceTotale+"Km");
+					} else {
+						tableCheminsPanel.addDataInTable("Départ", distanceTotale+"Km");
+					}
+
+				}
+				tableCheminsPanel.addDataInTable("Distance Totale", distanceTotale+"Km");
+			} else {
+				tableCheminsPanel.addDataInTable(sommetSelect.getNom()+" -> "+destination, "Aucun Chemin");
+			}
+
+
+		}
+		else if (selectChoixChemin.equals((ChoixTypeChemin.DUREE.getAttribut()))) {
+			tableCheminsPanel.resetTable();
+			tableCheminsPanel.updateColonne(selectChoixChemin);
+			LinkedHashMap<String, Double> chemin = graphe.getCheminDijkstra().get(sommetSelect.getNom()).getCheminsDureeTo(destination);
+			if(chemin!=null){
+				int dureeTotale = 0;
+
+				for (Map.Entry<String, Double> entry : chemin.entrySet()) {
+					String nomSommet = entry.getKey();
+					double duree = entry.getValue();
+					dureeTotale += (int) duree;
+					if(!nomSommet.equals(sommetSelect.getNom())){
+						tableCheminsPanel.addDataInTable(nomSommet,dureeTotale+" min");
+					} else {
+						tableCheminsPanel.addDataInTable("Départ", dureeTotale+" min");
+					}
+
+				}
+				tableCheminsPanel.addDataInTable("Durée Totale", dureeTotale+" min");
+			} else {
+				tableCheminsPanel.addDataInTable(sommetSelect.getNom()+" -> "+destination, "Aucun Chemin");
+			}
+		}
+
+	}
+	//////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 *
 	 */
-	public static void mettreInvisibleComposantSommet(){
+	public void mettreInvisibleComposantSommet(){
 		nomSommetSelectionneLabel.setText("");
 		typeSommetSelectionneLabel.setText("");
-
 		afficherCheminButton.setVisible(false);
 		choixTypeCheminComboBox.setVisible(false);
 		choixDestinationComboBox.setVisible(false);
@@ -526,7 +615,7 @@ public class InterfaceGraphe extends JFrame {
 	 * @param nom
 	 * @param type
 	 */
-	public static void mettreVisibleComposantSommet(String nom, String type){
+	public void mettreVisibleComposantSommet(String nom, String type){
 		nomSommetSelectionneLabel.setText("Dispensaire "+nom);
 		typeSommetSelectionneLabel.setText(type);
 		itemFonctionnalites.setEnabled(true);
@@ -544,7 +633,7 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 * @return
 	 */
-	public static JButton getAfficherCheminButton() {
+	public JButton getAfficherCheminButton() {
 		return afficherCheminButton;
 	}
 	
@@ -552,7 +641,7 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 * @return
 	 */
-	public static JComboBox<String> getChoixTypeCheminComboBox() {
+	public JComboBox<String> getChoixTypeCheminComboBox() {
 		return choixTypeCheminComboBox;
 	}
 	
@@ -560,7 +649,27 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 * @return
 	 */
-	public static JComboBox<String> getChoixDestinationComboBox() {
+	public JComboBox<String> getChoixDestinationComboBox() {
 		return choixDestinationComboBox;
+	}
+
+	public DefaultTableModel getModelInfosVoisins() {
+		return modelInfosVoisins;
+	}
+
+	public JPanel getContenuGraphePanel(){
+		return contenuGraphePanel;
+	}
+
+	public JPanel getCp() {
+		return cp;
+	}
+
+	public JMenuBar getMenu() {
+		return menu;
+	}
+
+	public boolean getBloquerGraphe(){
+		return bloquerGraphe.isSelected();
 	}
 }
