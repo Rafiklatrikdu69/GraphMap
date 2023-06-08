@@ -1024,9 +1024,11 @@ public class Graphe {
 	public Map<String, Map<String, Double>> floydMap() {
 		fiabilites = new LinkedHashMap<>();
 		chemins = new LinkedHashMap<>();
+		Map<String, Map<String, String>> predecesseurs = new LinkedHashMap<>();
+	
 		MaillonGraphe tmp = this.getPremier();
 		
-		// Affecte les valeurs de fiabilités dans la map avec le sommet source et les sommets destination associés
+		// cffecte les valeurs de fiabilités dans la map avec le sommet source et les sommets destination associés
 		while (tmp != null) {
 			Map<String, Double> mapVoisin = new LinkedHashMap<>();
 			String nom = tmp.getNom();
@@ -1041,57 +1043,59 @@ public class Graphe {
 			tmp = tmp.getSuivant();
 		}
 		
+		for (String i : fiabilites.keySet()) {
+			predecesseurs.put(i, new LinkedHashMap<>());
+			for (String j : fiabilites.keySet()) {
+				predecesseurs.get(i).put(j, i); // chaque sommet est son propre prédécesseur au départ
+			}
+		}
+		
 		for (String k : fiabilites.keySet()) {
 			for (String i : fiabilites.keySet()) {
 				for (String j : fiabilites.keySet()) {
 					if (fiabilites.get(i).containsKey(k) && fiabilites.get(k).containsKey(j)) {
 						double fiabiliteIK = fiabilites.get(i).get(k);
 						double fiabiliteKJ = fiabilites.get(k).get(j);
-						double fiabiliteIJ = fiabilites.get(i).getOrDefault(j, Double.NEGATIVE_INFINITY);
+						double fiabiliteIJ = fiabilites.getOrDefault(i, new LinkedHashMap<>()).getOrDefault(j, Double.NEGATIVE_INFINITY);
 						
 						if (fiabiliteIK * fiabiliteKJ > fiabiliteIJ) {
 							fiabilites.get(i).put(j, fiabiliteIK * fiabiliteKJ);
+							predecesseurs.get(i).put(j, predecesseurs.get(k).get(j)); // Mettre à jour le prédécesseur de j à i
 						}
 					}
 				}
 			}
 		}
 		
+		
 
 		
+		for (String i : predecesseurs.keySet()) {
+			Map<String, String> map = predecesseurs.get(i);
+			for (String j : map.keySet()) {
+				String chemin = j; // commence par le sommet destination
+				String predecesseur = map.get(j);
 				
-				double fiabiliteTotale = fiabilites.get("S1").get("S30");
-				System.out.println("Fiabilité totale : " + fiabiliteTotale*100);
-				System.out.println("-----");
-			
-		/*
-		//lecture du chemin en cours
-		for (String i : chemins.keySet()) {
-			Map<String, String> cheminMap = chemins.get(i);
-			for (String j : cheminMap.keySet()) {
-				System.out.println("Chemin de " + i + " à " + j + ":");
-				String chemin = cheminMap.get(j);
-				if (!chemin.isEmpty()) {
-					String[] sommets = chemin.split(" -> ");
-					double fiabiliteTotale = 1.0;
-					for (String sommet : sommets) {
-						System.out.print(sommet + " -> ");
-						fiabiliteTotale *= fiabilites.get(i).get(sommet);
-					}
-					System.out.println(j);
-					System.out.println("Fiabilité totale : " + fiabiliteTotale);
-				} else {
-					System.out.println("Pas de chemin trouvé");
+				while (!predecesseur.equals(i)) {
+					chemin = predecesseur + " -> " + chemin+" [ "+fiabilites.get(i).get(j)+" ]"; // Ajoute le prédécesseur au début du chemin
+					predecesseur = map.get(predecesseur);
 				}
-				System.out.println("-----");
+				
+				chemin = i + " -> " + chemin; // ajoute le sommet source au début du chemin complet
+				System.out.println("Chemin de " + i + " à " + j + ": " + chemin);
+				double fiabiliteTotale = fiabilites.get(i).get(j);
+				System.out.print(" Fiabilité totale : " + fiabiliteTotale * 100);
+				System.out.println();
 			}
+		
 		}
-		*/
+		
+		
+		
 		
 		return fiabilites;
+		
 	}
-
-	
 }
 
 
