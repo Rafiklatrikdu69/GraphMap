@@ -1047,35 +1047,46 @@ public class Graphe {
 					if (fiabilites.get(i).containsKey(k) && fiabilites.get(k).containsKey(j)) {
 						double fiabiliteIK = fiabilites.get(i).get(k);
 						double fiabiliteKJ = fiabilites.get(k).get(j);
-						double fiabiliteIJ = fiabilites.get(i).getOrDefault(j, Double.POSITIVE_INFINITY);
+						double fiabiliteIJ = fiabilites.get(i).getOrDefault(j, Double.NEGATIVE_INFINITY);
 						
 						if (fiabiliteIK * fiabiliteKJ > fiabiliteIJ) {
 							fiabilites.get(i).put(j, fiabiliteIK * fiabiliteKJ);
-							
-						/*	if (!chemins.containsKey(i)) {
-								chemins.put(i, new LinkedHashMap<>());
-							}*/
-							
-						//	String cheminIK = chemins.get(i).getOrDefault(k, "");
-							//String cheminKJ = chemins.getOrDefault(k, new LinkedHashMap<>()).getOrDefault(j, "");
-							//chemins.get(i).put(j, cheminIK + " -> " + k + " -> " + cheminKJ);
 						}
 					}
 				}
 			}
 		}
 		
-		// Affichage des résultats
-		for (String key1 : fiabilites.keySet()) {
-			System.out.println("Sommet Source " + key1);
-			Map<String, Double> map = fiabilites.get(key1);
-			for (String key2 : map.keySet()) {
-				Double value = map.get(key2);
-				System.out.println("Voisin " + key2 + ", Fiabilité : " + value * 100);
+
+		
+				
+				double fiabiliteTotale = fiabilites.get("S1").get("S30");
+				System.out.println("Fiabilité totale : " + fiabiliteTotale*100);
+				System.out.println("-----");
+			
+		/*
+		//lecture du chemin en cours
+		for (String i : chemins.keySet()) {
+			Map<String, String> cheminMap = chemins.get(i);
+			for (String j : cheminMap.keySet()) {
+				System.out.println("Chemin de " + i + " à " + j + ":");
+				String chemin = cheminMap.get(j);
+				if (!chemin.isEmpty()) {
+					String[] sommets = chemin.split(" -> ");
+					double fiabiliteTotale = 1.0;
+					for (String sommet : sommets) {
+						System.out.print(sommet + " -> ");
+						fiabiliteTotale *= fiabilites.get(i).get(sommet);
+					}
+					System.out.println(j);
+					System.out.println("Fiabilité totale : " + fiabiliteTotale);
+				} else {
+					System.out.println("Pas de chemin trouvé");
+				}
+				System.out.println("-----");
 			}
 		}
-	//lecture du chemin en cours
-		
+		*/
 		
 		return fiabilites;
 	}
