@@ -1025,55 +1025,40 @@ public class Graphe {
 		fiabilites = new LinkedHashMap<>();
 		chemins = new LinkedHashMap<>();
 		MaillonGraphe tmp = this.getPremier();
-		String nom="";
-	
+		
+		// Affecte les valeurs de fiabilités dans la map avec le sommet source et les sommets destination associés
 		while (tmp != null) {
-			
-			Map<String, String> cheminMap = new LinkedHashMap<>();
 			Map<String, Double> mapVoisin = new LinkedHashMap<>();
-			 nom = tmp.getNom();
+			String nom = tmp.getNom();
 			MaillonGrapheSec tmp2 = tmp.getVoisin();
 			
 			while (tmp2 != null) {
 				mapVoisin.put(tmp2.getDestination(), tmp2.getFiabilite() / 10);
-				cheminMap.put(tmp2.getDestination(), nom + " -> " + tmp2.getDestination());
 				tmp2 = tmp2.getSuivantMaillonSec();
 			}
 			
-			
-			
 			fiabilites.put(nom, mapVoisin);
-			chemins.put(nom, cheminMap);
 			tmp = tmp.getSuivant();
 		}
-		for (String key1 : fiabilites.keySet()) {
-			Map<String, Double> mapVoisin = fiabilites.get(key1);
-			
-			for (String key2 : fiabilites.keySet()) {
-				if (key1.equals(key2)) {
-					mapVoisin.put(key2, 0.0); // diagonale vaut 0.0
-				} else if (!mapVoisin.containsKey(key2)) {
-					mapVoisin.put(key2, Double.POSITIVE_INFINITY); // pas d'arête vaut plus l'infini
-				}
-			}
-		}
-		// début algorithme de Floyd-Warshall
+		
 		for (String k : fiabilites.keySet()) {
 			for (String i : fiabilites.keySet()) {
 				for (String j : fiabilites.keySet()) {
 					if (fiabilites.get(i).containsKey(k) && fiabilites.get(k).containsKey(j)) {
-						double distanceIK = fiabilites.get(i).get(k);
-						double distanceKJ = fiabilites.get(k).get(j);
-						double distanceIJ = fiabilites.get(i).getOrDefault(j, Double.POSITIVE_INFINITY);
+						double fiabiliteIK = fiabilites.get(i).get(k);
+						double fiabiliteKJ = fiabilites.get(k).get(j);
+						double fiabiliteIJ = fiabilites.get(i).getOrDefault(j, Double.POSITIVE_INFINITY);
 						
-						if (distanceIK * distanceKJ < distanceIJ) {
-							fiabilites.get(i).put(j, distanceIK * distanceKJ);
-							String cheminIK = chemins.get(i).get(k);
-							String cheminKJ = chemins.get(k).get(j);
+						if (fiabiliteIK * fiabiliteKJ > fiabiliteIJ) {
+							fiabilites.get(i).put(j, fiabiliteIK * fiabiliteKJ);
 							
-							if (cheminIK != null && cheminKJ != null && !cheminIK.isEmpty() && !cheminKJ.isEmpty()) {
-								chemins.get(i).put(j, cheminIK + " -> " + cheminKJ);
-							}
+						/*	if (!chemins.containsKey(i)) {
+								chemins.put(i, new LinkedHashMap<>());
+							}*/
+							
+						//	String cheminIK = chemins.get(i).getOrDefault(k, "");
+							//String cheminKJ = chemins.getOrDefault(k, new LinkedHashMap<>()).getOrDefault(j, "");
+							//chemins.get(i).put(j, cheminIK + " -> " + k + " -> " + cheminKJ);
 						}
 					}
 				}
@@ -1083,40 +1068,14 @@ public class Graphe {
 		// Affichage des résultats
 		for (String key1 : fiabilites.keySet()) {
 			System.out.println("Sommet Source " + key1);
-			Map<String, Double> innerMap = fiabilites.get(key1);
-			for (String key2 : innerMap.keySet()) {
-				Double value = innerMap.get(key2);
-				System.out.println("Voisin " + key2 + ", Valeur : " + value);
+			Map<String, Double> map = fiabilites.get(key1);
+			for (String key2 : map.keySet()) {
+				Double value = map.get(key2);
+				System.out.println("Voisin " + key2 + ", Fiabilité : " + value * 100);
 			}
 		}
+	//lecture du chemin en cours
 		
-		for (String i : fiabilites.keySet()) {
-			for (String j : fiabilites.keySet()) {
-				System.out.println("Chemin de " + i + " à " + j + ":");
-				System.out.print(i);
-				Map<String, String> cheminMap = chemins.get(i);
-				Map<String, Double> distanceMap = fiabilites.get(i);
-				
-				if (cheminMap != null && distanceMap != null && cheminMap.containsKey(j) && distanceMap.containsKey(j)) {
-					String chemin = cheminMap.get(j);
-					Double distance = distanceMap.get(j);
-					String[] sommets = chemin.split(" -> ");
-					
-					for (int k = 1; k < sommets.length; k++) {
-						String sommet = sommets[k];
-						Double sommetDistance = distanceMap.get(sommet);
-						if (sommetDistance != null) {
-							System.out.print(" -> " + sommet + " [" + sommetDistance + "]");
-						}
-					}
-					System.out.println();
-				} else {
-					System.out.println("Pas de chemin trouvé");
-				}
-				System.out.println("Distance totale: " + distanceMap.get(j) * 100);
-				System.out.println("-----");
-			}
-		}
 		
 		return fiabilites;
 	}
