@@ -17,8 +17,8 @@ public class Graphe {
 	
 	public List<Integer> chemin;
 	private double[][] fiabilite;
-     private  Map<String, Map<String, Double>> fiabilites;
-     private   Map<String, Map<String, String>> chemins;
+	private Map<String, Map<String, Double>> fiabilites;
+	private Map<String, Map<String, String>> chemins;
 	
 	private double[][] matrice;
 	private double[][] distances;
@@ -1019,88 +1019,109 @@ public class Graphe {
 	public HashMap<String, Dijkstra> getCheminDijkstra() {
 		return cheminDijkstra;
 	}
-    
-    
-    public Map<String, Map<String, Double>> floydMap() {
-        fiabilites = new LinkedHashMap<>();
-       chemins = new LinkedHashMap<>();
-        MaillonGraphe tmp = this.getPremier();
-        //affecte les valeurs dans la map avec le sommet source et les sommets destination associer avec leurs distance
-        while (tmp != null) {
-            Map<String, Double> mapVoisin = new LinkedHashMap<>();
-            String nom = tmp.getNom();
-            MaillonGrapheSec tmp2 = tmp.getVoisin();
-            
-            while (tmp2 != null) {
-                mapVoisin.put(tmp2.getDestination(), tmp2.getDistance());
-                tmp2 = tmp2.getSuivantMaillonSec();
-            }
-            
-            for (String key : fiabilites.keySet()) {
-                if (key.equals(nom)) {
-                    mapVoisin.put(key, 0.0);//diagonale vaut 0
-                } else if (!mapVoisin.containsKey(key)) {
-                    mapVoisin.put(key, Double.POSITIVE_INFINITY);//pas d'arrete vaut plus l'infini
-                }
-            }
-            
-            fiabilites.put(nom, mapVoisin);
-            tmp = tmp.getSuivant();
-        }
-        
-        for (String i : fiabilites.keySet()) {
-            Map<String, String> cheminMap = new LinkedHashMap<>();
-            for (String j : fiabilites.keySet()) {
-                if (i.equals(j)) {
-                    cheminMap.put(j, i);//initalise le chemin
-                } else {
-                    cheminMap.put(j, ""); // Initialisation avec une chaîne vide
-                }
-            }
-            chemins.put(i, cheminMap);
-        }
-        //debut algo
-        for (String k : fiabilites.keySet()) {
-            for (String i : fiabilites.keySet()) {
-                for (String j : fiabilites.keySet()) {
-                    if (fiabilites.get(i).containsKey(k) && fiabilites.get(k).containsKey(j)) {
-                        double distanceIK = fiabilites.get(i).get(k);
-                        double distanceKJ = fiabilites.get(k).get(j);
-                        double distanceIJ = fiabilites.get(i).getOrDefault(j, Double.POSITIVE_INFINITY);
-                        
-                        if (distanceIK + distanceKJ < distanceIJ) {
-                            fiabilites.get(i).put(j, distanceIK + distanceKJ);
-                            //chemins probleme !
-                            chemins.get(i).put(j, chemins.get(i).get(k) + " -> " + chemins.get(k).get(j));
-                        }
-                    }
-                }
-            }
-        }
-        //test
-        for (String key1 : fiabilites.keySet()) {
-            System.out.println("Sommet Source " + key1);
-            Map<String, Double> innerMap = fiabilites.get(key1);
-            for (String key2 : innerMap.keySet()) {
-                Double value = innerMap.get(key2);
-                System.out.println("Voisin " + key2 + ", Valeur : " + value);
-            }
-        }
-        
-    //affichage chemin probleme !!!
-        for (String i : chemins.keySet()) {
-            for (String j : chemins.keySet()) {
-                System.out.println("Chemin de " + i + " à " + j + ":");
-                System.out.println(chemins.get(i).get(j));
-                System.out.println("-----");
-            }
-        }
-        
-    
-        
-        return fiabilites;
-    }
+	
+	
+	public Map<String, Map<String, Double>> floydMap() {
+		fiabilites = new LinkedHashMap<>();
+		chemins = new LinkedHashMap<>();
+		MaillonGraphe tmp = this.getPremier();
+		String nom="";
+	
+		while (tmp != null) {
+			
+			Map<String, String> cheminMap = new LinkedHashMap<>();
+			Map<String, Double> mapVoisin = new LinkedHashMap<>();
+			 nom = tmp.getNom();
+			MaillonGrapheSec tmp2 = tmp.getVoisin();
+			
+			while (tmp2 != null) {
+				mapVoisin.put(tmp2.getDestination(), tmp2.getFiabilite() / 10);
+				cheminMap.put(tmp2.getDestination(), nom + " -> " + tmp2.getDestination());
+				tmp2 = tmp2.getSuivantMaillonSec();
+			}
+			
+			
+			
+			fiabilites.put(nom, mapVoisin);
+			chemins.put(nom, cheminMap);
+			tmp = tmp.getSuivant();
+		}
+		for (String key1 : fiabilites.keySet()) {
+			Map<String, Double> mapVoisin = fiabilites.get(key1);
+			
+			for (String key2 : fiabilites.keySet()) {
+				if (key1.equals(key2)) {
+					mapVoisin.put(key2, 0.0); // diagonale vaut 0.0
+				} else if (!mapVoisin.containsKey(key2)) {
+					mapVoisin.put(key2, Double.POSITIVE_INFINITY); // pas d'arête vaut plus l'infini
+				}
+			}
+		}
+		// début algorithme de Floyd-Warshall
+		for (String k : fiabilites.keySet()) {
+			for (String i : fiabilites.keySet()) {
+				for (String j : fiabilites.keySet()) {
+					if (fiabilites.get(i).containsKey(k) && fiabilites.get(k).containsKey(j)) {
+						double distanceIK = fiabilites.get(i).get(k);
+						double distanceKJ = fiabilites.get(k).get(j);
+						double distanceIJ = fiabilites.get(i).getOrDefault(j, Double.POSITIVE_INFINITY);
+						
+						if (distanceIK * distanceKJ < distanceIJ) {
+							fiabilites.get(i).put(j, distanceIK * distanceKJ);
+							String cheminIK = chemins.get(i).get(k);
+							String cheminKJ = chemins.get(k).get(j);
+							
+							if (cheminIK != null && cheminKJ != null && !cheminIK.isEmpty() && !cheminKJ.isEmpty()) {
+								chemins.get(i).put(j, cheminIK + " -> " + cheminKJ);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		// Affichage des résultats
+		for (String key1 : fiabilites.keySet()) {
+			System.out.println("Sommet Source " + key1);
+			Map<String, Double> innerMap = fiabilites.get(key1);
+			for (String key2 : innerMap.keySet()) {
+				Double value = innerMap.get(key2);
+				System.out.println("Voisin " + key2 + ", Valeur : " + value);
+			}
+		}
+		
+		for (String i : fiabilites.keySet()) {
+			for (String j : fiabilites.keySet()) {
+				System.out.println("Chemin de " + i + " à " + j + ":");
+				System.out.print(i);
+				Map<String, String> cheminMap = chemins.get(i);
+				Map<String, Double> distanceMap = fiabilites.get(i);
+				
+				if (cheminMap != null && distanceMap != null && cheminMap.containsKey(j) && distanceMap.containsKey(j)) {
+					String chemin = cheminMap.get(j);
+					Double distance = distanceMap.get(j);
+					String[] sommets = chemin.split(" -> ");
+					
+					for (int k = 1; k < sommets.length; k++) {
+						String sommet = sommets[k];
+						Double sommetDistance = distanceMap.get(sommet);
+						if (sommetDistance != null) {
+							System.out.print(" -> " + sommet + " [" + sommetDistance + "]");
+						}
+					}
+					System.out.println();
+				} else {
+					System.out.println("Pas de chemin trouvé");
+				}
+				System.out.println("Distance totale: " + distanceMap.get(j) * 100);
+				System.out.println("-----");
+			}
+		}
+		
+		return fiabilites;
+	}
 
+	
 }
 
 
