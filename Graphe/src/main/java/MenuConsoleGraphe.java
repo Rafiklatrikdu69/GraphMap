@@ -18,8 +18,7 @@ public class MenuConsoleGraphe{
         
         
         Map<String, Map<String, Double>> floydMap = new LinkedHashMap<>();
-        newGraphe.floydMap();
-        System.out.println(newGraphe.getCheminDijkstra().get("S2").getCheminsFiabiliteTo("S19"));
+        System.out.println(newGraphe.getCheminDijkstra().get("S18").getCheminsFiabiliteTo("S27"));
       //  double[][] predecesseurs = newGraphe.floydWarshallFiabilite();
       
         

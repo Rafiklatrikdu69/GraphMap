@@ -6,6 +6,7 @@ import javax.swing.*;
 
 public class LancerInterface {
     public static void main(String[] args){
+        
 
         try {
             // Changer le thème en utilisant le nom de classe du look and feel

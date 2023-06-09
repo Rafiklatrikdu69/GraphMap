@@ -16,7 +16,7 @@ public class DessinGraphe extends JPanel {
 
 	private InterfaceGraphe interfaceGraphe;
 
-	public double[][] predecesseur;
+	public Map<String,Map<String,Double>> predecesseur;
 	private Map<Integer, Boolean> verifePresenceChemin;
 	private Graphe graphe;
 	private Map<Graphe.MaillonGraphe, SommetVisuel> sommets;
@@ -40,20 +40,14 @@ public class DessinGraphe extends JPanel {
 		super();
 		this.graphe = graphe;
 		this.interfaceGraphe = interfaceGraphe;
-		predecesseur = graphe.floydWarshallFiabilite();
+		
 		listAretes = new ArrayList<>();
 		sommets = new HashMap<>();//Map pour associe chaque maillon de la liste avec un Jpanel
 		setLayout(null); // Utiliser un layout null pour positionner les sommets manuellement
 		initialisationGraphe();
 		
 	}
-	private void colorChemin () {
-		for (Integer indice : graphe.chemin) {
-			estDansChemin(indice);
-		}
-	}
-	
-	
+
 	
 	
 	/**
@@ -65,21 +59,9 @@ public class DessinGraphe extends JPanel {
 		dessinerArete(g);
 
 	}
-	private boolean estDansChemin(int indiceSommet) {
-		
-		for (Map.Entry<Graphe.MaillonGraphe, SommetVisuel> entry : sommets.entrySet()) {
-			SommetVisuel sommetVisuel = entry.getValue();
-			if (sommetVisuel.getSommetGraphe().getNom().equals(graphe.getNomSommet(indiceSommet))) {
-				sommetVisuel.setCouleurCentre(Color.RED);
-				return true;
-			}
-		}
-		return false;
-		
-		
-	}
+	
 	private void dessinerArete (Graphics g){
-		List<Integer> chemin = graphe.getChemin();
+		
 		
 		
 		listAretes.forEach(areteVisuel -> {
@@ -217,38 +199,12 @@ public class DessinGraphe extends JPanel {
 			
 		}
 	}
+
+		
 	
-	public void rechercherChemin(String source, String destination) {
 		
 		
-		// Vérifie si les sommets saisis existent dans le graphe
-		if (!graphe.indexSommet().containsKey(source) || !graphe.indexSommet().containsKey(destination)) {
-			System.out.println("Les sommets saisis ne sont pas valides.");
-			return;
-		}
-		
-		int indexSource = graphe.indexSommet().get(source);
-		int indexDestination = graphe.indexSommet().get(destination);
-		
-		
-		// Vérifie si un chemin existe entre les sommets saisis
-		if (graphe.getPredecesseurs()[indexSource][indexDestination] == -1) {
-			JPanel panelAucunChemin = new JPanel();
-			JLabel chemin = new JLabel("Aucun chemin trouver !");
-			panelAucunChemin.add(chemin);
-			int result = showOptionDialog(null, panelAucunChemin, "Chemin Court", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
-			return;
-			
-		}
-		
-		
-		//graphe.afficherChemin(indexSource, indexDestination);
-		
-		
-		//String chemin = String.valueOf(graphe.getMatrice()[indexSource][indexDestination]);
-		//AfficherCheminPanel a = new AfficherCheminPanel(chemin, sommets, this);
-		
-	}
+	
 	
 
 	
