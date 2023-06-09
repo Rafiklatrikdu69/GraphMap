@@ -40,7 +40,6 @@ public class DessinGraphe extends JPanel {
 		super();
 		this.graphe = graphe;
 		this.interfaceGraphe = interfaceGraphe;
-		
 		listAretes = new ArrayList<>();
 		sommets = new HashMap<>();//Map pour associe chaque maillon de la liste avec un Jpanel
 		setLayout(null); // Utiliser un layout null pour positionner les sommets manuellement
