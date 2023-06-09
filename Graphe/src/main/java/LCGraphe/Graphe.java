@@ -1070,38 +1070,34 @@ public class Graphe {
 			}
 		}
 		
-		for (String i : predecesseurs.keySet()) {
-			Map<String, String> map = predecesseurs.get(i);
-			for (String j : map.keySet()) {
-				String chemin = j; // commence par le sommet destination
-				String predecesseur = map.get(j);
-				
-				while (!predecesseur.equals(i)) {
-					chemin = predecesseur + " -> " + chemin; // Ajoute le prédécesseur au début du chemin
-					predecesseur = map.get(predecesseur);
-				}
-				
-				chemin = i + " -> " + chemin; // ajoute le sommet source au début du chemin complet
-				System.out.println("Chemin de " + i + " à " + j + ": " + chemin);
-				System.out.println();
-				
-				String[] sommets = chemin.split(" -> ");
-				double fiabiliteTotale = 1.0;
-				
-				for (int k = 0; k < sommets.length - 1; k++) {
-					String sommetActuel = sommets[k];
-					String sommetSuivant = sommets[k + 1];
-					Double fiabiliteInitialeObj = copieFiabilite.get(sommetActuel).get(sommetSuivant);
-					double fiabiliteInitiale = (fiabiliteInitialeObj != null) ? fiabiliteInitialeObj : 0.0;
-					System.out.println("Fiabilité sommet " + sommetActuel + " -> " + sommetSuivant + ": " + fiabiliteInitiale * 100);
-					fiabiliteTotale *= fiabiliteInitiale;
-				}
-				
-				System.out.println("Fiabilité totale : " + fiabiliteTotale * 100);
-				System.out.println();
-			}
+		String sommetDepart = "S2";
+		String sommetArrivee = "S19";
+		
+		String chemin = sommetArrivee;
+		String predecesseur = predecesseurs.get(sommetDepart).get(sommetArrivee);
+		double fiabiliteTotale = fiabilites.get(predecesseur).get(sommetArrivee);
+		
+		while (!predecesseur.equals(sommetDepart)) {
+			chemin = predecesseur + " -> " + chemin;
+			String sommetPrecedent = predecesseurs.get(sommetDepart).get(predecesseur);
+			fiabiliteTotale *= fiabilites.get(sommetPrecedent).get(predecesseur);
+			predecesseur = sommetPrecedent;
 		}
 		
+		chemin = sommetDepart + " -> " + chemin;
+		System.out.println("Chemin de " + sommetDepart + " à " + sommetArrivee + ": " + chemin);
+	
+		
+		String[] sommets = chemin.split(" -> ");
+		
+		for (int k = 0; k < sommets.length - 1; k++) {
+			String sommetActuel = sommets[k];
+			String sommetSuivant = sommets[k + 1];
+			double fiabiliteSommet = fiabilites.get(sommetActuel).get(sommetSuivant);
+			System.out.println("Fiabilité sommet " + sommetActuel + " -> " + sommetSuivant + ": " + fiabiliteSommet * 100);
+		}
+		
+		System.out.println("Fiabilité totale : " + fiabiliteTotale * 100);
 		
 		
 		return fiabilites;
