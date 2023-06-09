@@ -1070,9 +1070,6 @@ public class Graphe {
 			}
 		}
 		
-		
-		
-		
 		for (String i : predecesseurs.keySet()) {
 			Map<String, String> map = predecesseurs.get(i);
 			for (String j : map.keySet()) {
@@ -1080,51 +1077,36 @@ public class Graphe {
 				String predecesseur = map.get(j);
 				
 				while (!predecesseur.equals(i)) {
-					chemin = predecesseur + " -> " + chemin + " [ " + copieFiabilite.get(predecesseur).get(j) + " ]"; // Ajoute le prédécesseur au début du chemin
+					chemin = predecesseur + " -> " + chemin; // Ajoute le prédécesseur au début du chemin
 					predecesseur = map.get(predecesseur);
 				}
 				
 				chemin = i + " -> " + chemin; // ajoute le sommet source au début du chemin complet
 				System.out.println("Chemin de " + i + " à " + j + ": " + chemin);
-				double fiabiliteTotale = fiabilites.get(i).get(j);
-				System.out.print(" Fiabilité totale : " + fiabiliteTotale * 100);
+				System.out.println();
 				
-			
 				String[] sommets = chemin.split(" -> ");
+				double fiabiliteTotale = 1.0;
+				
 				for (int k = 0; k < sommets.length - 1; k++) {
 					String sommetActuel = sommets[k];
 					String sommetSuivant = sommets[k + 1];
 					Double fiabiliteInitialeObj = copieFiabilite.get(sommetActuel).get(sommetSuivant);
-					double fiabiliteInitiale = (fiabiliteInitialeObj != null) ? fiabiliteInitialeObj.doubleValue() : 0.0;
-					System.out.print(" Fiabilité sommet " + sommetActuel + " : " + fiabiliteInitiale * 100);
+					double fiabiliteInitiale = (fiabiliteInitialeObj != null) ? fiabiliteInitialeObj : 0.0;
+					System.out.println("Fiabilité sommet " + sommetActuel + " -> " + sommetSuivant + ": " + fiabiliteInitiale * 100);
+					fiabiliteTotale *= fiabiliteInitiale;
 				}
 				
-			
-				String dernierSommet = sommets[sommets.length - 1];
-				
-				Map<String, Double> fiabiliteSommet = copieFiabilite.get(dernierSommet);
-				if (fiabiliteSommet != null) {
-					Double fiabiliteInitiale = fiabiliteSommet.get(j);
-					
-					if (fiabiliteInitiale != null) {
-						double fiabiliteInitialeDouble = fiabiliteInitiale.doubleValue();
-						System.out.println(dernierSommet+" "+fiabiliteInitialeDouble);
-					} else {
-					
-					}
-				} else {
-				
-				}
+				System.out.println("Fiabilité totale : " + fiabiliteTotale * 100);
 				System.out.println();
-				
 			}
 		}
 		
 		
 		
-		
-		
 		return fiabilites;
+		
+		
 		
 	}
 }
