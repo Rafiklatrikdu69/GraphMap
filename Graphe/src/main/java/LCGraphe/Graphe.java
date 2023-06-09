@@ -1025,7 +1025,7 @@ public class Graphe {
 		fiabilites = new LinkedHashMap<>();
 		chemins = new LinkedHashMap<>();
 		Map<String, Map<String, String>> predecesseurs = new LinkedHashMap<>();
-	
+		Map<String, Map<String, Double>> copieFiabilite = new LinkedHashMap<>();
 		MaillonGraphe tmp = this.getPremier();
 		
 		// cffecte les valeurs de fiabilités dans la map avec le sommet source et les sommets destination associés
@@ -1040,15 +1040,18 @@ public class Graphe {
 			}
 			
 			fiabilites.put(nom, mapVoisin);
+			copieFiabilite.put(nom,mapVoisin);
 			tmp = tmp.getSuivant();
 		}
 		
 		for (String i : fiabilites.keySet()) {
 			predecesseurs.put(i, new LinkedHashMap<>());
 			for (String j : fiabilites.keySet()) {
+				
 				predecesseurs.get(i).put(j, i); // chaque sommet est son propre prédécesseur au départ
 			}
 		}
+		
 		
 		for (String k : fiabilites.keySet()) {
 			for (String i : fiabilites.keySet()) {
@@ -1068,7 +1071,7 @@ public class Graphe {
 		}
 		
 		
-
+		
 		
 		for (String i : predecesseurs.keySet()) {
 			Map<String, String> map = predecesseurs.get(i);
@@ -1077,7 +1080,7 @@ public class Graphe {
 				String predecesseur = map.get(j);
 				
 				while (!predecesseur.equals(i)) {
-					chemin = predecesseur + " -> " + chemin+" [ "+fiabilites.get(i).get(j)+" ]"; // Ajoute le prédécesseur au début du chemin
+					chemin = predecesseur + " -> " + chemin + " [ " + copieFiabilite.get(predecesseur).get(j) + " ]"; // Ajoute le prédécesseur au début du chemin
 					predecesseur = map.get(predecesseur);
 				}
 				
@@ -1085,10 +1088,38 @@ public class Graphe {
 				System.out.println("Chemin de " + i + " à " + j + ": " + chemin);
 				double fiabiliteTotale = fiabilites.get(i).get(j);
 				System.out.print(" Fiabilité totale : " + fiabiliteTotale * 100);
+				
+			
+				String[] sommets = chemin.split(" -> ");
+				for (int k = 0; k < sommets.length - 1; k++) {
+					String sommetActuel = sommets[k];
+					String sommetSuivant = sommets[k + 1];
+					Double fiabiliteInitialeObj = copieFiabilite.get(sommetActuel).get(sommetSuivant);
+					double fiabiliteInitiale = (fiabiliteInitialeObj != null) ? fiabiliteInitialeObj.doubleValue() : 0.0;
+					System.out.print(" Fiabilité sommet " + sommetActuel + " : " + fiabiliteInitiale * 100);
+				}
+				
+			
+				String dernierSommet = sommets[sommets.length - 1];
+				
+				Map<String, Double> fiabiliteSommet = copieFiabilite.get(dernierSommet);
+				if (fiabiliteSommet != null) {
+					Double fiabiliteInitiale = fiabiliteSommet.get(j);
+					
+					if (fiabiliteInitiale != null) {
+						double fiabiliteInitialeDouble = fiabiliteInitiale.doubleValue();
+						System.out.println(dernierSommet+" "+fiabiliteInitialeDouble);
+					} else {
+					
+					}
+				} else {
+				
+				}
 				System.out.println();
+				
 			}
-		
 		}
+		
 		
 		
 		
