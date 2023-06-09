@@ -8,6 +8,7 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -381,7 +382,8 @@ public class InterfaceGraphe extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fenetreOuvertureFichier = new JFileChooser(new File("."));
-				File fichier = new File("\\src\\fichiersGraphe\\");
+				fenetreOuvertureFichier.setFileFilter(new FileNameExtensionFilter("Fichiers", "csv"));
+				File fichier = new File("..\\src\\fichiersGraphe\\");
 				fenetreOuvertureFichier.setCurrentDirectory(fichier);
 				if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					fichier = fenetreOuvertureFichier.getSelectedFile();
@@ -483,7 +485,7 @@ public class InterfaceGraphe extends JFrame {
 			graphe.rechercheChemin(sommetSelect.getNom(), destination);
 			tableCheminsPanel.resetTable();
 			tableCheminsPanel.updateColonne(selectChoixChemin);
-			tableCheminsPanel.addDataInTable("Depart", String.valueOf(graphe.getSommetDonnees().get(0)));
+			tableCheminsPanel.addDataInTable("Depart", String.valueOf(graphe.getSommetDonnees().get(0)*100+" %"));
 			double fiabiliteTotale = 1.0;
 			
 			for (String i : graphe.getSommet()) {
@@ -498,7 +500,9 @@ public class InterfaceGraphe extends JFrame {
 			}
 			
 			tableCheminsPanel.addDataInTable("Fiabilité totale", String.valueOf(Math.round(fiabiliteTotale*100*100)/100) +" %");
-			
+			graphePanel.miseAJourDessin();
+			graphePanel.colorChemin();
+			repaint();
 			
 		}
 		
@@ -649,4 +653,5 @@ public class InterfaceGraphe extends JFrame {
 	public boolean getBloquerGraphe() {
 		return bloquerGraphe.isSelected();
 	}
+	
 }

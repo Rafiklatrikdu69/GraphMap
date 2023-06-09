@@ -13,10 +13,10 @@ import java.util.List;
 import static javax.swing.JOptionPane.showOptionDialog;
 
 public class DessinGraphe extends JPanel {
-
+	
 	private InterfaceGraphe interfaceGraphe;
-
-	public Map<String,Map<String,Double>> predecesseur;
+	
+	public Map<String, Map<String, Double>> predecesseur;
 	private Map<Integer, Boolean> verifePresenceChemin;
 	private Graphe graphe;
 	private Map<Graphe.MaillonGraphe, SommetVisuel> sommets;
@@ -46,7 +46,6 @@ public class DessinGraphe extends JPanel {
 		initialisationGraphe();
 		
 	}
-
 	
 	
 	/**
@@ -56,11 +55,10 @@ public class DessinGraphe extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		dessinerArete(g);
-
+		
 	}
 	
-	private void dessinerArete (Graphics g){
-		
+	private void dessinerArete(Graphics g) {
 		
 		
 		listAretes.forEach(areteVisuel -> {
@@ -155,7 +153,8 @@ public class DessinGraphe extends JPanel {
 		add(dessinPanel);
 		sommets.put(m, dessinPanel);
 	}
-	private void actionPerformedDragged(MouseEvent e){
+	
+	private void actionPerformedDragged(MouseEvent e) {
 		if (!interfaceGraphe.getBloquerGraphe() && sommetEnDeplacement != null) {
 			//calcule les nouvelles coordonnes du sommet deplacer
 			setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
@@ -170,8 +169,8 @@ public class DessinGraphe extends JPanel {
 			sommetEnDeplacement.setLocation(newPosX, newPosY);//reaffecte les positions du sommet
 		}
 	}
-
-	private void actionPerformedClickDessinPanel(Graphe.MaillonGraphe m){
+	
+	private void actionPerformedClickDessinPanel(Graphe.MaillonGraphe m) {
 		if (sommetSelectionne != null) {
 			sommets.get(sommetSelectionne).setCouleurCentre(DEFAUT_COULEUR_SOMMET);
 		}
@@ -183,7 +182,7 @@ public class DessinGraphe extends JPanel {
 			// Selectionne un nouveau sommet et afficher ses voisins
 			sommetSelectionne = m;
 			DefaultTableModel modelInfosVoisins = interfaceGraphe.getModelInfosVoisins();
-
+			
 			modelInfosVoisins.setRowCount(0);
 			
 			// parcourt les voisins du sommet sélectionné et les ajouter au modèle d'informations des voisins
@@ -198,14 +197,7 @@ public class DessinGraphe extends JPanel {
 			
 		}
 	}
-
-		
 	
-		
-		
-	
-	
-
 	
 	/**
 	 * Cette methode tire au hasard une position pour placer le sommet dans le Jpanel en recuperant ca largeur et ca hauteur
@@ -301,11 +293,36 @@ public class DessinGraphe extends JPanel {
 		}
 		return areteVisuel;
 	}
-
+	
 	public Graphe.MaillonGraphe getSommetSelectionne() {
 		return sommetSelectionne;
 	}
-
+	
+	
+	
+	public void colorChemin() {
+		for (Map.Entry<Graphe.MaillonGraphe, SommetVisuel> entry : sommets.entrySet()) {
+			SommetVisuel sommetVisuel = entry.getValue();
+			for (String i : graphe.getSommet()) {
+				//SommetVisuel sommetVisuel2 = sommets.get(i); // Récupérer le SommetVisuel correspondant au sommet i
+				
+				if (sommetVisuel.getSommetGraphe().getNom().equals(i) ) {
+					sommetVisuel.setCouleurCentre(Color.RED);
+					
+				
+					//AreteVisuel areteVisuel = new AreteVisuel(sommetVisuel, sommetVisuel2);
+				//	areteVisuel.setCouleurLigne(Color.RED);
+				//	System.out.println("arrete");
+				}
+			}
+		}
+		
+	}
+	
+	
+	
+	
+	
 	/**
 	 * @return
 	 */

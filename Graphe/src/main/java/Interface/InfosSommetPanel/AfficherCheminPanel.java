@@ -19,6 +19,7 @@ public class AfficherCheminPanel extends JPanel {
         infoChemin.setRowCount(0);
         tableInfoChemin.setModel(infoChemin);
         add(new JScrollPane(tableInfoChemin), BorderLayout.CENTER);
+       
     }
 
     public void updateColonne(String typeChemin){
