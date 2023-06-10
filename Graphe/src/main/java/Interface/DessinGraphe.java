@@ -304,20 +304,21 @@ public class DessinGraphe extends JPanel {
 		for (Map.Entry<Graphe.MaillonGraphe, SommetVisuel> entry : sommets.entrySet()) {
 			SommetVisuel sommetVisuel = entry.getValue();
 			for (String i : graphe.getSommet()) {
-				//SommetVisuel sommetVisuel2 = sommets.get(i); // Récupérer le SommetVisuel correspondant au sommet i
-				
-				if (sommetVisuel.getSommetGraphe().getNom().equals(i) ) {
+				if (sommetVisuel.getSommetGraphe().getNom().equals(i)) {
 					sommetVisuel.setCouleurCentre(Color.RED);
-					
-				
-					//AreteVisuel areteVisuel = new AreteVisuel(sommetVisuel, sommetVisuel2);
-				//	areteVisuel.setCouleurLigne(Color.RED);
-				//	System.out.println("arrete");
+					SommetVisuel sommetVisuel2 = sommets.get(i);
+					if (sommetVisuel2 != null) {
+						System.out.println("sommet visuel pas null");
+						AreteVisuel areteVisuel = getArete(sommetVisuel.getName(), sommetVisuel2.getName());
+						if (areteVisuel != null) {
+							areteVisuel.setCouleurLigne(Color.RED);
+						}
+					}
 				}
 			}
 		}
-		
 	}
+	
 	
 	
 	
