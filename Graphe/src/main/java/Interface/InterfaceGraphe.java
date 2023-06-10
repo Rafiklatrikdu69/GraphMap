@@ -470,8 +470,16 @@ public class InterfaceGraphe extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setActionListenerToAfficherChemins();
+				//boolean v = true;
+				/////////////////////probleme reset
+				/*if(graphePanel.getListeArreteChemin()!=null && graphePanel.getListeSommetChemin()!=null){
+					graphePanel.resetColorArreteChemin();
+					graphePanel.resetColorSommetChemin();
+				}*/
 				
+			repaint();
 			}
+			
 		});
 		
 	}
@@ -500,7 +508,7 @@ public class InterfaceGraphe extends JFrame {
 			}
 			
 			tableCheminsPanel.addDataInTable("Fiabilité totale", String.valueOf(Math.round(fiabiliteTotale*100*100)/100) +" %");
-			graphePanel.miseAJourDessin();
+			
 			graphePanel.colorChemin();
 			repaint();
 			

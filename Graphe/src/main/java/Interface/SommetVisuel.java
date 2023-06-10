@@ -96,4 +96,7 @@ public class SommetVisuel extends JPanel {
     public void setCouleurTexte(Color couleurTexte) {
         this.couleurTexte = couleurTexte;
     }
+    public String getSommet(){
+        return this.centre.getNom();
+    }
 }

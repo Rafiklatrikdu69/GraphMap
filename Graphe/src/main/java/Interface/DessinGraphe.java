@@ -18,6 +18,8 @@ public class DessinGraphe extends JPanel {
 	
 	public Map<String, Map<String, Double>> predecesseur;
 	private Map<Integer, Boolean> verifePresenceChemin;
+	private List<AreteVisuel> listeArreteChemin;
+	private List<SommetVisuel> listeSommetChemin;
 	private Graphe graphe;
 	private Map<Graphe.MaillonGraphe, SommetVisuel> sommets;
 	private List<AreteVisuel> listAretes;
@@ -56,16 +58,17 @@ public class DessinGraphe extends JPanel {
 		super.paintComponent(g);
 		dessinerArete(g);
 		
+		
 	}
 	
 	private void dessinerArete(Graphics g) {
 		
-		
+		Graphics2D g2d = (Graphics2D) g;
 		listAretes.forEach(areteVisuel -> {
-			g.setColor(areteVisuel.getCouleurLigne());
-			
-			g.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
-			
+			g2d.setColor(areteVisuel.getCouleurLigne());
+			g2d.setStroke(new BasicStroke(3));
+			g2d.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
+		
 			
 		});
 	}
@@ -125,6 +128,12 @@ public class DessinGraphe extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
+				
+				if (listeArreteChemin != null&& listeSommetChemin!=null) {
+					resetColorArreteChemin();
+					resetColorSommetChemin();
+				}
+				
 				actionPerformedClickDessinPanel(m);
 				//calculerCheminPlusCourt();
 				repaint();
@@ -288,6 +297,7 @@ public class DessinGraphe extends JPanel {
 			tmp = listAretes.get(i);
 			if ((tmp.getSommetVisuel1().getSommetGraphe().getNom().equals(nomSommet) && tmp.getSommetVisuel2().getSommetGraphe().getNom().equals(nomSommetDestination)) || (tmp.getSommetVisuel2().getSommetGraphe().getNom().equals(nomSommet) && tmp.getSommetVisuel1().getSommetGraphe().getNom().equals(nomSommetDestination))) {
 				areteVisuel = tmp;
+				System.out.println("arret entre deux sommets");
 			}
 			i++;
 		}
@@ -299,29 +309,50 @@ public class DessinGraphe extends JPanel {
 	}
 	
 	
-	
 	public void colorChemin() {
-		for (Map.Entry<Graphe.MaillonGraphe, SommetVisuel> entry : sommets.entrySet()) {
-			SommetVisuel sommetVisuel = entry.getValue();
-			for (String i : graphe.getSommet()) {
-				if (sommetVisuel.getSommetGraphe().getNom().equals(i)) {
-					sommetVisuel.setCouleurCentre(Color.RED);
-					SommetVisuel sommetVisuel2 = sommets.get(i);
-					if (sommetVisuel2 != null) {
-						System.out.println("sommet visuel pas null");
-						AreteVisuel areteVisuel = getArete(sommetVisuel.getName(), sommetVisuel2.getName());
-						if (areteVisuel != null) {
-							areteVisuel.setCouleurLigne(Color.RED);
-						}
-					}
-				}
+		listeArreteChemin = new ArrayList<>();
+		listeSommetChemin = new ArrayList<>();
+		List<String> sommetsList = graphe.getSommet(); // Récupérer la liste des sommets
+		
+		for (int i = 0; i < sommetsList.size() - 1; i++) {
+			String sommetCourant = sommetsList.get(i);
+			String sommetSuivant = sommetsList.get(i + 1);
+			
+			SommetVisuel sommetVisuelCourant = sommets.get(graphe.getCentre(sommetCourant));
+			SommetVisuel sommetVisuelSuivant = sommets.get(graphe.getCentre(sommetSuivant));
+			listeSommetChemin.add(sommetVisuelCourant);
+			listeSommetChemin.add(sommetVisuelSuivant);
+			AreteVisuel areteVisuel = getArete(sommetVisuelCourant.getSommet(), sommetVisuelSuivant.getSommet());
+			listAretes.remove(areteVisuel);
+			listAretes.add(areteVisuel);
+			if (areteVisuel == null) {
+				System.out.println("arrete null");
 			}
+			
+			listeArreteChemin.add(areteVisuel);
+			sommetVisuelCourant.setCouleurCentre(Color.RED);
+			sommetVisuelSuivant.setCouleurCentre(Color.RED);
+			areteVisuel.setCouleurLigne(Color.RED);
+			
 		}
+		
+		repaint();
 	}
 	
-	
-	
-	
+	public void resetColorArreteChemin() {
+		listeArreteChemin.forEach(areteVisuel -> {
+			//met la couleur de l'arrete
+			areteVisuel.setCouleurLigne(COULEUR_ARETE);
+		});
+		
+	}
+	public void resetColorSommetChemin() {
+		listeSommetChemin.forEach(areteVisuel -> {
+			//met la couleur de l'arrete
+			areteVisuel.setCouleurCentre(DEFAUT_COULEUR_SOMMET);
+		});
+		
+	}
 	
 	
 	/**
@@ -331,6 +362,11 @@ public class DessinGraphe extends JPanel {
 	public Dimension getPreferredSize() {
 		return new Dimension(100, 100);
 	}
-	
+	public List<SommetVisuel> getListeSommetChemin(){
+		return this.listeSommetChemin;
+	}
+	public List<AreteVisuel> getListeArreteChemin(){
+		return this.listeArreteChemin;
+	}
 }
 
