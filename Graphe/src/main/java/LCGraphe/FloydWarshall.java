@@ -49,7 +49,7 @@ public class FloydWarshall {
 			}
 		}
 	}
-	public Map<String, Map<String, Double>> floydMap() {
+	public Map<String, Map<String, Double>> floydWarshallFiabilite() {
 		initMap();
 		Map<String, Map<String, Double>> copieFiabilite = new LinkedHashMap<>();
 		
@@ -73,7 +73,7 @@ public class FloydWarshall {
 		}
 		
 		
-		rechercheChemin("S2","S19");
+		//rechercheChemin("S2","S19");
 		
 		return fiabilites;
 		
@@ -98,7 +98,7 @@ public class FloydWarshall {
 		}
 		
 		chemin = sommetDepart + " -> " + chemin;
-		System.out.println("Chemin de " + sommetDepart + " à " + sommetArrivee + ": " + chemin);
+		//System.out.println("Chemin de " + sommetDepart + " à " + sommetArrivee + ": " + chemin);
 		
 		
 		String[] sommets = chemin.split(" -> ");
@@ -108,7 +108,7 @@ public class FloydWarshall {
 			String sommetSuivant = sommets[k + 1];
 			
 			double fiabiliteSommet = fiabilites.get(sommetActuel).get(sommetSuivant);
-			System.out.println("Fiabilité sommet " + sommetActuel + " -> " + sommetSuivant + ": " + fiabiliteSommet * 100);
+		//	System.out.println("Fiabilité sommet " + sommetActuel + " -> " + sommetSuivant + ": " + fiabiliteSommet * 100);
 			if(!sommet.contains(sommetActuel)){
 				sommet.add(sommetActuel);
 				
@@ -118,14 +118,14 @@ public class FloydWarshall {
 				sommetDonnees.add(fiabiliteSommet);
 			}
 		}
-		
+	/*
 		System.out.println("Fiabilité totale : " + fiabiliteTotale * 100);
 		for(String i : sommet){
 			System.out.println("sommet : "+i);
 		}
 		for(Double i : sommetDonnees){
 			System.out.println("fiabilite : "+i);
-		}
+		}*/
 	}
 	public List<String> getSommet(){
 		return sommet;

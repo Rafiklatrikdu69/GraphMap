@@ -1,6 +1,5 @@
 package Interface;
 
-import Interface.InfosSommetPanel.AfficherCheminPanel;
 import LCGraphe.Graphe;
 
 import javax.swing.*;
@@ -10,11 +9,11 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-import static javax.swing.JOptionPane.showOptionDialog;
-
 public class DessinGraphe extends JPanel {
 	
 	private InterfaceGraphe interfaceGraphe;
+	private boolean misAjourAutoriseFloydWarshall = false;
+	private boolean misAjourAutorise = false;
 	
 	public Map<String, Map<String, Double>> predecesseur;
 	private Map<Integer, Boolean> verifePresenceChemin;
@@ -309,10 +308,10 @@ public class DessinGraphe extends JPanel {
 	}
 	
 	
-	public void colorChemin() {
+	public void colorCheminFiabilite() {
 		listeArreteChemin = new ArrayList<>();
 		listeSommetChemin = new ArrayList<>();
-		List<String> sommetsList = graphe.getSommet(); // Récupérer la liste des sommets
+		List<String> sommetsList = graphe.getListeSommetCheminGraphe(); // Récupérer la liste des sommets
 		
 		for (int i = 0; i < sommetsList.size() - 1; i++) {
 			String sommetCourant = sommetsList.get(i);
@@ -325,9 +324,9 @@ public class DessinGraphe extends JPanel {
 			AreteVisuel areteVisuel = getArete(sommetVisuelCourant.getSommet(), sommetVisuelSuivant.getSommet());
 			listAretes.remove(areteVisuel);
 			listAretes.add(areteVisuel);
-			if (areteVisuel == null) {
+			/*if (areteVisuel == null) {
 				System.out.println("arrete null");
-			}
+			}*/
 			
 			listeArreteChemin.add(areteVisuel);
 			sommetVisuelCourant.setCouleurCentre(Color.RED);
@@ -335,7 +334,34 @@ public class DessinGraphe extends JPanel {
 			areteVisuel.setCouleurLigne(Color.RED);
 			
 		}
-		
+		misAjourAutoriseFloydWarshall = true;
+		repaint();
+	}
+	public void colorCheminDjikstra() {
+		listeArreteChemin = new ArrayList<>();
+		listeSommetChemin = new ArrayList<>();
+		for (int i = 0; i < interfaceGraphe.getListeSommetDjikstraChemin().size() - 1; i++) {
+			String sommetCourant =  interfaceGraphe.getListeSommetDjikstraChemin().get(i);
+			String sommetSuivant =  interfaceGraphe.getListeSommetDjikstraChemin().get(i + 1);
+			
+			SommetVisuel sommetVisuelCourant = sommets.get(graphe.getCentre(sommetCourant));
+			SommetVisuel sommetVisuelSuivant = sommets.get(graphe.getCentre(sommetSuivant));
+			listeSommetChemin.add(sommetVisuelCourant);
+			listeSommetChemin.add(sommetVisuelSuivant);
+			AreteVisuel areteVisuel = getArete(sommetVisuelCourant.getSommet(), sommetVisuelSuivant.getSommet());
+			listAretes.remove(areteVisuel);
+			listAretes.add(areteVisuel);
+			/*if (areteVisuel == null) {
+				System.out.println("arrete null");
+			}*/
+			
+			listeArreteChemin.add(areteVisuel);
+			sommetVisuelCourant.setCouleurCentre(Color.RED);
+			sommetVisuelSuivant.setCouleurCentre(Color.RED);
+			areteVisuel.setCouleurLigne(Color.RED);
+			
+		}
+		misAjourAutorise = true;
 		repaint();
 	}
 	
@@ -367,6 +393,18 @@ public class DessinGraphe extends JPanel {
 	}
 	public List<AreteVisuel> getListeArreteChemin(){
 		return this.listeArreteChemin;
+	}
+	public boolean getMisAjourAutoriseFloydWarsall(){
+		return misAjourAutoriseFloydWarshall;
+	}
+	public void setMisAjourAutoriseFloydWarshall(Boolean b){
+		 misAjourAutoriseFloydWarshall = b;
+	}
+	public boolean getMisAjourAutoriseDjikstra(){
+		return misAjourAutorise;
+	}
+	public void setMisAjourAutoriseDjikstra(Boolean b){
+		misAjourAutorise = b;
 	}
 }
 

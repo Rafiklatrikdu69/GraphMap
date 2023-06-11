@@ -1,7 +1,6 @@
 package Interface;
 
 import Interface.InfosSommetPanel.AfficherCheminPanel;
-import LCGraphe.FloydWarshall;
 import LCGraphe.Graphe;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
@@ -13,9 +12,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+
 
 import static javax.swing.JOptionPane.showOptionDialog;
 
@@ -29,6 +30,8 @@ public class InterfaceGraphe extends JFrame {
 	
 	private AccueilPanel accueilPanel;
 	private JPanel barreDeChargementPanel, nord;
+	private List<String> listeSommetDjikstraChemin;
+	
 	private DessinGraphe graphePanel;
 	
 	private JLabel labelTitreVoisin;
@@ -66,7 +69,7 @@ public class InterfaceGraphe extends JFrame {
 	private JMenu itemOptionFonction;
 	private JMenu itemChoixTheme;
 	private JMenuItem itemFermerFenetre, itemMenuPrincipale, itemOuvrirFichier;
-	private JMenuItem itemAfficherCheminPlusCourts;
+	private JMenuItem itemAjoutSommet, itemAjoutArete;
 	static JRadioButton bloquerGraphe;
 	private JProgressBar barreChargement;
 	private boolean end;
@@ -265,7 +268,8 @@ public class InterfaceGraphe extends JFrame {
 		itemFenetre.add(itemFermerFenetre);
 		itemFenetre.setFont(fontBarreMenu);
 		
-		itemOptionFonction.add(itemAfficherCheminPlusCourts);
+		itemOptionFonction.add(itemAjoutSommet);
+		itemOptionFonction.add(itemAjoutArete);
 		itemOptionFonction.setFont(fontBarreMenu);
 		
 		ButtonGroup groupeBoutons = new ButtonGroup();
@@ -300,8 +304,9 @@ public class InterfaceGraphe extends JFrame {
 		itemFermerFenetre = new JMenuItem("Fermer");
 		itemMenuPrincipale = new JMenuItem("Menu Principale");
 		itemMenuPrincipale.setEnabled(false);
-		itemAfficherCheminPlusCourts = new JMenuItem("Calculer Itineraire");
-		itemAfficherCheminPlusCourts.setEnabled(false);
+		itemAjoutSommet = new JMenuItem("Ajouter Sommet");
+		itemAjoutArete = new JMenuItem("Ajouter Arete");
+		
 		modeLight = new JRadioButtonMenuItem("Light", true);
 		modeDark = new JRadioButtonMenuItem("Dark");
 	}
@@ -434,12 +439,22 @@ public class InterfaceGraphe extends JFrame {
 						graphePanel.setCouleurSommetSelect(Color.BLUE);
 						graphePanel.setCouleurArete(Color.BLACK);
 						graphePanel.miseAJourDessin();
+						
+						if (graphePanel.getMisAjourAutoriseFloydWarsall() == true) {
+							graphePanel.setMisAjourAutoriseFloydWarshall(false);
+							graphePanel.colorCheminFiabilite();
+							
+						}
+						else if(graphePanel.getMisAjourAutoriseDjikstra()==true){
+							graphePanel.setMisAjourAutoriseDjikstra(false);
+							graphePanel.colorCheminDjikstra();
+						}
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 				
-			
+				
 			}
 		});
 		modeDark.addActionListener(new ActionListener() {
@@ -448,7 +463,7 @@ public class InterfaceGraphe extends JFrame {
 				try {
 					// Changer le thème en utilisant le nom de classe du look and feel
 					UIManager.setLookAndFeel(new FlatMacDarkLaf());
-				
+					
 					// Mettre à jour les composants de la fenêtre pour refléter le nouveau thème
 					
 					updateInterface();
@@ -456,13 +471,22 @@ public class InterfaceGraphe extends JFrame {
 						graphePanel.setCouleurTexteSommet(Color.BLACK);
 						graphePanel.setDefautCouleurSommet(Color.LIGHT_GRAY);
 						graphePanel.setCouleurSommetSelect(Color.DARK_GRAY);
-						graphePanel.setCouleurArete(Color.DARK_GRAY);
+						graphePanel.setCouleurArete(Color.GRAY);
 						graphePanel.miseAJourDessin();
+						if (graphePanel.getMisAjourAutoriseFloydWarsall() == true) {
+							graphePanel.setMisAjourAutoriseFloydWarshall(false);
+							graphePanel.colorCheminFiabilite();
+							
+						}
+						else if(graphePanel.getMisAjourAutoriseDjikstra()==true){
+							graphePanel.setMisAjourAutoriseDjikstra(false);
+							graphePanel.colorCheminDjikstra();
+						}
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-			
+				
 			}
 		});
 		choixTypeCheminComboBox.addActionListener(new ActionListener() {
@@ -474,27 +498,42 @@ public class InterfaceGraphe extends JFrame {
 		afficherCheminButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(graphePanel.getListeArreteChemin()!=null && graphePanel.getListeSommetChemin()!=null){
+				
+				if (graphePanel.getListeArreteChemin() != null && graphePanel.getListeSommetChemin() != null) {
+					
 					graphePanel.resetColorArreteChemin();
 					graphePanel.resetColorSommetChemin();
+					
+					
+					repaint();
 				}
 				setActionListenerToAfficherChemins();
-				//boolean v = true;
-				/////////////////////probleme reset
-				/*if(graphePanel.getListeArreteChemin()!=null && graphePanel.getListeSommetChemin()!=null){
-					graphePanel.resetColorArreteChemin();
-					graphePanel.resetColorSommetChemin();
-				}*/
 				
-			repaint();
 			}
-			
 		});
 		
+		
+		//////////////////////////////////////////////////////////////////////////////////////
+		
+		
 	}
-	private void updateInterface(){
+	
+	private void updateInterface() {
 		SwingUtilities.updateComponentTreeUI(this);
 	}
+	
+	/**
+	 * Methode pour ajouter arete et sommet
+	 **/
+	private void ajoutSommet(ActionEvent a) {
+	
+	}
+	
+	private void ajoutArete(ActionEvent a) {
+	
+	}
+	
+	
 	private void setActionListenerToAfficherChemins() {
 		String selectChoixChemin = (String) choixTypeCheminComboBox.getSelectedItem();
 		Graphe.MaillonGraphe sommetSelect = graphePanel.getSommetSelectionne();
@@ -504,82 +543,86 @@ public class InterfaceGraphe extends JFrame {
 			graphe.rechercheChemin(sommetSelect.getNom(), destination);
 			tableCheminsPanel.resetTable();
 			tableCheminsPanel.updateColonne(selectChoixChemin);
-			tableCheminsPanel.addDataInTable("Depart", String.valueOf(graphe.getSommetDonnees().get(0)*100+" %"));
+			tableCheminsPanel.addDataInTable("Depart", String.valueOf(graphe.getSommetDonnees().get(0) * 100 + " %"));
 			double fiabiliteTotale = 1.0;
 			
-			for (String i : graphe.getSommet()) {
-				System.out.println("sommet : " + i);
+			for (String i : graphe.getListeSommetCheminGraphe()) {
+				//System.out.println("sommet : " + i);
 				
 				if (!i.equals(sommetSelect.getNom())) {
-	
-					Double donneeSommet = graphe.getSommetDonnees().get(graphe.getSommet().indexOf(i));
-					tableCheminsPanel.addDataInTable(i, String.valueOf(donneeSommet*100)+" %");
+					
+					Double donneeSommet = graphe.getSommetDonnees().get(graphe.getListeSommetCheminGraphe().indexOf(i));
+					tableCheminsPanel.addDataInTable(i, String.valueOf(donneeSommet * 100) + " %");
 					fiabiliteTotale *= donneeSommet;
 				}
 			}
 			
-			tableCheminsPanel.addDataInTable("Fiabilité totale", String.valueOf(Math.round(fiabiliteTotale*100*100)/100) +" %");
+			tableCheminsPanel.addDataInTable("Fiabilité totale", String.valueOf(Math.round(fiabiliteTotale * 100 * 100) / 100) + " %");
 			
-			graphePanel.colorChemin();
+			graphePanel.colorCheminFiabilite();
 			repaint();
 			
 		}
 		
-		 if(selectChoixChemin.equals((ChoixTypeChemin.DISTANCE.getAttribut())))
-	
-	{
-		tableCheminsPanel.resetTable();
-		tableCheminsPanel.updateColonne(selectChoixChemin);
-		LinkedHashMap<String, Double> chemin = graphe.getCheminDijkstra().get(sommetSelect.getNom()).getCheminsDistanceTo(destination);
-		if (chemin != null) {
-			int distanceTotale = 0;
-			
-			for (Map.Entry<String, Double> entry : chemin.entrySet()) {
-				String nomSommet = entry.getKey();
-				double distance = entry.getValue();
-				distanceTotale += (int) distance;
-				if (!nomSommet.equals(sommetSelect.getNom())) {
-					tableCheminsPanel.addDataInTable(nomSommet, distanceTotale + "Km");
-				} else {
-					tableCheminsPanel.addDataInTable("Départ", distanceTotale + "Km");
-				}
+		if (selectChoixChemin.equals((ChoixTypeChemin.DISTANCE.getAttribut()))) {
+			tableCheminsPanel.resetTable();
+			listeSommetDjikstraChemin = new ArrayList<>();
+			listeSommetDjikstraChemin.add(sommetSelect.getNom());
+			tableCheminsPanel.updateColonne(selectChoixChemin);
+			LinkedHashMap<String, Double> chemin = graphe.getCheminDijkstra().get(sommetSelect.getNom()).getCheminsDistanceTo(destination);
+			if (chemin != null) {
+				int distanceTotale = 0;
 				
+				for (Map.Entry<String, Double> entry : chemin.entrySet()) {
+					String nomSommet = entry.getKey();
+					double distance = entry.getValue();
+					distanceTotale += (int) distance;
+					if (!nomSommet.equals(sommetSelect.getNom())) {
+						listeSommetDjikstraChemin.add(nomSommet);
+						tableCheminsPanel.addDataInTable(nomSommet, distanceTotale + "Km");
+					} else {
+						tableCheminsPanel.addDataInTable("Départ", distanceTotale + "Km");
+					}
+					
+				}
+				tableCheminsPanel.addDataInTable("Distance Totale", distanceTotale + "Km");
+			} else {
+				tableCheminsPanel.addDataInTable(sommetSelect.getNom() + " -> " + destination, "Aucun Chemin");
 			}
-			tableCheminsPanel.addDataInTable("Distance Totale", distanceTotale + "Km");
-		} else {
-			tableCheminsPanel.addDataInTable(sommetSelect.getNom() + " -> " + destination, "Aucun Chemin");
+			graphePanel.colorCheminDjikstra();
+			repaint();
+			
+		} else if (selectChoixChemin.equals((ChoixTypeChemin.DUREE.getAttribut()))) {
+			
+			tableCheminsPanel.resetTable();
+			listeSommetDjikstraChemin = new ArrayList<>();
+			listeSommetDjikstraChemin.add(sommetSelect.getNom());
+			tableCheminsPanel.updateColonne(selectChoixChemin);
+			LinkedHashMap<String, Double> chemin = graphe.getCheminDijkstra().get(sommetSelect.getNom()).getCheminsDureeTo(destination);
+			if (chemin != null) {
+				int dureeTotale = 0;
+				
+				for (Map.Entry<String, Double> entry : chemin.entrySet()) {
+					String nomSommet = entry.getKey();
+					double duree = entry.getValue();
+					dureeTotale += (int) duree;
+					if (!nomSommet.equals(sommetSelect.getNom())) {
+						listeSommetDjikstraChemin.add(nomSommet);
+						tableCheminsPanel.addDataInTable(nomSommet, dureeTotale + " min");
+					} else {
+						tableCheminsPanel.addDataInTable("Départ", dureeTotale + " min");
+					}
+					
+				}
+				tableCheminsPanel.addDataInTable("Durée Totale", dureeTotale + " min");
+			} else {
+				tableCheminsPanel.addDataInTable(sommetSelect.getNom() + " -> " + destination, "Aucun Chemin");
+			}
+			graphePanel.colorCheminDjikstra();
+			repaint();
 		}
 		
-		
 	}
-		else if(selectChoixChemin.equals((ChoixTypeChemin.DUREE.getAttribut())))
-	
-	{
-		tableCheminsPanel.resetTable();
-		tableCheminsPanel.updateColonne(selectChoixChemin);
-		LinkedHashMap<String, Double> chemin = graphe.getCheminDijkstra().get(sommetSelect.getNom()).getCheminsDureeTo(destination);
-		if (chemin != null) {
-			int dureeTotale = 0;
-			
-			for (Map.Entry<String, Double> entry : chemin.entrySet()) {
-				String nomSommet = entry.getKey();
-				double duree = entry.getValue();
-				dureeTotale += (int) duree;
-				if (!nomSommet.equals(sommetSelect.getNom())) {
-					tableCheminsPanel.addDataInTable(nomSommet, dureeTotale + " min");
-				} else {
-					tableCheminsPanel.addDataInTable("Départ", dureeTotale + " min");
-				}
-				
-			}
-			tableCheminsPanel.addDataInTable("Durée Totale", dureeTotale + " min");
-		} else {
-			tableCheminsPanel.addDataInTable(sommetSelect.getNom() + " -> " + destination, "Aucun Chemin");
-		}
-	}
-	
-}
-	//////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 *
@@ -671,6 +714,9 @@ public class InterfaceGraphe extends JFrame {
 	
 	public boolean getBloquerGraphe() {
 		return bloquerGraphe.isSelected();
+	}
+	public  List<String> getListeSommetDjikstraChemin(){
+		return this.listeSommetDjikstraChemin;
 	}
 	
 }
