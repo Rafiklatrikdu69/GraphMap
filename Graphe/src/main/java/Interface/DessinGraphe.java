@@ -1,6 +1,5 @@
 package Interface;
 
-import Interface.InfosSommetPanel.AfficherCheminPanel;
 import LCGraphe.Graphe;
 
 import javax.swing.*;
@@ -10,11 +9,10 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-import static javax.swing.JOptionPane.showOptionDialog;
-
 public class DessinGraphe extends JPanel {
 	
 	private InterfaceGraphe interfaceGraphe;
+	private boolean misAjourAutorise = false;
 	
 	public Map<String, Map<String, Double>> predecesseur;
 	private Map<Integer, Boolean> verifePresenceChemin;
@@ -66,7 +64,7 @@ public class DessinGraphe extends JPanel {
 		Graphics2D g2d = (Graphics2D) g;
 		listAretes.forEach(areteVisuel -> {
 			g2d.setColor(areteVisuel.getCouleurLigne());
-			g2d.setStroke(new BasicStroke(3));
+			g2d.setStroke(new BasicStroke(2));
 			g2d.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
 		
 			
@@ -309,10 +307,10 @@ public class DessinGraphe extends JPanel {
 	}
 	
 	
-	public void colorChemin() {
+	public void colorCheminFiabilite() {
 		listeArreteChemin = new ArrayList<>();
 		listeSommetChemin = new ArrayList<>();
-		List<String> sommetsList = graphe.getSommet(); // Récupérer la liste des sommets
+		List<String> sommetsList = graphe.getListeSommetCheminGraphe(); // Récupérer la liste des sommets
 		
 		for (int i = 0; i < sommetsList.size() - 1; i++) {
 			String sommetCourant = sommetsList.get(i);
@@ -325,9 +323,9 @@ public class DessinGraphe extends JPanel {
 			AreteVisuel areteVisuel = getArete(sommetVisuelCourant.getSommet(), sommetVisuelSuivant.getSommet());
 			listAretes.remove(areteVisuel);
 			listAretes.add(areteVisuel);
-			if (areteVisuel == null) {
+			/*if (areteVisuel == null) {
 				System.out.println("arrete null");
-			}
+			}*/
 			
 			listeArreteChemin.add(areteVisuel);
 			sommetVisuelCourant.setCouleurCentre(Color.RED);
@@ -335,7 +333,7 @@ public class DessinGraphe extends JPanel {
 			areteVisuel.setCouleurLigne(Color.RED);
 			
 		}
-		
+		misAjourAutorise = true;
 		repaint();
 	}
 	
@@ -367,6 +365,12 @@ public class DessinGraphe extends JPanel {
 	}
 	public List<AreteVisuel> getListeArreteChemin(){
 		return this.listeArreteChemin;
+	}
+	public boolean getMisAjourAutorise(){
+		return misAjourAutorise;
+	}
+	public void setMisAjourAutorise(Boolean b){
+		 misAjourAutorise = b;
 	}
 }
 

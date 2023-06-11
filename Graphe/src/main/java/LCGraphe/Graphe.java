@@ -13,10 +13,8 @@ import java.util.*;
  */
 public class Graphe {
 	
-	private HashMap<String, Dijkstra> cheminDijkstra;
+	private Map<String, Dijkstra> cheminDijkstra;
 	private FloydWarshall f = new FloydWarshall(this);
-	
-	
 	
 	
 	public class MaillonGrapheSec {
@@ -562,7 +560,7 @@ public class Graphe {
 				compteurLigne++;
 			}
 			scanner.close();
-			f.floydMap();
+			f.floydWarshallFiabilite();
 			cheminDijkstra = new HashMap<>();
 			this.tousLesCentresToList().forEach(maillonGraphe -> {
 				cheminDijkstra.put(maillonGraphe.getNom(), new Dijkstra(this, maillonGraphe.getNom()));
@@ -594,17 +592,19 @@ public class Graphe {
 		return chaine.toString();
 	}
 	
-	public HashMap<String, Dijkstra> getCheminDijkstra() {
+	public Map<String, Dijkstra> getCheminDijkstra() {
 		return cheminDijkstra;
 	}
 	
-	public List<String> getSommet(){
+	public List<String> getListeSommetCheminGraphe() {
 		return f.getSommet();
 	}
-	public List<Double> getSommetDonnees(){
+	
+	public List<Double> getSommetDonnees() {
 		return f.getSommetDonnees();
 	}
-	public void rechercheChemin(String  depart ,String destination){
+	
+	public void rechercheChemin(String depart, String destination) {
 		f.rechercheChemin(depart, destination);
 	}
 	
