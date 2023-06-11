@@ -6,10 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AccueilPanel extends JPanel {
-    private JButton commencer, parametre, quitter;
+    private JButton commencer, quitter;
     private InterfaceGraphe interfaceGraphe;
+    private JPanel panelTop;
     AccueilPanel(InterfaceGraphe interfaceGraphe){
         this.interfaceGraphe = interfaceGraphe;
+        setLayout(new BorderLayout());
         initAccueilComponents();
         initAccueilEventListeners();
         setVisible(true);
@@ -17,41 +19,35 @@ public class AccueilPanel extends JPanel {
 
 
     private void initAccueilComponents(){
-        setLayout(new BorderLayout());
-
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+        panelTop = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel titleLabel = new JLabel("Bienvenue !");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(titleLabel);
+        panelTop.add(titleLabel);
 
-        commencer = new JButton("Commencer");
-        parametre = new JButton("Paramètres");
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        commencer = new JButton("Ouvrir Fichier");
         quitter = new JButton("Quitter");
 
-        commencer.setAlignmentX(Component.CENTER_ALIGNMENT);
-        parametre.setAlignmentX(Component.CENTER_ALIGNMENT);
-        quitter.setAlignmentX(Component.CENTER_ALIGNMENT);
+        commencer.setHorizontalAlignment(JButton.CENTER);
+        quitter.setHorizontalAlignment(JButton.CENTER);
 
-        centerPanel.add(Box.createVerticalStrut(50));
         centerPanel.add(commencer);
-        centerPanel.add(Box.createVerticalStrut(50));
-        centerPanel.add(parametre);
-        centerPanel.add(Box.createVerticalStrut(50));
         centerPanel.add(quitter);
-
+        add(panelTop, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
     }
     private void initAccueilEventListeners(){
         commencer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setVisible(false);
+                interfaceGraphe.setOuvrirFichierActions();
+
+
                 interfaceGraphe.setContentPane(interfaceGraphe.getCp());
                 interfaceGraphe.setJMenuBar(interfaceGraphe.getMenu());
+                interfaceGraphe.pack();
             }
         });
         quitter.addActionListener(new ActionListener() {
