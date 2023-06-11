@@ -32,7 +32,7 @@ public class FloydWarshall {
 			Graphe.MaillonGrapheSec tmp2 = tmp.getVoisin();
 			
 			while (tmp2 != null) {
-				mapVoisin.put(tmp2.getDestination(), tmp2.getFiabilite() / 10);
+				mapVoisin.put(tmp2.getDestination().getNom(), tmp2.getFiabilite() / 10);
 				tmp2 = tmp2.getSuivantMaillonSec();
 			}
 			

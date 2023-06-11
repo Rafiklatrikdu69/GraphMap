@@ -22,10 +22,10 @@ public class Graphe {
 		private double fiab;
 		private double dist;
 		private double dur;
-		private String dest;
+		private MaillonGraphe dest;
 		private MaillonGrapheSec suiv;
 		
-		private MaillonGrapheSec(double fiabilite, double distance, double duree, String d) {
+		private MaillonGrapheSec(double fiabilite, double distance, double duree, MaillonGraphe d) {
 			fiab = fiabilite;
 			dist = distance;
 			dur = duree;
@@ -36,7 +36,7 @@ public class Graphe {
 		/**
 		 * @return String: destination
 		 */
-		public String getDestination() {
+		public MaillonGraphe getDestination() {
 			return dest;
 		}
 		
@@ -69,7 +69,7 @@ public class Graphe {
 		/**
 		 * @param dest
 		 */
-		public void setDestination(String dest) {
+		public void setDestination(MaillonGraphe dest) {
 			this.dest = dest;
 		}
 		
@@ -202,7 +202,6 @@ public class Graphe {
 			}
 			return s.toString();
 		}
-		
 	}
 	
 	private MaillonGraphe premier;
@@ -247,12 +246,12 @@ public class Graphe {
 		
 		MaillonGrapheSec tmp1 = maillonCentre1.lVois;
 		while (tmp1 != null) {
-			voisins1.add(tmp1.getDestination());
+			voisins1.add(tmp1.getDestination().getNom());
 			tmp1 = tmp1.getSuivantMaillonSec();
 		}
 		MaillonGrapheSec tmp2 = maillonCentre2.lVois;
 		while (tmp2 != null) {
-			voisins2.add(tmp2.getDestination());
+			voisins2.add(tmp2.getDestination().getNom());
 			tmp2 = tmp2.getSuivantMaillonSec();
 		}
 		List<String> voisinsCommuns = new ArrayList<>(voisins1);
@@ -280,8 +279,41 @@ public class Graphe {
 		}
 		return chaineVoisin.toString();
 	}
-	
-	
+
+	public List<MaillonGraphe> getVoisinPDistance(MaillonGraphe sommetDepart,int p){
+		List<MaillonGraphe> listeMaillon = new ArrayList<>();
+		MaillonGrapheSec voisinsSommetDepart = sommetDepart.getVoisin();
+		MaillonGraphe sommetTemp;
+		MaillonGrapheSec voisinTemp = null;
+		assert p>=1;
+		int i;
+		if(p==1){
+			while (voisinsSommetDepart !=null){
+				listeMaillon.add(voisinsSommetDepart.getDestination());
+				voisinsSommetDepart = voisinsSommetDepart.getSuivantMaillonSec();
+			}
+		} else {
+			while (voisinsSommetDepart !=null){
+				i = 0;
+				sommetTemp = voisinsSommetDepart.getDestination();
+				while(i<p){
+					voisinTemp = sommetTemp.getVoisin();
+					if (i==p-1){
+
+					} else {
+						voisinTemp = voisinTemp.getSuivantMaillonSec();
+					}
+					i++;
+				}
+				voisinTemp = sommetTemp.getVoisin();
+
+
+				voisinsSommetDepart = voisinsSommetDepart.getSuivantMaillonSec();
+			}
+		}
+		return listeMaillon;
+	}
+
 	
 	/**
 	 * Cette methode ajoute les Voisins(Arretes) avec
@@ -294,7 +326,7 @@ public class Graphe {
 	 * @param dur
 	 */
 	public void ajoutVoisin(String nomCentre, String nomDestinataire, Double fiab, Double dist, Double dur) {
-		MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, nomDestinataire);
+		MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getCentre(nomDestinataire));
 		MaillonGraphe tmp = this.getPremier();
 		while (!tmp.getNom().equals(nomCentre)) {
 			tmp = tmp.getSuivant();
@@ -302,7 +334,7 @@ public class Graphe {
 		nouv.suiv = tmp.lVois;
 		tmp.lVois = nouv;
 		
-		MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, nomCentre);
+		MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, getCentre(nomCentre));
 		tmp = this.getPremier();
 		while (!tmp.getNom().equals(nomDestinataire)) {
 			tmp = tmp.getSuivant();

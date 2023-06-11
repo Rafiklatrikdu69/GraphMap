@@ -43,7 +43,7 @@ public class Dijkstra {
 
             Graphe.MaillonGrapheSec voisin = graphe.getCentre(centre).getVoisin();
             while (voisin != null) {
-                String nomVoisin = voisin.getDestination();
+                String nomVoisin = voisin.getDestination().getNom();
                 if (!sommetsTraites.get(nomVoisin)) {
                     if (!mapPlusCourtCheminsFiabilite.containsKey(nomVoisin)) {
                         // On arrive à cette endroit si nomVoisin n'a pas encore de chemin
@@ -140,7 +140,7 @@ public class Dijkstra {
 
             Graphe.MaillonGrapheSec voisin = graphe.getCentre(centre).getVoisin();
             while (voisin != null) {
-                String nomVoisin = voisin.getDestination();
+                String nomVoisin = voisin.getDestination().getNom();
                 if (!sommetsTraites.get(nomVoisin)) {
                     if (!mapPlusCourtCheminsDistance.containsKey(nomVoisin)) {
                         // On arrive à cette endroit si nomVoisin n'a pas encore de chemin
@@ -237,7 +237,7 @@ public class Dijkstra {
 
             Graphe.MaillonGrapheSec voisin = graphe.getCentre(centre).getVoisin();
             while (voisin != null) {
-                String nomVoisin = voisin.getDestination();
+                String nomVoisin = voisin.getDestination().getNom();
                 if (!sommetsTraites.get(nomVoisin)) {
                     if (!mapPlusCourtCheminsDuree.containsKey(nomVoisin)) {
                         // On arrive à cette endroit si nomVoisin n'a pas encore de chemin
