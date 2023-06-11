@@ -29,6 +29,7 @@ public class DessinGraphe extends JPanel {
 	//Initialise les couleurs ainsi que les taille par defaut
 	private static final int SOMMET_WIDTH = 40;
 	private static final int SOMMET_HEIGHT = 40;
+	private Color COULEUR_ARETE_CHEMIN = new Color(0, 100, 255);
 	public Color DEFAUT_COULEUR_SOMMET = Color.BLACK;
 	public Color COULEUR_ARETE = Color.BLACK;
 	public Color COULEUR_TEXTE_SOMMET = Color.WHITE;
@@ -93,7 +94,7 @@ public class DessinGraphe extends JPanel {
 		sommets.forEach((sommet, sommetVisuel) -> {
 			Graphe.MaillonGrapheSec voisins = sommet.getVoisin();//recupere le voisin de la liste
 			while (voisins != null) {
-				AreteVisuel arete = new AreteVisuel(sommetVisuel, sommets.get(graphe.getCentre(voisins.getDestination())));/*creer un nouvelle arrete entre le sommet
+				AreteVisuel arete = new AreteVisuel(sommetVisuel, sommets.get(voisins.getDestination()));/*creer un nouvelle arrete entre le sommet
                 de depart et le voisin*/
 				arete.setCouleurLigne(COULEUR_ARETE);
 				listAretes.add(arete);
@@ -195,7 +196,7 @@ public class DessinGraphe extends JPanel {
 			
 			// parcourt les voisins du sommet sélectionné et les ajouter au modèle d'informations des voisins
 			sommetSelectionne.voisinsToList().forEach(voisin -> {
-				modelInfosVoisins.addRow(new Object[]{voisin.getDestination(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
+				modelInfosVoisins.addRow(new Object[]{voisin.getDestination().getNom(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
 			});
 			
 			// Met en évidence le sommet sélectionné visuellement
@@ -329,9 +330,9 @@ public class DessinGraphe extends JPanel {
 			}*/
 			
 			listeArreteChemin.add(areteVisuel);
-			sommetVisuelCourant.setCouleurCentre(Color.RED);
-			sommetVisuelSuivant.setCouleurCentre(Color.RED);
-			areteVisuel.setCouleurLigne(Color.RED);
+			sommetVisuelCourant.setCouleurCentre(COULEUR_ARETE_CHEMIN);
+			sommetVisuelSuivant.setCouleurCentre(COULEUR_ARETE_CHEMIN);
+			areteVisuel.setCouleurLigne(COULEUR_ARETE_CHEMIN);
 			
 		}
 		misAjourAutoriseFloydWarshall = true;
@@ -356,9 +357,9 @@ public class DessinGraphe extends JPanel {
 			}*/
 			
 			listeArreteChemin.add(areteVisuel);
-			sommetVisuelCourant.setCouleurCentre(Color.RED);
-			sommetVisuelSuivant.setCouleurCentre(Color.RED);
-			areteVisuel.setCouleurLigne(Color.RED);
+			sommetVisuelCourant.setCouleurCentre(COULEUR_ARETE_CHEMIN);
+			sommetVisuelSuivant.setCouleurCentre(COULEUR_ARETE_CHEMIN);
+			areteVisuel.setCouleurLigne(COULEUR_ARETE_CHEMIN);
 			
 		}
 		misAjourAutorise = true;
