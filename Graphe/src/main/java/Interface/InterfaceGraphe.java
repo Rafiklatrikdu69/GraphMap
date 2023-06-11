@@ -426,7 +426,8 @@ public class InterfaceGraphe extends JFrame {
 					UIManager.setLookAndFeel(new FlatMacLightLaf());
 					
 					// Mettre à jour les composants de la fenêtre pour refléter le nouveau thème
-					SwingUtilities.updateComponentTreeUI(fenetrePrincipale);
+					
+					updateInterface();
 					if (graphePanel != null) {
 						graphePanel.setCouleurTexteSommet(Color.WHITE);
 						graphePanel.setDefautCouleurSommet(Color.BLACK);
@@ -437,6 +438,8 @@ public class InterfaceGraphe extends JFrame {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				
+			
 			}
 		});
 		modeDark.addActionListener(new ActionListener() {
@@ -445,9 +448,10 @@ public class InterfaceGraphe extends JFrame {
 				try {
 					// Changer le thème en utilisant le nom de classe du look and feel
 					UIManager.setLookAndFeel(new FlatMacDarkLaf());
-					
+				
 					// Mettre à jour les composants de la fenêtre pour refléter le nouveau thème
-					SwingUtilities.updateComponentTreeUI(fenetrePrincipale);
+					
+					updateInterface();
 					if (graphePanel != null) {
 						graphePanel.setCouleurTexteSommet(Color.BLACK);
 						graphePanel.setDefautCouleurSommet(Color.LIGHT_GRAY);
@@ -458,6 +462,7 @@ public class InterfaceGraphe extends JFrame {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+			
 			}
 		});
 		choixTypeCheminComboBox.addActionListener(new ActionListener() {
@@ -469,6 +474,10 @@ public class InterfaceGraphe extends JFrame {
 		afficherCheminButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if(graphePanel.getListeArreteChemin()!=null && graphePanel.getListeSommetChemin()!=null){
+					graphePanel.resetColorArreteChemin();
+					graphePanel.resetColorSommetChemin();
+				}
 				setActionListenerToAfficherChemins();
 				//boolean v = true;
 				/////////////////////probleme reset
@@ -483,7 +492,9 @@ public class InterfaceGraphe extends JFrame {
 		});
 		
 	}
-	
+	private void updateInterface(){
+		SwingUtilities.updateComponentTreeUI(this);
+	}
 	private void setActionListenerToAfficherChemins() {
 		String selectChoixChemin = (String) choixTypeCheminComboBox.getSelectedItem();
 		Graphe.MaillonGraphe sommetSelect = graphePanel.getSommetSelectionne();

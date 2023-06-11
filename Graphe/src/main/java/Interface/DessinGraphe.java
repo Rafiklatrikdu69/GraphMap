@@ -66,7 +66,7 @@ public class DessinGraphe extends JPanel {
 		Graphics2D g2d = (Graphics2D) g;
 		listAretes.forEach(areteVisuel -> {
 			g2d.setColor(areteVisuel.getCouleurLigne());
-			g2d.setStroke(new BasicStroke(3));
+			g2d.setStroke(new BasicStroke(2));
 			g2d.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
 		
 			
