@@ -32,11 +32,11 @@ public class FloydWarshall {
 			Graphe.MaillonGrapheSec tmp2 = tmp.getVoisin();
 			
 			while (tmp2 != null) {
-				mapVoisin.put(tmp2.getDestination().getNom(), tmp2.getFiabilite() / 10);
+				mapVoisin.put(tmp2.getDestination().getNom(), tmp2.getFiabilite() / 10);//affecte les fiabilites des voisins dans la map
 				tmp2 = tmp2.getSuivantMaillonSec();
 			}
 			
-			fiabilites.put(nom, mapVoisin);
+			fiabilites.put(nom, mapVoisin);//affecte le nom du sommet source avec la map des voisins
 			copieFiabilite.put(nom,mapVoisin);
 			tmp = tmp.getSuivant();
 		}
@@ -53,19 +53,27 @@ public class FloydWarshall {
 		initMap();
 		Map<String, Map<String, Double>> copieFiabilite = new LinkedHashMap<>();
 		
-		copieListeToMap(copieFiabilite);
-		
+		copieListeToMap(copieFiabilite);//appel de la methode pour copier les donnes de la liste chainée dans la map fiabilite afin d'utliser les donnes
+		//Objectif Optimisation avec des maps
+		/*Debut de l'algo */
 		for (String k : fiabilites.keySet()) {
 			for (String i : fiabilites.keySet()) {
 				for (String j : fiabilites.keySet()) {
-					if (fiabilites.get(i).containsKey(k) && fiabilites.get(k).containsKey(j)) {
+					if (fiabilites.get(i).containsKey(k) && fiabilites.get(k).containsKey(j)) {//verifie si les valeurs son null et qu'elles sont contenu dans la map
 						double fiabiliteIK = fiabilites.get(i).get(k);
 						double fiabiliteKJ = fiabilites.get(k).get(j);
 						double fiabiliteIJ = fiabilites.getOrDefault(i, new LinkedHashMap<>()).getOrDefault(j, Double.NEGATIVE_INFINITY);
-						
-						if (fiabiliteIK * fiabiliteKJ > fiabiliteIJ) {
-							fiabilites.get(i).put(j, fiabiliteIK * fiabiliteKJ);
-							predecesseurs.get(i).put(j, predecesseurs.get(k).get(j)); // Mettre à jour le prédécesseur de j à i
+						/*
+						S1[2,4,7]
+						S2[4,4,9]
+						S3[1,8,5]
+						S4[2,4,0]
+						Il faut voir la map comme un matrice ,pour chaque sommet(string) on a les fiabilites des voisin
+						ensuite on projet ligne 1 colonne 1 puis ligne 2 colonne 2 pour verifier si la fiabilite est meilleur
+						*/
+						if (fiabiliteIK * fiabiliteKJ > fiabiliteIJ) {//Si la fiabilite 4 > 4*4 alors on la change sinon on ny touche pas(voir exemple dessus avec matrice)
+							fiabilites.get(i).put(j, fiabiliteIK * fiabiliteKJ);//on ajoute la nouvelle fiabilite
+							predecesseurs.get(i).put(j, predecesseurs.get(k).get(j)); // met à jour le prédécesseur de j à i
 						}
 					}
 				}
@@ -73,7 +81,7 @@ public class FloydWarshall {
 		}
 		
 		
-		//rechercheChemin("S2","S19");
+	
 		
 		return fiabilites;
 		
