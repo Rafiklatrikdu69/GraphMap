@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d99efb15-7d67-42af-a5b4-ff7c9cd77565" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Interface/AccueilPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Interface/AccueilPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Interface/DessinGraphe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Interface/DessinGraphe.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Interface/InterfaceGraphe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Interface/InterfaceGraphe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LCGraphe/Dijkstra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LCGraphe/Dijkstra.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LCGraphe/FloydWarshall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LCGraphe/FloydWarshall.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/LCGraphe/Graphe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LCGraphe/Graphe.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -108,6 +104,8 @@
       <workItem from="1686153722587" duration="2099000" />
       <workItem from="1686506741769" duration="14864000" />
       <workItem from="1686522426799" duration="13000" />
+      <workItem from="1686549644414" duration="123000" />
+      <workItem from="1686556600567" duration="3783000" />
     </task>
     <servers />
   </component>
@@ -119,7 +117,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/LCGraphe/Graphe.java</url>
-          <line>456</line>
+          <line>491</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
