@@ -349,6 +349,31 @@ public class Graphe {
 		return res;
 	}
 
+	public Integer getNombreDispensaire(){
+		Integer res = 0;
+		MaillonGraphe tmp = this.getPremier();
+		while (tmp != null) {
+			res++;
+			tmp = tmp.getSuivant();
+		}
+		return res;
+	}
+
+	public Integer getNombreRoute(){
+		Integer res = 0;
+		MaillonGraphe tmp = this.getPremier();
+		MaillonGrapheSec tmp2 = null;
+		while (tmp != null) {
+			tmp2 = tmp.getVoisin();
+			while (tmp2 !=null){
+				res++;
+				tmp2 = tmp2.getSuivantMaillonSec();
+			}
+			tmp = tmp.getSuivant();
+		}
+		return res/2;
+	}
+
 	
 	/**
 	 * Cette methode ajoute les Voisins(Arretes) avec
