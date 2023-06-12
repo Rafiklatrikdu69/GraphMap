@@ -293,6 +293,7 @@ public class Graphe {
 				voisinsSommetDepart = voisinsSommetDepart.getSuivantMaillonSec();
 			}
 		} else {
+			i=0;
 			while (voisinsSommetDepart !=null){
 				i = 0;
 				sommetTemp = voisinsSommetDepart.getDestination();
@@ -312,6 +313,40 @@ public class Graphe {
 			}
 		}
 		return listeMaillon;
+	}
+
+	public Integer getNombreOperatoire(){
+		Integer res = 0;
+		MaillonGraphe tmp = this.getPremier();
+		while (tmp != null) {
+			if (tmp.type.equals("Opératoire")) {
+				res++;
+			}
+			tmp = tmp.getSuivant();
+		}
+		return res;
+	}
+	public Integer getNombreMaternite(){
+		Integer res = 0;
+		MaillonGraphe tmp = this.getPremier();
+		while (tmp != null) {
+			if (tmp.type.equals("Maternité")) {
+				res++;
+			}
+			tmp = tmp.getSuivant();
+		}
+		return res;
+	}
+	public Integer getNombreCentreNutrition(){
+		Integer res = 0;
+		MaillonGraphe tmp = this.getPremier();
+		while (tmp != null) {
+			if (tmp.type.equals("Centre de nutrition")) {
+				res++;
+			}
+			tmp = tmp.getSuivant();
+		}
+		return res;
 	}
 
 	
