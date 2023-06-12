@@ -13,9 +13,9 @@ public class LCGrapheTest {
      @Test
      public void testAjouterSommet() {
        
-          assertFalse(graphe.existeCentre("S1"));
+          assertFalse(graphe.existeCentre("S35"));
           assertFalse(graphe.existeCentre("S2"));
-          assertFalse(graphe.existeCentre("S3"));
+          assertFalse(graphe.existeCentre("S32"));
      }
      @Test
      public void testChercheMaillon() {

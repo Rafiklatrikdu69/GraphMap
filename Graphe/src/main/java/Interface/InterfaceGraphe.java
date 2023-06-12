@@ -27,6 +27,9 @@ public class InterfaceGraphe extends JFrame {
 	private String[] colonneIdentifiersChemin;
 	
 	public JPanel cp;
+
+	private JPanel paneInfoSommet, panelInfoGraphe, panelToutesInfos;
+	private JLabel titre;
 	
 	private AccueilPanel accueilPanel;
 	private JPanel barreDeChargementPanel, nord;
@@ -41,10 +44,7 @@ public class InterfaceGraphe extends JFrame {
 	private JScrollPane affichageVoisinScrollPane;
 	
 	private JButton boutonSuivant, boutonPrecedent;
-	
-	private JPanel panelAllInfos;
-	
-	
+
 	private JPanel contenuNomTypeSommetPanel;
 	private JPanel contenuInfoSommetPanel;
 	private JPanel affichageVoisinPanel;
@@ -55,7 +55,7 @@ public class InterfaceGraphe extends JFrame {
 	
 	private JPanel cardPanelInfos;
 	
-	private JLabel nombreRouteLabel, nombreSommetLabel, nomSommetSelectionneLabel, typeSommetSelectionneLabel;
+	private JLabel nombreRouteLabel, nombreSommetLabel, nombreMatLabel, nombreOpLabel, nombreCentreNutriLabel, nomSommetSelectionneLabel, typeSommetSelectionneLabel;
 	private JButton afficherCheminButton;
 	private JComboBox<String> choixTypeCheminComboBox, choixDestinationComboBox;
 	private JMenuBar menu;
@@ -118,9 +118,11 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 */
 	private void initContainerTousInfos() {
-		panelAllInfos = new JPanel(new BorderLayout()); // ce panel contient le card layout, le nom du sommet et son type.
+		panelInfoGraphe = new JPanel(new BorderLayout());
+		panelToutesInfos = new JPanel(new BorderLayout());
+		paneInfoSommet = new JPanel(new BorderLayout()); // ce panel contient le card layout, le nom du sommet et son type.
 		//On met un minimum de dimension de ce panel pour qu'il est la place d'afficher le contenu
-		panelAllInfos.setPreferredSize(new Dimension((int) screenSize.getWidth() / 6, (int) screenSize.getHeight()));
+		panelToutesInfos.setPreferredSize(new Dimension((int) screenSize.getWidth() / 6, (int) screenSize.getHeight()));
 		
 		cardLayout = new CardLayout(); // ce card layout sert à changer de fenetre entre "Afficher les Voisins" et "Faire un Chemin"
 		cardPanelInfos = new JPanel(cardLayout); // on met le card layout dans son panel
@@ -135,15 +137,45 @@ public class InterfaceGraphe extends JFrame {
 		contenuButtonSuivPrec.add(boutonSuivant); // Ajout
 		
 		initContainersInfoSommet(); // Panel
+		initContainersInfoGraphe();
 		
 		cardPanelInfos.add(contenuInfoSommetPanel, "panel de base");
 		cardPanelInfos.add(contenuTousLesCheminsPanel, "panel Suivant");
-		panelAllInfos.add(contenuNomTypeSommetPanel, BorderLayout.NORTH);
-		panelAllInfos.add(contenuButtonSuivPrec, BorderLayout.SOUTH);
-		panelAllInfos.add(cardPanelInfos, BorderLayout.CENTER);
-		cp.add(panelAllInfos, BorderLayout.EAST);
+		paneInfoSommet.add(contenuNomTypeSommetPanel, BorderLayout.NORTH);
+		paneInfoSommet.add(contenuButtonSuivPrec, BorderLayout.SOUTH);
+		paneInfoSommet.add(cardPanelInfos, BorderLayout.CENTER);
+
+		panelToutesInfos.add(panelInfoGraphe, BorderLayout.NORTH);
+		panelToutesInfos.add(paneInfoSommet, BorderLayout.CENTER);
+
+		cp.add(panelToutesInfos, BorderLayout.EAST);
 	}
-	
+
+	private void initContainersInfoGraphe(){
+		Dimension tmp = panelToutesInfos.getPreferredSize();
+		panelInfoGraphe.setPreferredSize(new Dimension((int) tmp.getWidth(), (int) (tmp.getHeight()/8)));
+		titre = new JLabel("Graphe");
+		titre.setHorizontalAlignment(JLabel.CENTER);
+		titre.setFont(new Font("Arial", Font.PLAIN, 25));
+		nombreRouteLabel = new JLabel("");
+		nombreSommetLabel = new JLabel("");
+		nombreMatLabel = new JLabel("");
+		nombreCentreNutriLabel = new JLabel("");
+		nombreOpLabel = new JLabel("");
+		nombreCentre = 0;
+		nombreRoutes = 0;
+		JPanel mid = new JPanel(new GridLayout(5,1));
+		mid.add(nombreSommetLabel);
+		mid.add(nombreRouteLabel);
+		mid.add(nombreOpLabel);
+		mid.add(nombreMatLabel);
+		mid.add(nombreCentreNutriLabel);
+		panelInfoGraphe.add(titre, BorderLayout.NORTH);
+		panelInfoGraphe.add(mid,BorderLayout.CENTER);
+
+
+	}
+
 	private void initContainerNomTypeSommet() {
 		nomSommetSelectionneLabel = new JLabel("");
 		Font font = new Font("Arial", Font.PLAIN, 25);
@@ -230,7 +262,7 @@ public class InterfaceGraphe extends JFrame {
 		if (graphePanel == null) {
 			graphePanel = new DessinGraphe(graphe, this);
 			graphePanel.setBorder(BorderFactory.createTitledBorder("Graphe"));
-			panelAllInfos.setBorder(BorderFactory.createTitledBorder("Infos"));
+			panelToutesInfos.setBorder(BorderFactory.createTitledBorder("Infos"));
 		} else {
 			graphePanel.changerGraphe(graphe);
 		}
@@ -629,6 +661,7 @@ public class InterfaceGraphe extends JFrame {
 	public void mettreInvisibleComposantSommet() {
 		nomSommetSelectionneLabel.setText("");
 		typeSommetSelectionneLabel.setText("");
+
 		afficherCheminButton.setVisible(false);
 		choixTypeCheminComboBox.setVisible(false);
 		choixDestinationComboBox.setVisible(false);
@@ -642,6 +675,12 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 */
 	private void mettreInvisibleComposantGraphe() {
+		titre.setVisible(false);
+		nombreSommetLabel.setText("");
+		nombreRouteLabel.setText("");
+		nombreOpLabel.setText("");
+		nombreMatLabel.setText("");
+		nombreCentreNutriLabel.setText("");
 		itemModeDuGraphe.setEnabled(false);
 		itemFonctionnalite.setEnabled(false);
 		itemChoixTheme.setEnabled(false);
@@ -651,9 +690,16 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 */
 	private void mettreVisibleComposantGraphe() {
+		titre.setVisible(true);
 		itemModeDuGraphe.setEnabled(true);
 		itemFonctionnalite.setEnabled(true);
 		itemChoixTheme.setEnabled(true);
+
+		nombreSommetLabel.setText("Dispensaires : "+nombreCentre);
+		nombreRouteLabel.setText("Routes : "+nombreRoutes);
+		nombreOpLabel.setText("Opératoires : "+graphe.getNombreOperatoire());
+		nombreMatLabel.setText("Maternités : "+graphe.getNombreMaternite());
+		nombreCentreNutriLabel.setText("Centres de nutrition : "+graphe.getNombreCentreNutrition());
 	}
 	
 	/**
