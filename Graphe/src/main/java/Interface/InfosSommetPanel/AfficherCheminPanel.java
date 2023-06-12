@@ -10,7 +10,7 @@ public class AfficherCheminPanel extends JPanel {
 
     public AfficherCheminPanel(){
         setLayout(new BorderLayout());
-        tableInfoChemin = new JTable();
+        tableInfoChemin = new JTable();//table qui stocke les informations des chemins
         infoChemin = new DefaultTableModel();
         infoChemin.setColumnCount(0);
         infoChemin.addColumn("Dispensaires");

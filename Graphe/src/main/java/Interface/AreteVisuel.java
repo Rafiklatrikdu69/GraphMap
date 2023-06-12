@@ -1,15 +1,21 @@
 package Interface;
 
-import Interface.SommetVisuel;
 
 import java.awt.*;
 
 public class AreteVisuel {
-    private Point positionCentre1;
-    private Point positionCentre2;
-    private SommetVisuel sommetVisuel1;
-    private SommetVisuel sommetVisuel2;
-    private Color couleurLigne;
+    private Point positionCentre1;//position du centre 1
+    private Point positionCentre2;//position du centre 2
+    private SommetVisuel sommetVisuel1;//sommet visuel 1
+    private SommetVisuel sommetVisuel2;//sommet visuel 2
+    private Color couleurLigne;//couleur de la ligne
+    
+    /**
+     *Une Arete est composer de deux sommet visuels qui sont reliés
+     *
+     * @param sommetVisuel1
+     * @param sommetVisuel2
+     */
     AreteVisuel(SommetVisuel sommetVisuel1, SommetVisuel sommetVisuel2){
         this.positionCentre1 = sommetVisuel1.getCentreDuCercle();
         this.positionCentre2 = sommetVisuel2.getCentreDuCercle();
@@ -17,10 +23,11 @@ public class AreteVisuel {
         this.sommetVisuel2 = sommetVisuel2;
         this.couleurLigne = Color.BLACK;
     }
+    /**Getters/Setters**/
     
     /**
      *
-     * @return
+     * @return positionCentre1
      */
     public Point getPositionCentre1() {
         return positionCentre1;
@@ -28,7 +35,7 @@ public class AreteVisuel {
     
     /**
      *
-     * @return
+     * @return positionCentre2
      */
     public Point getPositionCentre2() {
         return positionCentre2;
@@ -36,7 +43,7 @@ public class AreteVisuel {
     
     /**
      *
-     * @return
+     * @return sommetVisuel1
      */
     public SommetVisuel getSommetVisuel1() {
         return sommetVisuel1;
@@ -44,7 +51,7 @@ public class AreteVisuel {
     
     /**
      *
-     * @return
+     * @return sommetVisuel2
      */
     public SommetVisuel getSommetVisuel2() {
         return sommetVisuel2;
@@ -52,7 +59,7 @@ public class AreteVisuel {
     
     /**
      *
-     * @return
+     * @return couleurLigne
      */
     public Color getCouleurLigne() {
         return couleurLigne;

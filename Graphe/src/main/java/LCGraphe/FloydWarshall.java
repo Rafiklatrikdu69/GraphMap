@@ -44,7 +44,9 @@ public class FloydWarshall {
 		for (String i : fiabilites.keySet()) {
 			predecesseurs.put(i, new LinkedHashMap<>());
 			for (String j : fiabilites.keySet()) {
-				
+					if(!i.equals(j)){
+						//gerer les circuits !!!
+					}
 				predecesseurs.get(i).put(j, i); // chaque sommet est son propre prédécesseur au départ
 			}
 		}
