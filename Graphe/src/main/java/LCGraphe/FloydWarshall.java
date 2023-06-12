@@ -79,7 +79,7 @@ public class FloydWarshall {
 				}
 			}
 		}
-		
+		//gestion des valeurs dans la diagonales a venir ...
 		
 	
 		
