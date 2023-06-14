@@ -43,11 +43,6 @@ public class AccueilPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 interfaceGraphe.setOuvrirFichierActions();
-
-
-                interfaceGraphe.setContentPane(interfaceGraphe.getCp());
-                interfaceGraphe.setJMenuBar(interfaceGraphe.getMenu());
-                interfaceGraphe.pack();
             }
         });
         quitter.addActionListener(new ActionListener() {
