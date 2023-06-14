@@ -369,8 +369,8 @@ public class DessinGraphe extends JPanel {
 				String sommetCourant = sommetsList.get(i); // Récupère le sommet courant
 				String sommetSuivant = sommetsList.get(i + 1); // Récupère le sommet suivant
 				
-				SommetVisuel sommetVisuelCourant = sommets.get(graphe.getCentre(sommetCourant)); // Récupère le sommet visuel correspondant au sommet courant
-				SommetVisuel sommetVisuelSuivant = sommets.get(graphe.getCentre(sommetSuivant)); // Récupère le sommet visuel correspondant au sommet suivant
+				SommetVisuel sommetVisuelCourant = sommets.get(graphe.getSommet(sommetCourant)); // Récupère le sommet visuel correspondant au sommet courant
+				SommetVisuel sommetVisuelSuivant = sommets.get(graphe.getSommet(sommetSuivant)); // Récupère le sommet visuel correspondant au sommet suivant
 				listeSommetChemin.add(sommetVisuelCourant); // Ajoute le sommet courant à la liste des sommets du chemin
 				listeSommetChemin.add(sommetVisuelSuivant); // Ajoute le sommet suivant à la liste des sommets du chemin
 				AreteVisuel areteVisuel = getArete(sommetVisuelCourant.getSommet(), sommetVisuelSuivant.getSommet()); // Récupère l'arête visuelle entre les deux sommets
@@ -394,8 +394,8 @@ public class DessinGraphe extends JPanel {
 			String sommetCourant = interfaceGraphe.getListeSommetDjikstraChemin().get(i); // Récupère le sommet courant
 			String sommetSuivant = interfaceGraphe.getListeSommetDjikstraChemin().get(i + 1); // Récupère le sommet suivant
 			
-			SommetVisuel sommetVisuelCourant = sommets.get(graphe.getCentre(sommetCourant)); // Récupère le sommet visuel correspondant au sommet courant
-			SommetVisuel sommetVisuelSuivant = sommets.get(graphe.getCentre(sommetSuivant)); // Récupère le sommet visuel correspondant au sommet suivant
+			SommetVisuel sommetVisuelCourant = sommets.get(graphe.getSommet(sommetCourant)); // Récupère le sommet visuel correspondant au sommet courant
+			SommetVisuel sommetVisuelSuivant = sommets.get(graphe.getSommet(sommetSuivant)); // Récupère le sommet visuel correspondant au sommet suivant
 			listeSommetChemin.add(sommetVisuelCourant); // Ajoute le sommet courant à la liste des sommets du chemin
 			listeSommetChemin.add(sommetVisuelSuivant); // Ajoute le sommet suivant à la liste des sommets du chemin
 			AreteVisuel areteVisuel = getArete(sommetVisuelCourant.getSommet(), sommetVisuelSuivant.getSommet()); // Récupère l'arête visuelle entre les deux sommets

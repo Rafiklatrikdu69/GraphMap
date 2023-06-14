@@ -25,7 +25,7 @@ public class MenuConsoleGraphe{
         System.out.println(newGraphe.getCheminDijkstra().get("S21").getCheminsFiabiliteTo("S30"));
         System.out.println(newGraphe.getCheminDijkstra().get("S30").getCheminsFiabiliteTo("S21"));
       //  double[][] predecesseurs = newGraphe.floydWarshallFiabilite();
-      
+        
         
         
         
@@ -58,7 +58,7 @@ public class MenuConsoleGraphe{
                         try {
                             
                             
-                            List<Graphe.MaillonGraphe> tousLesCentresList = newGraphe.tousLesCentresToList();
+                            List<Graphe.MaillonGraphe> tousLesCentresList = newGraphe.tousLesSommetToList();
                             tousLesCentresList.forEach(Centre -> {
                                 StringBuilder stringVoisin = new StringBuilder();
                                 List<Graphe.MaillonGrapheSec> voisinsCentre = Centre.voisinsToList();
@@ -90,10 +90,10 @@ public class MenuConsoleGraphe{
                         optionDispensaire = scannerDispensaire.next();
                         scannerDispensaire.nextLine();
                         boolean sortieAnnexe = false;
-                        if (!newGraphe.existeCentre(optionDispensaire)) {
+                        if (!newGraphe.existeSommet(optionDispensaire)) {
                             System.out.println("Le dispensaire " + optionDispensaire + " n'existe pas !");
                         } else {
-                            Graphe.MaillonGraphe dispensaire = newGraphe.getCentre(optionDispensaire);
+                            Graphe.MaillonGraphe dispensaire = newGraphe.getSommet(optionDispensaire);
                             int optionFonctionDispensaire;
                             Scanner scannerFonctionDispensaire = new Scanner(System.in);
                             do {
@@ -130,7 +130,7 @@ public class MenuConsoleGraphe{
                                             Scanner scannerDispensaire2 = new Scanner(System.in);
                                             optionDispensaire2 = scannerDispensaire2.next();
                                             scannerDispensaire2.nextLine();
-                                            if (!newGraphe.existeCentre(optionDispensaire2)) {
+                                            if (!newGraphe.existeSommet(optionDispensaire2)) {
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
                                             }
                                             else if (dispensaire.estVoisin(optionDispensaire2)) {
@@ -148,7 +148,7 @@ public class MenuConsoleGraphe{
                                             Scanner scannerDispensaire2 = new Scanner(System.in);
                                             optionDispensaire2 = scannerDispensaire2.next();
                                             scannerDispensaire2.nextLine();
-                                            if (!newGraphe.existeCentre(optionDispensaire2)) {
+                                            if (!newGraphe.existeSommet(optionDispensaire2)) {
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
                                             } else {
                                                 System.out.println(newGraphe.voisinsVoisinsToString(dispensaire.getNom(),optionDispensaire2));
@@ -161,7 +161,7 @@ public class MenuConsoleGraphe{
                                             Scanner scannerDispensaire2 = new Scanner(System.in);
                                             optionDispensaire2 = scannerDispensaire2.next();
                                             scannerDispensaire2.nextLine();
-                                            if (!newGraphe.existeCentre(optionDispensaire2)) {
+                                            if (!newGraphe.existeSommet(optionDispensaire2)) {
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
                                             } else {
                                                 LinkedHashMap<String, Double> plusCourtChemin = newGraphe.getCheminDijkstra().get(dispensaire.getNom()).getCheminsFiabiliteTo(optionDispensaire2);
@@ -192,7 +192,7 @@ public class MenuConsoleGraphe{
                                             Scanner scannerDispensaire2 = new Scanner(System.in);
                                             optionDispensaire2 = scannerDispensaire2.next();
                                             scannerDispensaire2.nextLine();
-                                            if (!newGraphe.existeCentre(optionDispensaire2)) {
+                                            if (!newGraphe.existeSommet(optionDispensaire2)) {
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
                                             } else {
                                                 LinkedHashMap<String, Double> plusCourtChemin = newGraphe.getCheminDijkstra().get(dispensaire.getNom()).getCheminsDistanceTo(optionDispensaire2);
@@ -223,7 +223,7 @@ public class MenuConsoleGraphe{
                                             Scanner scannerDispensaire2 = new Scanner(System.in);
                                             optionDispensaire2 = scannerDispensaire2.next();
                                             scannerDispensaire2.nextLine();
-                                            if (!newGraphe.existeCentre(optionDispensaire2)) {
+                                            if (!newGraphe.existeSommet(optionDispensaire2)) {
                                                 System.out.println("Le dispensaire " + optionDispensaire2 + " n'existe pas !");
                                             } else {
                                                 LinkedHashMap<String, Double> plusCourtChemin = newGraphe.getCheminDijkstra().get(dispensaire.getNom()).getCheminsDureeTo(optionDispensaire2);
