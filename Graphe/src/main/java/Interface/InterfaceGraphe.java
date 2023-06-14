@@ -586,9 +586,14 @@ public class InterfaceGraphe extends JFrame {
 		
 		
 	}
+	
+	/**
+	 * Creation de la Joption Pane
+	 *
+	 */
 	private void creationDuSommet() {
-		AjoutSommetVisuelCreation a = new AjoutSommetVisuelCreation();
-		int choix = JOptionPane.showOptionDialog(this, a, "Ajouter Centre", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+		AjoutSommetVisuelCreation ajout = new AjoutSommetVisuelCreation();
+		int choix = JOptionPane.showOptionDialog(this, ajout, "Ajouter Centre", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 		if (choix == JOptionPane.OK_OPTION) {
 		
 		
@@ -744,7 +749,7 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 */
 	private void mettreInvisibleComposantGraphe() {
-
+		//Visbilite des composants
 		titre.setVisible(false);
 		nombreSommetLabel.setText("");
 		nombreRouteLabel.setText("");
@@ -760,6 +765,7 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 */
 	private void mettreVisibleComposantGraphe() {
+		//Visibilite des composants lier au graphe
 		titre.setVisible(true);
 		itemModeDuGraphe.setEnabled(true);
 		itemFonctionnalite.setEnabled(true);
@@ -776,6 +782,7 @@ public class InterfaceGraphe extends JFrame {
 	 * @param type
 	 */
 	public void mettreVisibleComposantSommet(String nom, String type) {
+		//initialisation des composants lier au sommet
 		nomSommetSelectionneLabel.setText("Dispensaire " + nom);
 		typeSommetSelectionneLabel.setText(type);
 		itemModeDuGraphe.setEnabled(true);
