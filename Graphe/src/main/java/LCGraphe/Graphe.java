@@ -1,8 +1,8 @@
 package LCGraphe;
 
-import Exception.CentreException;
+import Exception.SommetException;
 import Exception.VoisinException;
-import Exception.ListeCentresNull;
+import Exception.ListeSommetsNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,8 +29,9 @@ public class Graphe {
 		return f.getSommetDonnees();
 	}
 	
-	public void rechercheChemin(String depart, String destination) {
-		f.rechercheChemin(depart, destination);
+	public double rechercheChemin(String depart, String destination) {
+	
+		return f.rechercheChemin(depart, destination);
 	}
 	
 	
@@ -38,7 +39,7 @@ public class Graphe {
 	public class MaillonGraphe {
 		
 		private String nom;//nom du sommet
-		private String type;//type du centre
+		private String type;//type du sommets
 		private MaillonGrapheSec lVois;//pointeur vers le maillon de liste secondaire
 		private MaillonGraphe suiv;//pointeur vers le maillon suivant de la liste
 		
@@ -248,13 +249,13 @@ public class Graphe {
 	/**
 	 * Cette methode ajoute au debut de la liste le sommet avec les parametres
 	 *
-	 * @param nomCentre
-	 * @param typeCentre
+	 * @param nomSommet
+	 * @param typeSommet
 	 * @see {@link  MaillonGraphe}
 	 */
-	public void ajoutCentre(String nomCentre, String typeCentre) {
+	public void ajoutSommet(String nomSommet, String typeSommet) {
 		//instancie un nouveau maillon
-		MaillonGraphe nouv = new MaillonGraphe(nomCentre, typeCentre);
+		MaillonGraphe nouv = new MaillonGraphe(nomSommet, typeSommet);
 		
 		nouv.suiv = this.getPremier();
 		this.premier = nouv;//le nouveau maillon devient la tete de la liste
@@ -262,26 +263,26 @@ public class Graphe {
 	}
 	
 	/**
-	 * @param centre1
-	 * @param centre2
-	 * @see {@link #getCentre(String)} , une methode qui permet de chercher
+	 * @param sommet1
+	 * @param sommet2
+	 * @see {@link #getSommet(String)} , une methode qui permet de chercher
 	 * le maillon grace a son nom passer en parametre
 	 */
-	public String voisinsVoisinsToString(String centre1, String centre2) {
+	public String voisinsVoisinsToString(String sommet1, String sommet2) {
 		StringBuilder chaineVoisin = new StringBuilder();
-		List<String> voisins1 = new LinkedList<>();//liste des voisin centre1
-		List<String> voisins2 = new LinkedList<>();//liste des voisin centre2
-		MaillonGraphe maillonCentre1 = getCentre(centre1);//
-		MaillonGraphe maillonCentre2 = getCentre(centre2);
+		List<String> voisins1 = new LinkedList<>();//liste du voisin sommet1
+		List<String> voisins2 = new LinkedList<>();//liste du voisin sommet2
+		MaillonGraphe maillonSommet1 = getSommet(sommet1);//
+		MaillonGraphe maillonSommet2 = getSommet(sommet2);
 		
-		MaillonGrapheSec tmp1 = maillonCentre1.lVois;
-		//affecte tout les voisins du centre1 dans la liste voisin1
+		MaillonGrapheSec tmp1 = maillonSommet1.lVois;
+		//affecte tout les voisins du sommet1 dans la liste voisin1
 		while (tmp1 != null) {
 			voisins1.add(tmp1.getDestination().getNom());
 			tmp1 = tmp1.getSuivantMaillonSec();
 		}
-		MaillonGrapheSec tmp2 = maillonCentre2.lVois;
-		//affecte tout les voisins du centre2 dans la liste voisin2
+		MaillonGrapheSec tmp2 = maillonSommet2.lVois;
+		//affecte tout les voisins du sommet2 dans la liste voisin2
 		while (tmp2 != null) {
 			voisins2.add(tmp2.getDestination().getNom());
 			tmp2 = tmp2.getSuivantMaillonSec();
@@ -292,11 +293,11 @@ public class Graphe {
 		boolean distance2 = false;
 		
 		for (String voisin : voisinsCommuns) {
-			MaillonGraphe maillonVoisin = getCentre(voisin);
+			MaillonGraphe maillonVoisin = getSommet(voisin);
 			MaillonGrapheSec tmp3 = maillonVoisin.lVois;
 			while (tmp3 != null) {
 				if (voisins1.contains(tmp3.getDestination().getNom()) && voisins2.contains(tmp3.getDestination().getNom())) {
-					chaineVoisin.append("Les sommets " + centre1 + " et " + centre2 + " sont à une distance de 2.");
+					chaineVoisin.append("Les sommets " + sommet1 + " et " + sommet2 + " sont à une distance de 2.");
 					distance2 = true;
 					break;
 				}
@@ -307,7 +308,7 @@ public class Graphe {
 			}
 		}
 		if (!distance2) {
-			chaineVoisin.append("Les sommets " + centre1 + " et " + centre2 + " ne sont pas à une distance de 2.");
+			chaineVoisin.append("Les sommets " + sommet1 + " et " + sommet2 + " ne sont pas à une distance de 2.");
 		}
 		return chaineVoisin.toString();
 	}
@@ -388,7 +389,7 @@ public class Graphe {
 	 *
 	 * @return
 	 */
-	public Integer getNombreCentreNutrition() {
+	public Integer getNombreSommetNutrition() {
 		Integer res = 0;
 		MaillonGraphe tmp = this.getPremier();
 		while (tmp != null) {
@@ -440,17 +441,17 @@ public class Graphe {
 	 * Cette methode ajoute les Voisins(Arretes) avec
 	 * les parametres donner en entrée de la methode
 	 *
-	 * @param nomCentre
+	 * @param nomSommet
 	 * @param nomDestinataire
 	 * @param fiab
 	 * @param dist
 	 * @param dur
 	 */
-	public void ajoutVoisin(String nomCentre, String nomDestinataire, Double fiab, Double dist, Double dur) {
-		MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getCentre(nomDestinataire));//cration du nouveau maillon de la seconde liste pour dire qu'il ya une arete
+	public void ajoutVoisin(String nomSommet, String nomDestinataire, Double fiab, Double dist, Double dur) {
+		MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomDestinataire));//cration du nouveau maillon de la seconde liste pour dire qu'il ya une arete
 		MaillonGraphe tmp = this.getPremier();
 		//parcourt de liste principale
-		while (!tmp.getNom().equals(nomCentre)) {
+		while (!tmp.getNom().equals(nomSommet)) {
 			tmp = tmp.getSuivant();
 		}
 		//les aretes vont dans les deux sens -> allez/retour
@@ -458,7 +459,7 @@ public class Graphe {
 		nouv.suiv = tmp.lVois;
 		tmp.lVois = nouv;
 		
-		MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, getCentre(nomCentre));
+		MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomSommet));
 		tmp = this.getPremier();
 		while (!tmp.getNom().equals(nomDestinataire)) {
 			tmp = tmp.getSuivant();
@@ -472,24 +473,24 @@ public class Graphe {
 	 * Cette methode permet de modifier les donnee d'un voisin(Arrete) avec
 	 * les parmatres donnés en entrée de la methode
 	 *
-	 * @param nomCentre
+	 * @param nomSommet
 	 * @param nomDestinataire
 	 * @param fiab
 	 * @param dist
 	 * @param dur
 	 * @throws VoisinException
-	 * @throws CentreException
+	 * @throws SommetException
 	 */
-	public void modifVoisin(String nomCentre, String nomDestinataire, double fiab, double dist, double dur) throws VoisinException, CentreException {
+	public void modifVoisin(String nomSommet, String nomDestinataire, double fiab, double dist, double dur) throws VoisinException, SommetException {
 		MaillonGrapheSec tmp2 = null;
 		MaillonGraphe tmp = this.getPremier();
 		MaillonGraphe tmp3 = this.getPremier();
 		boolean check = false;
-		//recherche du maillon portant nomCentre
-		while (!tmp.getNom().equals(nomCentre)) {
+		//recherche du maillon portant nomSommet
+		while (!tmp.getNom().equals(nomSommet)) {
 			tmp = tmp.getSuivant();
 			if (tmp == null) {
-				throw new CentreException("Le centre " + nomCentre + " n'existe pas!");//cas ou le sommet n'existe pas
+				throw new SommetException("Le sommet " + nomSommet + " n'existe pas!");//cas ou le sommet n'existe pas
 			}
 		}
 		//a partir du maillon trouver on parcourt ca liste des voisins
@@ -514,13 +515,14 @@ public class Graphe {
 		while (!tmp3.getNom().equals(nomDestinataire)) {
 			tmp3 = tmp3.getSuivant();
 			if (tmp3 == null) {
-				throw new CentreException("Le sommet " + nomDestinataire + " n'existe pas!");
+				throw new SommetException("Le sommet " + nomDestinataire + " n'existe pas!");
 			}
 		}
 		check = false;
 		tmp2 = tmp3.getVoisin();
 		while (!check && tmp2 != null) {
-			if (tmp2.getDestination().getNom().equals(nomCentre)) {
+			if (tmp2.getDestination().getNom().equals(nomSommet)) {
+				//Mise à jour
 				tmp2.setDistance(dist);
 				tmp2.setDuree(dur);
 				tmp2.setFiabilite(fiab);
@@ -531,18 +533,18 @@ public class Graphe {
 	}
 	
 	/**
-	 * Cette methode renvoie true si il existe une arrete sinon elle renvoie false
+	 * Cette methode renvoie true s'il existe une arrete sinon elle renvoie false
 	 *
 	 *
-	 * @param nomCentre
+	 * @param nomSommet
 	 * @param nomDestinataire
 	 * @return verifeExistence : boolean
 	 */
-	public boolean existeVoisin(String nomCentre, String nomDestinataire) {
+	public boolean existeVoisin(String nomSommet, String nomDestinataire) {
 		boolean verifeExistence = false; // Variable pour indiquer l'existence d'un voisin
 		MaillonGraphe tmp = this.getPremier(); // Obtient le premier maillon du graphe
 		MaillonGrapheSec tmp2 = null; // Variable pour parcourir les voisins du maillon
-		while (!tmp.getNom().equals(nomCentre)) { // Recherche le maillon correspondant au nom du centre
+		while (!tmp.getNom().equals(nomSommet)) { // Recherche le maillon correspondant au nom du sommet
 			tmp = tmp.getSuivant();
 		}
 		tmp2 = tmp.lVois; // Obtient la liste des voisins du maillon
@@ -557,17 +559,17 @@ public class Graphe {
 	
 	
 	/**
-	 * Cette methode renvoie true si le centre(sommet) existe sinon elle renvoie false
-	 * <p>
+	 * Cette methode renvoie true si le sommet existe sinon elle renvoie false
+	 *
 	 * false
 	 *
-	 * @param nomCentre
+	 * @param nomSommet
 	 * @return boolean : false ou true
 	 * @see MaillonGraphe#getNom()
 	 */
-	public boolean existeCentre(String nomCentre) {
+	public boolean existeSommet(String nomSommet) {
 		MaillonGraphe tmp = this.getPremier(); // Obtient le premier maillon du graphe
-		while (tmp != null && !tmp.getNom().equals(nomCentre)) { // Parcourt les maillons jusqu'à trouver le maillon correspondant ou épuiser la liste
+		while (tmp != null && !tmp.getNom().equals(nomSommet)) { // Parcourt les maillons jusqu'à trouver le maillon correspondant ou épuiser la liste
 			tmp = tmp.getSuivant();
 		}
 		assert tmp == null; // Vérifie qu'aucun maillon correspondant n'a été trouvé (assertion)
@@ -576,40 +578,45 @@ public class Graphe {
 	
 	
 	/**
-	 * Cette methode renvoie tout les sommet en les affichant
+	 * Cette methode renvoie tous les sommet en les affichant
 	 *
-	 * @return String : chaineCentres
+	 * @see StringBuilder#StringBuilder()
+	 *
+	 * @return String : chaineSommet
 	 */
-	public String tousLesCentresToString() {
-		StringBuilder chaineCentres = new StringBuilder();
+	public String tousLesSommetToString() {
+		StringBuilder chaineSommet = new StringBuilder();
 		MaillonGraphe tmp = this.getPremier();
 		//affiche les sommets
 		while (tmp != null) {
-			chaineCentres.append(tmp.getNom()).append(" [").append(tmp.getType()).append("]\n");
+			chaineSommet.append(tmp.getNom()).append(" [").append(tmp.getType()).append("]\n");
 			tmp = tmp.getSuivant();
 		}
-		return chaineCentres.toString();//renvoie une chaine de caractere
+		return chaineSommet.toString();//renvoie une chaine de caractere
 	}
 	
 	/**
-	 * Cette methode affecte tout les centres(sommets) dans une liste
+	 * Cette methode affecte tous les sommets dans une liste
 	 *
-	 * @return ensembleCentre : List<MaillonGraphe>
+	 * @throws ListeSommetsNull
+	 *
+	 * @return ensembleSommetListe : List<MaillonGraphe>
 	 */
-	public List<MaillonGraphe> tousLesCentresToList() throws ListeCentresNull {
-		List<MaillonGraphe> ensembleCentre = new LinkedList<>();
+	public List<MaillonGraphe> tousLesSommetToList() throws ListeSommetsNull {
+		List<MaillonGraphe> ensembleSommetListe = new LinkedList<>();
 		MaillonGraphe tmp = this.getPremier();
 		while (tmp != null) {
-			ensembleCentre.add(tmp);//ajout la liste
+			ensembleSommetListe.add(tmp);//ajout la liste
 			tmp = tmp.getSuivant();
 		}
-		if (ensembleCentre == null) {
-			throw new ListeCentresNull("la liste est nulle !");
+		if (ensembleSommetListe == null) {
+			throw new ListeSommetsNull("la liste est nulle !");
 		}
-		return ensembleCentre;//renvoie la liste
+		return ensembleSommetListe;//renvoie la liste
 	}
 	
 	/**
+	 *
 	 * @return List : MaillonGrapheSec
 	 */
 	public List<MaillonGrapheSec> toutesLesAretesToList() {
@@ -631,8 +638,9 @@ public class Graphe {
 	
 	
 	/**
-	 * Cette methode renvoie tout les blocs sous formes de chaine de caraceteres
+	 * Cette methode renvoie tous les blocs sous formes de chaine de caractères
 	 *
+	 * @see {@link #getPremier()}
 	 * @return String : ensembleBloc
 	 */
 	public String tousLesBlocsToString() {
@@ -649,30 +657,30 @@ public class Graphe {
 	
 	
 	/**
-	 * Cette methode recupere le centre avec son nom en parametre
+	 * Cette methode renvoie le sommet avec son nom (String) en parametre
 	 *
-	 * @param nomCentre
-	 * @return MaillonGraphe : centreRechercher
+	 * @param nomSommet : String
+	 * @return MaillonGraphe : SommetRechercher
 	 */
-	public MaillonGraphe getCentre(String nomCentre) {
+	public MaillonGraphe getSommet(String nomSommet) {
 		MaillonGraphe tmp = this.getPremier(); // Obtient le premier maillon du graphe
-		MaillonGraphe centreRechercher = null; // Variable pour stocker le centre recherché
-		while (centreRechercher == null && tmp != null) { // Parcourt les maillons jusqu'à trouver le centre recherché ou épuiser la liste
-			if (tmp.getNom().equals(nomCentre)) { // Vérifie si le nom du maillon correspond au nom du centre recherché
-				centreRechercher = tmp; // Stocke le maillon correspondant dans la variable centreRechercher
+		MaillonGraphe sommetRechercher = null; // Variable pour stocker le sommet recherché
+		while (sommetRechercher == null && tmp != null) { // Parcourt les maillons jusqu'à trouver le sommet recherché ou épuiser la liste
+			if (tmp.getNom().equals(nomSommet)) { // Vérifie si le nom du maillon correspond au nom du sommet recherché
+				sommetRechercher = tmp; // Stocke le maillon correspondant dans la variable sommetRechercher
 			}
 			tmp = tmp.getSuivant(); // Passe au maillon suivant
 		}
-		return centreRechercher; // retourne  le centre recherché (ou null s'il n'a pas été trouvé)
+		return sommetRechercher; // retourne  le sommet recherché (ou null s'il n'a pas été trouvé)
 	}
 	
 	
 	/**
-	 * Cette methode permet de lire le fichier grace au chemin passer en parametre
+	 * Cette methode permet de lire le fichier grace au chemin passé en parameter
 	 *
 	 * @param nomFichierChoisi : String
 	 */
-	public void chargementFichier(String nomFichierChoisi) throws ListeCentresNull {
+	public void chargementFichier(String nomFichierChoisi) throws ListeSommetsNull {
 		try {
 			File file = new File(nomFichierChoisi); // Crée un objet File à partir du nom de fichier choisi
 			Scanner scanner = new Scanner(file); // Crée un objet Scanner pour lire le fichier
@@ -697,7 +705,7 @@ public class Graphe {
 							type = "Opératoire";
 							break;
 					}
-					ajoutCentre(nom, type); // Ajoute le sommet au graphe
+					ajoutSommet(nom, type); // Ajoute le sommet au graphe
 					
 					for (int i = 2; i < parts.length; i++) { // Parcourt toutes les arêtes du sommet actuel
 						if (!parts[i].equals("0")) { // Vérifie si l'arête existe
@@ -722,8 +730,8 @@ public class Graphe {
 			f.floydWarshallFiabilite(); // Lance l'algorithme pour les fiabilités
 			
 			cheminDijkstra = new HashMap<>(); // Crée une nouvelle map pour stocker les chemins de Dijkstra
-			this.tousLesCentresToList().forEach(maillonGraphe -> { // Parcourt tous les centres du graphe
-				cheminDijkstra.put(maillonGraphe.getNom(), new Dijkstra(this, maillonGraphe.getNom())); // Ajoute un objet Dijkstra pour chaque centre au map cheminDijkstra
+			this.tousLesSommetToList().forEach(maillonGraphe -> { // Parcourt tous les sommets du graphe
+				cheminDijkstra.put(maillonGraphe.getNom(), new Dijkstra(this, maillonGraphe.getNom())); // Ajoute un objet Dijkstra pour chaque sommets au map cheminDijkstra
 			});
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -748,7 +756,7 @@ public class Graphe {
 			}
 			tmp = tmp.getSuivant();//passe au maillon suivant de la liste principal
 		}
-		return chaine.toString();//renvoie la  chaine String
+		return chaine.toString();//renvoie la chaine String
 	}
 	
 	

@@ -18,7 +18,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-import static javax.swing.JComponent.isLightweightComponent;
 import static javax.swing.JOptionPane.showOptionDialog;
 
 public class InterfaceGraphe extends JFrame {
@@ -102,7 +101,7 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 */
 	private void initComponents() {
-		// la panel qui contient tout.
+		// le panel qui contient tout.
 		cp = new JPanel();
 		cp.setOpaque(false);
 		cp.setLayout(new BorderLayout());
@@ -119,6 +118,7 @@ public class InterfaceGraphe extends JFrame {
 	}
 	
 	/**
+	 * Cette methode permet d'afficher le panel contenant toutes les infos du graphe
 	 *
 	 */
 	private void initContainerTousInfos() {
@@ -774,7 +774,7 @@ public class InterfaceGraphe extends JFrame {
 		nombreRouteLabel.setText("Routes : " + graphe.getNombreRoute());
 		nombreOpLabel.setText("Opératoires : " + graphe.getNombreOperatoire());
 		nombreMatLabel.setText("Maternités : " + graphe.getNombreMaternite());
-		nombreCentreNutriLabel.setText("Centres de nutrition : " + graphe.getNombreCentreNutrition());
+		nombreCentreNutriLabel.setText("Centres de nutrition : " + graphe.getNombreSommetNutrition());
 	}
 	
 	/**

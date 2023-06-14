@@ -29,7 +29,7 @@ public class Dijkstra {
 		mapPlusCourtCheminsFiabilite.get(nomSommet).put(nomSommet, 1.0);//le premier centre(sommet) a une fiabilite de 1
 		//on itere sur tout les centres afin de les mettre a false -> les sommets ne sont pas encore marquer
 		try {
-			graphe.tousLesCentresToList().forEach(Centre -> {
+			graphe.tousLesSommetToList().forEach(Centre -> {
 				sommetsTraites.put(Centre.getNom(), false);
 			});
 		} catch (Exception e) {
@@ -46,7 +46,7 @@ public class Dijkstra {
 			String centre = donnee[0];//donne[0] vaut le nom du centre
 			double fiab = Double.parseDouble(donnee[1]);//donne[1] vaut la fiabilite de type String convertie en double
 			
-			Graphe.MaillonGrapheSec voisin = graphe.getCentre(centre).getVoisin();
+			Graphe.MaillonGrapheSec voisin = graphe.getSommet(centre).getVoisin();
 			while (voisin != null) {
 				String nomVoisin = voisin.getDestination().getNom();
 				if (!sommetsTraites.get(nomVoisin)) {
@@ -132,7 +132,7 @@ public class Dijkstra {
 		mapPlusCourtCheminsDistance.get(nomSommet).put(nomSommet, 0.0);//le premier centre(sommet) a une distance de 0
 		//on itere sur tout les centres afin de les mettre a false -> les sommets ne sont pas encore marquer
 		try {
-			graphe.tousLesCentresToList().forEach(Centre -> {
+			graphe.tousLesSommetToList().forEach(Centre -> {
 				sommetsTraites.put(Centre.getNom(), false);
 			});
 		} catch (Exception e) {
@@ -148,7 +148,7 @@ public class Dijkstra {
 			String centre = donnee[0];//donne[0] vaut le nom du centre
 			double distance = Double.parseDouble(donnee[1]);//donne[1] vaut la distance de type String convertie en double
 			
-			Graphe.MaillonGrapheSec voisin = graphe.getCentre(centre).getVoisin();
+			Graphe.MaillonGrapheSec voisin = graphe.getSommet(centre).getVoisin();
 			while (voisin != null) {
 				String nomVoisin = voisin.getDestination().getNom();
 				if (!sommetsTraites.get(nomVoisin)) {
@@ -234,7 +234,7 @@ public class Dijkstra {
 		mapPlusCourtCheminsDuree.get(nomSommet).put(nomSommet, 0.0);//le premier centre(sommet) a une durée de 0
 		//on itere sur tout les centres afin de les mettre a false -> les sommets ne sont pas encore marquer
 		try {
-			graphe.tousLesCentresToList().forEach(Centre -> {
+			graphe.tousLesSommetToList().forEach(Centre -> {
 				sommetsTraites.put(Centre.getNom(), false);
 			});
 		} catch (Exception e) {
@@ -250,7 +250,7 @@ public class Dijkstra {
 			String centre = donnee[0];//donne[0] vaut le nom du centre
 			double duree = Double.parseDouble(donnee[1]);//donne[1] vaut la durée de type String convertie en double
 			
-			Graphe.MaillonGrapheSec voisin = graphe.getCentre(centre).getVoisin();
+			Graphe.MaillonGrapheSec voisin = graphe.getSommet(centre).getVoisin();
 			while (voisin != null) {
 				String nomVoisin = voisin.getDestination().getNom();
 				if (!sommetsTraites.get(nomVoisin)) {
