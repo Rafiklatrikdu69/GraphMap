@@ -140,7 +140,6 @@ public class Graphe {
 				}
 				tmp = tmp.getSuivantMaillonSec();
 			}
-			assert voisin == null;
 			return voisin;
 			
 		}
@@ -288,11 +287,11 @@ public class Graphe {
 	 * @see {@link  MaillonGraphe}
 	 * @return boolean
 	 */
-	public boolean ajoutCentre(String nomCentre, String typeCentre) {
+	public boolean ajoutSommet(String nomSommet, String typeSommet) {
 		boolean resultat = false;
-		if(!existeCentre(nomCentre)){ // verifie si le sommet existe deja ou pas
+		if(!existeSommet(nomSommet)){ // verifie si le sommet existe deja ou pas
 			//instancie un nouveau maillon
-			MaillonGraphe nouv = new MaillonGraphe(nomCentre, typeCentre);
+			MaillonGraphe nouv = new MaillonGraphe(nomSommet, typeSommet);
 			nouv.suiv = this.getPremier();
 			this.premier = nouv;//le nouveau maillon devient la tete de la liste
 			resultat = true;
@@ -305,21 +304,21 @@ public class Graphe {
 	 * Cette methode ajoute les Voisins(Arretes) avec
 	 * les parametres donner en entrée de la methode
 	 *
-	 * @param nomCentre
+	 * @param nomSommet
 	 * @param nomDestinataire
 	 * @param fiab
 	 * @param dist
 	 * @param dur
 	 * @return boolean
 	 */
-	public boolean ajoutVoisin(String nomCentre, String nomDestinataire, Double fiab, Double dist, Double dur) {
+	public boolean ajoutVoisin(String nomSommet, String nomDestinataire, Double fiab, Double dist, Double dur) {
 		boolean resultat = false;
-		if(existeCentre(nomCentre) && existeCentre(nomDestinataire)){
-			if(!existeVoisin(nomCentre, nomDestinataire)){
-				MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getCentre(nomDestinataire));//cration du nouveau maillon de la seconde liste pour dire qu'il ya une arete
+		if(existeSommet(nomSommet) && existeSommet(nomDestinataire)){
+			if(!existeVoisin(nomSommet, nomDestinataire)){
+				MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomDestinataire));//cration du nouveau maillon de la seconde liste pour dire qu'il ya une arete
 				MaillonGraphe tmp = this.getPremier();
 				//parcourt de liste principale
-				while (!tmp.getNom().equals(nomCentre)) {
+				while (!tmp.getNom().equals(nomSommet)) {
 					tmp = tmp.getSuivant();
 				}
 				//les aretes vont dans les deux sens -> allez/retour
@@ -327,7 +326,7 @@ public class Graphe {
 				nouv.suiv = tmp.lVois;
 				tmp.lVois = nouv;
 
-				MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, getCentre(nomCentre));
+				MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomSommet));
 				tmp = this.getPremier();
 				while (!tmp.getNom().equals(nomDestinataire)) {
 					tmp = tmp.getSuivant();
@@ -527,7 +526,7 @@ public class Graphe {
 	 * @param dist
 	 * @param dur
 	 */
-	public void ajoutVoisin(String nomSommet, String nomDestinataire, Double fiab, Double dist, Double dur) {
+	public void ajoutSommet(String nomSommet, String nomDestinataire, Double fiab, Double dist, Double dur) {
 		MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomDestinataire));//cration du nouveau maillon de la seconde liste pour dire qu'il ya une arete
 		MaillonGraphe tmp = this.getPremier();
 		//parcourt de liste principale
