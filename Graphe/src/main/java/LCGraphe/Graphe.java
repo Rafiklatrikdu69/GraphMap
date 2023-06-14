@@ -20,6 +20,40 @@ public class Graphe {
 	public Map<String, Dijkstra> getCheminDijkstra() {
 		return cheminDijkstra;
 	}
+
+	public List<MaillonGraphe> getTousLesOperatoires(){
+		MaillonGraphe tmp = getPremier();
+		List<MaillonGraphe> resultat = new ArrayList<>();
+		while (tmp !=null){
+			if (tmp.getType().equals("Opératoire")){
+				resultat.add(tmp);
+			}
+			tmp = tmp.getSuivant();
+		}
+		return resultat;
+	}
+	public List<MaillonGraphe> getTousLesCentreDeNutrions(){
+		MaillonGraphe tmp = getPremier();
+		List<MaillonGraphe> resultat = new ArrayList<>();
+		while (tmp !=null){
+			if (tmp.getType().equals("Centre de nutrition")){
+				resultat.add(tmp);
+			}
+			tmp = tmp.getSuivant();
+		}
+		return resultat;
+	}
+	public List<MaillonGraphe> getToutesLesMaternites(){
+		MaillonGraphe tmp = getPremier();
+		List<MaillonGraphe> resultat = new ArrayList<>();
+		while (tmp !=null){
+			if (tmp.getType().equals("Maternité")){
+				resultat.add(tmp);
+			}
+			tmp = tmp.getSuivant();
+		}
+		return resultat;
+	}
 	
 	public List<String> getListeSommetCheminGraphe() {
 		return f.getSommet();
@@ -583,7 +617,6 @@ public class Graphe {
 		while (tmp != null && !tmp.getNom().equals(nomCentre)) { // Parcourt les maillons jusqu'à trouver le maillon correspondant ou épuiser la liste
 			tmp = tmp.getSuivant();
 		}
-		assert tmp == null; // Vérifie qu'aucun maillon correspondant n'a été trouvé (assertion)
 		return (tmp != null); // Retourne true si un maillon correspondant a été trouvé, sinon retourne false
 	}
 	
