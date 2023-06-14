@@ -586,8 +586,14 @@ public class InterfaceGraphe extends JFrame {
 		
 		
 	}
-	private void creationDuSommet(){
+	private void creationDuSommet() {
 		AjoutSommetVisuelCreation a = new AjoutSommetVisuelCreation();
+		int choix = JOptionPane.showOptionDialog(this, a, "Ajouter Centre", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+		if (choix == JOptionPane.OK_OPTION) {
+		
+		
+		
+		}
 	}
 	
 	/**
