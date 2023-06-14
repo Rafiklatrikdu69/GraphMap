@@ -251,7 +251,7 @@ public class Graphe {
 	 * @param nomCentre
 	 * @param typeCentre
 	 * @see {@link  MaillonGraphe}
-	 * return boolean
+	 * @return boolean
 	 */
 	public boolean ajoutCentre(String nomCentre, String typeCentre) {
 		boolean resultat = false;
