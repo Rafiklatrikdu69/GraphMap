@@ -33,7 +33,7 @@ public class Dijkstra {
 				sommetsTraites.put(Centre.getNom(), false);
 			});
 		} catch (Exception e) {
-		
+			System.out.println("liste vide !");
 		}
 		
 		sommetsTraites.put(nomSommet, true);//le premier centre est le debut donc il traiter -> true
@@ -136,7 +136,7 @@ public class Dijkstra {
 				sommetsTraites.put(Centre.getNom(), false);
 			});
 		} catch (Exception e) {
-		
+			System.out.println("liste vide !");
 		}
 		sommetsTraites.put(nomSommet, true);//le premier centre est le debut donc il traiter -> true
 		List<String[]> fileAttente = new ArrayList<>();//creation d'une liste permettant d'ajouter les sommet traiter
@@ -238,7 +238,7 @@ public class Dijkstra {
 				sommetsTraites.put(Centre.getNom(), false);
 			});
 		} catch (Exception e) {
-		
+			System.out.println("liste vide !");
 		}
 		sommetsTraites.put(nomSommet, true);//le premier centre est le debut donc il traiter -> true
 		List<String[]> fileAttente = new ArrayList<>();//creation d'une liste permettant d'ajouter les sommet traiter
