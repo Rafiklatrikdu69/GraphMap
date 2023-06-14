@@ -80,7 +80,11 @@ public class DessinGraphe extends JPanel {
 	private void initialisationGraphe() {
 		
 		Graphe.MaillonGraphe tmp = graphe.getPremier();
+
 		interfaceGraphe.getChoixDestinationComboBox().removeAllItems();
+		interfaceGraphe.getChoixDestinationComboBox().addItem("Maternité");
+		interfaceGraphe.getChoixDestinationComboBox().addItem("Centre de nutrition");
+		interfaceGraphe.getChoixDestinationComboBox().addItem("Opératoire");
 		while (tmp != null) {
 			int[] pos = getRandomPositionPourSommet(interfaceGraphe.getContenuGraphePanel());
 			//place le sommet a une position Random x et y
@@ -88,6 +92,7 @@ public class DessinGraphe extends JPanel {
 			interfaceGraphe.getChoixDestinationComboBox().addItem(tmp.getNom());
 			tmp = tmp.getSuivant();//Passe au maillon suivant
 		}
+
 		initialisationPlacementArete();
 	}
 	
@@ -346,7 +351,6 @@ public class DessinGraphe extends JPanel {
 			tmp = listAretes.get(i);
 			if ((tmp.getSommetVisuel1().getSommetGraphe().getNom().equals(nomSommet) && tmp.getSommetVisuel2().getSommetGraphe().getNom().equals(nomSommetDestination)) || (tmp.getSommetVisuel2().getSommetGraphe().getNom().equals(nomSommet) && tmp.getSommetVisuel1().getSommetGraphe().getNom().equals(nomSommetDestination))) {
 				areteVisuel = tmp;
-				System.out.println("arret entre deux sommets");
 			}
 			i++;
 		}

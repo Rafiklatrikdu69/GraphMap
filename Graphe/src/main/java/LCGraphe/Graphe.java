@@ -20,6 +20,40 @@ public class Graphe {
 	public Map<String, Dijkstra> getCheminDijkstra() {
 		return cheminDijkstra;
 	}
+
+	public List<MaillonGraphe> getTousLesOperatoires(){
+		MaillonGraphe tmp = getPremier();
+		List<MaillonGraphe> resultat = new ArrayList<>();
+		while (tmp !=null){
+			if (tmp.getType().equals("Opératoire")){
+				resultat.add(tmp);
+			}
+			tmp = tmp.getSuivant();
+		}
+		return resultat;
+	}
+	public List<MaillonGraphe> getTousLesCentreDeNutrions(){
+		MaillonGraphe tmp = getPremier();
+		List<MaillonGraphe> resultat = new ArrayList<>();
+		while (tmp !=null){
+			if (tmp.getType().equals("Centre de nutrition")){
+				resultat.add(tmp);
+			}
+			tmp = tmp.getSuivant();
+		}
+		return resultat;
+	}
+	public List<MaillonGraphe> getToutesLesMaternites(){
+		MaillonGraphe tmp = getPremier();
+		List<MaillonGraphe> resultat = new ArrayList<>();
+		while (tmp !=null){
+			if (tmp.getType().equals("Maternité")){
+				resultat.add(tmp);
+			}
+			tmp = tmp.getSuivant();
+		}
+		return resultat;
+	}
 	
 	public List<String> getListeSommetCheminGraphe() {
 		return f.getSommet();
@@ -245,21 +279,67 @@ public class Graphe {
 	public MaillonGraphe getPremier() {
 		return this.premier;
 	}
-	
+
 	/**
 	 * Cette methode ajoute au debut de la liste le sommet avec les parametres
 	 *
 	 * @param nomSommet
 	 * @param typeSommet
 	 * @see {@link  MaillonGraphe}
+	 * @return boolean
 	 */
-	public void ajoutSommet(String nomSommet, String typeSommet) {
-		//instancie un nouveau maillon
-		MaillonGraphe nouv = new MaillonGraphe(nomSommet, typeSommet);
-		
-		nouv.suiv = this.getPremier();
-		this.premier = nouv;//le nouveau maillon devient la tete de la liste
-		
+	public boolean ajoutCentre(String nomCentre, String typeCentre) {
+		boolean resultat = false;
+		if(!existeCentre(nomCentre)){ // verifie si le sommet existe deja ou pas
+			//instancie un nouveau maillon
+			MaillonGraphe nouv = new MaillonGraphe(nomCentre, typeCentre);
+			nouv.suiv = this.getPremier();
+			this.premier = nouv;//le nouveau maillon devient la tete de la liste
+			resultat = true;
+		}
+		return resultat;
+	}
+
+
+	/**
+	 * Cette methode ajoute les Voisins(Arretes) avec
+	 * les parametres donner en entrée de la methode
+	 *
+	 * @param nomCentre
+	 * @param nomDestinataire
+	 * @param fiab
+	 * @param dist
+	 * @param dur
+	 * @return boolean
+	 */
+	public boolean ajoutVoisin(String nomCentre, String nomDestinataire, Double fiab, Double dist, Double dur) {
+		boolean resultat = false;
+		if(existeCentre(nomCentre) && existeCentre(nomDestinataire)){
+			if(!existeVoisin(nomCentre, nomDestinataire)){
+				MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getCentre(nomDestinataire));//cration du nouveau maillon de la seconde liste pour dire qu'il ya une arete
+				MaillonGraphe tmp = this.getPremier();
+				//parcourt de liste principale
+				while (!tmp.getNom().equals(nomCentre)) {
+					tmp = tmp.getSuivant();
+				}
+				//les aretes vont dans les deux sens -> allez/retour
+				//ajout de l'arete pour le sommet source
+				nouv.suiv = tmp.lVois;
+				tmp.lVois = nouv;
+
+				MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, getCentre(nomCentre));
+				tmp = this.getPremier();
+				while (!tmp.getNom().equals(nomDestinataire)) {
+					tmp = tmp.getSuivant();
+				}
+				//ajout de l'arete pour le sommet destinataire
+				nouv2.suiv = tmp.lVois;
+				tmp.lVois = nouv2;
+				resultat = true;
+			}
+		}
+
+		return resultat;
 	}
 	
 	/**
@@ -572,7 +652,6 @@ public class Graphe {
 		while (tmp != null && !tmp.getNom().equals(nomSommet)) { // Parcourt les maillons jusqu'à trouver le maillon correspondant ou épuiser la liste
 			tmp = tmp.getSuivant();
 		}
-		assert tmp == null; // Vérifie qu'aucun maillon correspondant n'a été trouvé (assertion)
 		return (tmp != null); // Retourne true si un maillon correspondant a été trouvé, sinon retourne false
 	}
 	

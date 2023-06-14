@@ -11,7 +11,7 @@ class DijkstraTest {
     DijkstraTest(){
         try{
             graphe = new Graphe();
-            graphe.chargementFichier("src/fichiersGraphe/liste-adjacence-jeuEssai.csv");
+            graphe.chargementFichier("src/fichiersGraphe/graphe30Som74Arete.csv");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
