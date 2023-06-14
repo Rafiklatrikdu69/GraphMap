@@ -615,7 +615,7 @@ public class Graphe {
 	 * Cette methode renvoie true s'il existe une arrete sinon elle renvoie false
 	 *
 	 *
-	 * @param nomSommet
+	 * @param nomSommet nom du sommetF
 	 * @param nomDestinataire
 	 * @return verifeExistence : boolean
 	 */
