@@ -592,24 +592,83 @@ public class InterfaceGraphe extends JFrame {
 			Dijkstra tousLesCheminsDuSommet = graphe.getCheminDijkstra().get(sommetSelect.getNom());
 			switch (destination){
 				case "Maternité" ->{
-					LinkedHashMap<String, Double> meilleurChemin = null;
-					int meilleurDistance = 0;
-					for (Graphe.MaillonGraphe maternite : graphe.getToutesLesMaternites()) {
-						LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDistanceTo(maternite.getNom());
-						for (Map.Entry<String, Double> entry : tmp.entrySet()) {
-							if(meilleurDistance < entry.getValue()){
-								meilleurChemin = tmp;
+					if(sommetSelect.getType().equals("Maternité")){
+						chemin = tousLesCheminsDuSommet.getCheminsDistanceTo(sommetSelect.getNom());
+					}else {
+						LinkedHashMap<String, Double> meilleurChemin = null;
+						Double meilleurDistance = 0.0;
+						for (Graphe.MaillonGraphe maternite : graphe.getToutesLesMaternites()) {
+							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDistanceTo(maternite.getNom());
+							int count = tmp.size()-1;
+							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+								if (count == 0) {
+									if(meilleurDistance == 0.0){
+										meilleurChemin = tmp;
+										meilleurDistance = entry.getValue();
+									} else if (meilleurDistance < entry.getValue()) {
+										meilleurChemin = tmp;
+										meilleurDistance = entry.getValue();
+									}
+								}
+								count--;
 							}
 						}
+						chemin = meilleurChemin;
 					}
-					chemin = meilleurChemin;
-					System.out.println("rien");
+
+
 				}
 				case "Opératoire" ->{
-					System.out.println("rien");
+					if(sommetSelect.getType().equals("Opératoire")){
+						chemin = tousLesCheminsDuSommet.getCheminsDistanceTo(sommetSelect.getNom());
+					}else {
+						LinkedHashMap<String, Double> meilleurChemin = null;
+						double meilleurDistance = 0.0;
+						for (Graphe.MaillonGraphe ope : graphe.getTousLesOperatoires()) {
+							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDistanceTo(ope.getNom());
+							int count = tmp.size()-1;
+							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+								if (count == 0) {
+									if(meilleurDistance == 0.0){
+										meilleurChemin = tmp;
+										meilleurDistance = entry.getValue();
+									} else if (meilleurDistance < entry.getValue()) {
+										meilleurChemin = tmp;
+										meilleurDistance = entry.getValue();
+									}
+								}
+								count--;
+							}
+						}
+						chemin = meilleurChemin;
+					}
 				}
 				case "Centre de nutrition" ->{
-					System.out.println("rien");
+					if(sommetSelect.getType().equals("Centre de nutrition")){
+						chemin = tousLesCheminsDuSommet.getCheminsDistanceTo(sommetSelect.getNom());
+					}else {
+						LinkedHashMap<String, Double> meilleurChemin = null;
+						double meilleurDistance = 0.0;
+						for (Graphe.MaillonGraphe CentreDeNutri : graphe.getTousLesCentreDeNutrions()) {
+
+							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDistanceTo(CentreDeNutri.getNom());
+							int count = tmp.size()-1;
+
+							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+								if (count == 0) {
+									if(meilleurDistance == 0.0){
+										meilleurChemin = tmp;
+										meilleurDistance = entry.getValue();
+									} else if (meilleurDistance > entry.getValue()) {
+										meilleurChemin = tmp;
+										meilleurDistance = entry.getValue();
+									}
+								}
+								count--;
+							}
+						}
+						chemin = meilleurChemin;
+					}
 				}
 				default -> {
 					chemin = tousLesCheminsDuSommet.getCheminsDistanceTo(destination); // Obtient le chemin le plus court en termes de distance entre le sommet de départ et la destination
