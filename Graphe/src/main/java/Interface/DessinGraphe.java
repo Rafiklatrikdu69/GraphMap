@@ -9,6 +9,8 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
+import static com.formdev.flatlaf.ui.FlatUIUtils.drawString;
+
 public class DessinGraphe extends JPanel {
 	
 	private InterfaceGraphe interfaceGraphe;
@@ -27,9 +29,9 @@ public class DessinGraphe extends JPanel {
 	private static final int SOMMET_WIDTH = 40;
 	private static final int SOMMET_HEIGHT = 40;
 	private Color COULEUR_ARETE_CHEMIN = new Color(0, 100, 255);
-	public Color DEFAUT_COULEUR_SOMMET = Color.BLACK;
-	public Color COULEUR_ARETE = Color.BLACK;
-	public Color COULEUR_TEXTE_SOMMET = Color.WHITE;
+	public Color DEFAUT_COULEUR_SOMMET = new Color(58,166,170);
+	public Color COULEUR_ARETE = new Color(175,110,70);
+	public Color COULEUR_TEXTE_SOMMET = new Color(255,219,56);
 	public Color COULEUR_SOMMET_SELECT = Color.BLUE;
 	
 	/**
@@ -68,10 +70,16 @@ public class DessinGraphe extends JPanel {
 		listAretes.forEach(areteVisuel -> {
 			g2d.setColor(areteVisuel.getCouleurLigne());
 			g2d.setStroke(new BasicStroke(2));
-			g2d.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
-		
+			int ax = areteVisuel.getSommetVisuel1().getCentreDuCercle().x;
+			int bx = areteVisuel.getSommetVisuel2().getCentreDuCercle().x;
+			int ay = areteVisuel.getSommetVisuel1().getCentreDuCercle().y;
+			int by =areteVisuel.getSommetVisuel2().getCentreDuCercle().y ;
+			g2d.drawLine(ax, ay, bx, by);
+			g2d.drawRect((ax+bx)/2,(ay+by)/2,20,20);
 			
+			g2d.drawString("texte",(ax+bx)/2,(ay+by)/2);
 		});
+		repaint();
 	}
 	
 	/**
@@ -107,18 +115,21 @@ public class DessinGraphe extends JPanel {
                 de depart et le voisin*/
 				arete.setCouleurLigne(COULEUR_ARETE);
 				listAretes.add(arete);
+			
 				
 				voisins = voisins.getSuivantMaillonSec();//passe au maillon suivant
 			}
 		});
 	}
 	
+	
+	
 	/**
 	 * @param m
 	 * @param x
 	 * @param y
 	 */
-	private void initialisationPlacementSommet(Graphe.MaillonGraphe m, int x, int y) {
+	public void initialisationPlacementSommet(Graphe.MaillonGraphe m, int x, int y) {
 		// Création d'un Panel de dessin pour représenter le sommet visuellement
 		SommetVisuel dessinPanel = new SommetVisuel(m, SOMMET_HEIGHT / 2);
 		dessinPanel.setPreferredSize(new Dimension(SOMMET_WIDTH, SOMMET_HEIGHT));
@@ -232,7 +243,7 @@ public class DessinGraphe extends JPanel {
 	 * @param container
 	 * @return
 	 */
-	private int[] getRandomPositionPourSommet(JPanel container) {
+	public int[] getRandomPositionPourSommet(JPanel container) {
 		Random random = new Random();
 		int minX = 5;
 		int maxX = container.getWidth() - 30;
@@ -457,6 +468,9 @@ public class DessinGraphe extends JPanel {
 	}
 	public void setMisAjourAutoriseDjikstra(Boolean b){
 		misAjourAutorise = b;
+	}
+	public Map<Graphe.MaillonGraphe, SommetVisuel> getListeSommetVisuel(){
+		return sommets;
 	}
 }
 

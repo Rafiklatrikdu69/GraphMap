@@ -4,8 +4,7 @@ import Exception.SommetException;
 import Exception.VoisinException;
 import Exception.ListeSommetsNull;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 
@@ -615,7 +614,7 @@ public class Graphe {
 	 * Cette methode renvoie true s'il existe une arrete sinon elle renvoie false
 	 *
 	 *
-	 * @param nomSommet
+	 * @param nomSommet nom du sommetF
 	 * @param nomDestinataire
 	 * @return verifeExistence : boolean
 	 */
@@ -820,6 +819,7 @@ public class Graphe {
 	/**
 	 * Cette methode parcourt la liste pour afficher le Graphe avec les sommets et les arretes
 	 *
+	 * @see {@link }
 	 * @return String
 	 */
 	public String toString() {
@@ -837,7 +837,29 @@ public class Graphe {
 		return chaine.toString();//renvoie la chaine String
 	}
 	
-	
+	public void ajoutCentreDansCsv(String nomFichierChoisi, String nomCentre, String typeCentre, int nombreColonne){
+		try (BufferedWriter buffWrite = new BufferedWriter(new FileWriter(nomFichierChoisi, true))) {
+			StringBuilder ligne = new StringBuilder();
+			for (int i = 0; i < nombreColonne+3; i++) {
+				if(i == 0){
+					ligne.append(nomCentre);
+				} else if (i == 1) {
+					ligne.append(typeCentre);
+				} else {
+					ligne.append("0");
+				}
+				if(!(i == nombreColonne-1)){
+					ligne.append(";");
+				}
+			}
+			ligne.append("\n");
+			buffWrite.write(ligne.toString());
+			//ajoutSommet(nomCentre, typeCentre);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }
 
 
