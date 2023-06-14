@@ -615,7 +615,7 @@ public class Graphe {
 	 * Cette methode renvoie true s'il existe une arrete sinon elle renvoie false
 	 *
 	 *
-	 * @param nomSommet
+	 * @param nomSommet nom du sommetF
 	 * @param nomDestinataire
 	 * @return verifeExistence : boolean
 	 */
@@ -820,6 +820,7 @@ public class Graphe {
 	/**
 	 * Cette methode parcourt la liste pour afficher le Graphe avec les sommets et les arretes
 	 *
+	 * @see {@link }
 	 * @return String
 	 */
 	public String toString() {
