@@ -11,9 +11,13 @@ public class MenuConsoleGraphe{
     private static   String optionDispensaire2;
     
     public static void main(String[] args){
+        try {
+            
+            
+            newGraphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
+        }catch (Exception e){
         
-        newGraphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Graphe\\src\\fichiersGraphe\\liste-adjacence-jeuEssai.csv");
-        
+        }
         
         
         
@@ -51,21 +55,28 @@ public class MenuConsoleGraphe{
                 scanner.nextLine();
                 switch (option) {
                     case 1 -> {
-                        List<Graphe.MaillonGraphe> tousLesCentresList = newGraphe.tousLesCentresToList();
-                        tousLesCentresList.forEach(Centre -> {
-                            StringBuilder stringVoisin = new StringBuilder();
-                            List<Graphe.MaillonGrapheSec> voisinsCentre = Centre.voisinsToList();
-                            stringVoisin.append("[");
-                            for (int i = 0; i < voisinsCentre.size(); i++) {
-                                if (i == voisinsCentre.size() - 1) {
-                                    stringVoisin.append(voisinsCentre.get(i).getDestination());
-                                } else {
-                                    stringVoisin.append(voisinsCentre.get(i).getDestination()).append(",");
+                        try {
+                            
+                            
+                            List<Graphe.MaillonGraphe> tousLesCentresList = newGraphe.tousLesCentresToList();
+                            tousLesCentresList.forEach(Centre -> {
+                                StringBuilder stringVoisin = new StringBuilder();
+                                List<Graphe.MaillonGrapheSec> voisinsCentre = Centre.voisinsToList();
+                                stringVoisin.append("[");
+                                for (int i = 0; i < voisinsCentre.size(); i++) {
+                                    if (i == voisinsCentre.size() - 1) {
+                                        stringVoisin.append(voisinsCentre.get(i).getDestination());
+                                    } else {
+                                        stringVoisin.append(voisinsCentre.get(i).getDestination()).append(",");
+                                    }
                                 }
-                            }
-                            stringVoisin.append("]");
-                            System.out.println(Centre.getNom() + " [" + Centre.getType() + "], Voisins : " + stringVoisin.toString());
-                        });
+                                stringVoisin.append("]");
+                                System.out.println(Centre.getNom() + " [" + Centre.getType() + "], Voisins : " + stringVoisin.toString());
+                            });
+                        }catch (Exception e ){
+                        
+                        }
+                 
                         pressEnterToContinue(scanner);
                     }
                     case 2 -> {

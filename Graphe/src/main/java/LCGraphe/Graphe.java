@@ -2,6 +2,7 @@ package LCGraphe;
 
 import Exception.CentreException;
 import Exception.VoisinException;
+import Exception.ListeCentresNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +16,7 @@ public class Graphe {
 	
 	private Map<String, Dijkstra> cheminDijkstra;//stocke tous les algos djikstra
 	private FloydWarshall f = new FloydWarshall(this);//algo de recherche du chemin le plus fiable
+	
 	public Map<String, Dijkstra> getCheminDijkstra() {
 		return cheminDijkstra;
 	}
@@ -30,7 +32,6 @@ public class Graphe {
 	public void rechercheChemin(String depart, String destination) {
 		f.rechercheChemin(depart, destination);
 	}
-	
 	
 	
 	//Liste Principale
@@ -49,7 +50,10 @@ public class Graphe {
 			suiv = null;
 			
 		}
-				/**Getters et setters**/
+		
+		/**
+		 * Getters et setters
+		 **/
 		public MaillonGrapheSec getVoisin() {
 			return this.lVois;
 		}
@@ -101,7 +105,7 @@ public class Graphe {
 				}
 				tmp = tmp.getSuivantMaillonSec();
 			}
-			assert voisin==null;
+			assert voisin == null;
 			return voisin;
 			
 		}
@@ -138,7 +142,10 @@ public class Graphe {
 			return s.toString();
 		}
 	}
-	/**Liste secondaire **/
+	
+	/**
+	 * Liste secondaire
+	 **/
 	public class MaillonGrapheSec {
 		
 		private double fiab;
@@ -224,6 +231,7 @@ public class Graphe {
 			return chaine.toString();
 		}
 	}
+	
 	private MaillonGraphe premier;//creer la tete
 	
 	public Graphe() {
@@ -303,7 +311,7 @@ public class Graphe {
 		}
 		return chaineVoisin.toString();
 	}
-		//En cours de developement !!!
+	//En cours de developement !!!
 	/*public List<MaillonGraphe> getVoisinPDistance(MaillonGraphe sommetDepart,int p){
 		List<MaillonGraphe> listeMaillon = new ArrayList<>();
 		MaillonGrapheSec voisinsSommetDepart = sommetDepart.getVoisin();
@@ -339,13 +347,14 @@ public class Graphe {
 		return listeMaillon;
 	}
 	*/
+	
 	/**
 	 * methode qui compte le nombre de blocs operatoire
 	 *
 	 * @return
 	 */
 	
-	public Integer getNombreOperatoire(){
+	public Integer getNombreOperatoire() {
 		Integer res = 0;
 		MaillonGraphe tmp = this.getPremier();
 		while (tmp != null) {
@@ -359,9 +368,10 @@ public class Graphe {
 	
 	/**
 	 * methode qui compte le nombre de maternite
+	 *
 	 * @return
 	 */
-	public Integer getNombreMaternite(){
+	public Integer getNombreMaternite() {
 		Integer res = 0;
 		MaillonGraphe tmp = this.getPremier();
 		while (tmp != null) {
@@ -372,11 +382,13 @@ public class Graphe {
 		}
 		return res;
 	}
+	
 	/**
 	 * methode qui compte le nombre de nutrition
+	 *
 	 * @return
 	 */
-	public Integer getNombreCentreNutrition(){
+	public Integer getNombreCentreNutrition() {
 		Integer res = 0;
 		MaillonGraphe tmp = this.getPremier();
 		while (tmp != null) {
@@ -387,11 +399,13 @@ public class Graphe {
 		}
 		return res;
 	}
+	
 	/**
 	 * methode qui compte le nombre de dispensaires totales
+	 *
 	 * @return
 	 */
-	public Integer getNombreDispensaire(){
+	public Integer getNombreDispensaire() {
 		Integer res = 0;
 		MaillonGraphe tmp = this.getPremier();
 		while (tmp != null) {
@@ -400,25 +414,27 @@ public class Graphe {
 		}
 		return res;
 	}
+	
 	/**
 	 * methode qui compte le nombre d'aretes
+	 *
 	 * @return
 	 */
-	public Integer getNombreRoute(){
+	public Integer getNombreRoute() {
 		Integer res = 0;
 		MaillonGraphe tmp = this.getPremier();
 		MaillonGrapheSec tmp2 = null;
 		while (tmp != null) {
 			tmp2 = tmp.getVoisin();
-			while (tmp2 !=null){
+			while (tmp2 != null) {
 				res++;
 				tmp2 = tmp2.getSuivantMaillonSec();
 			}
 			tmp = tmp.getSuivant();
 		}
-		return res/2;
+		return res / 2;
 	}
-
+	
 	
 	/**
 	 * Cette methode ajoute les Voisins(Arretes) avec
@@ -515,8 +531,8 @@ public class Graphe {
 	}
 	
 	/**
-	 * Cette methode renvoie true si il existe une arrete sinon elle renvoie
-	 * false
+	 * Cette methode renvoie true si il existe une arrete sinon elle renvoie false
+	 *
 	 *
 	 * @param nomCentre
 	 * @param nomDestinataire
@@ -557,7 +573,7 @@ public class Graphe {
 		assert tmp == null; // Vérifie qu'aucun maillon correspondant n'a été trouvé (assertion)
 		return (tmp != null); // Retourne true si un maillon correspondant a été trouvé, sinon retourne false
 	}
-
+	
 	
 	/**
 	 * Cette methode renvoie tout les sommet en les affichant
@@ -580,12 +596,15 @@ public class Graphe {
 	 *
 	 * @return ensembleCentre : List<MaillonGraphe>
 	 */
-	public List<MaillonGraphe> tousLesCentresToList() {
+	public List<MaillonGraphe> tousLesCentresToList() throws ListeCentresNull {
 		List<MaillonGraphe> ensembleCentre = new LinkedList<>();
 		MaillonGraphe tmp = this.getPremier();
 		while (tmp != null) {
 			ensembleCentre.add(tmp);//ajout la liste
 			tmp = tmp.getSuivant();
+		}
+		if (ensembleCentre == null) {
+			throw new ListeCentresNull("la liste est nulle !");
 		}
 		return ensembleCentre;//renvoie la liste
 	}
@@ -609,7 +628,7 @@ public class Graphe {
 		}
 		return ensembleArrete; // Retourne la liste de toutes les arêtes
 	}
-
+	
 	
 	/**
 	 * Cette methode renvoie tout les blocs sous formes de chaine de caraceteres
@@ -627,7 +646,7 @@ public class Graphe {
 		}
 		return ensembleBloc.toString(); // Retourne la chaîne de caractères contenant tous les noms de blocs
 	}
-
+	
 	
 	/**
 	 * Cette methode recupere le centre avec son nom en parametre
@@ -646,14 +665,14 @@ public class Graphe {
 		}
 		return centreRechercher; // retourne  le centre recherché (ou null s'il n'a pas été trouvé)
 	}
-
+	
 	
 	/**
 	 * Cette methode permet de lire le fichier grace au chemin passer en parametre
 	 *
 	 * @param nomFichierChoisi : String
 	 */
-	public void chargementFichier(String nomFichierChoisi) {
+	public void chargementFichier(String nomFichierChoisi) throws ListeCentresNull {
 		try {
 			File file = new File(nomFichierChoisi); // Crée un objet File à partir du nom de fichier choisi
 			Scanner scanner = new Scanner(file); // Crée un objet Scanner pour lire le fichier
@@ -710,7 +729,7 @@ public class Graphe {
 			e.printStackTrace();
 		}
 	}
-
+	
 	
 	/**
 	 * Cette methode parcourt la liste pour afficher le Graphe avec les sommets et les arretes
@@ -732,7 +751,7 @@ public class Graphe {
 		return chaine.toString();//renvoie la  chaine String
 	}
 	
-
+	
 }
 
 
