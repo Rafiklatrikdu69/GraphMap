@@ -7,6 +7,8 @@ import java.awt.*;
 
 public class SommetVisuel extends JPanel {
 
+    private float opacity;
+
     private Graphe.MaillonGraphe centre;
     private int rayon;
     private int x;
@@ -20,6 +22,7 @@ public class SommetVisuel extends JPanel {
      * @param rayon
      */
     public SommetVisuel(Graphe.MaillonGraphe centre, int rayon) {
+        opacity = 1.0F;
         this.rayon = rayon;
         this.centre = centre;
         setOpaque(false);
@@ -32,8 +35,10 @@ public class SommetVisuel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        dessinerRond(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+        super.paintComponent(g2d);
+        dessinerRond(g2d);
+        g2d.dispose();
     }
     
     /**
@@ -41,19 +46,21 @@ public class SommetVisuel extends JPanel {
      *
      * @param g
      */
-    private void dessinerRond(Graphics g) {
+    private void dessinerRond(Graphics2D g2d) {
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity);
+        g2d.setComposite(alphaComposite);
         x = getWidth() / 2;
         y = getHeight() / 2;
         setOpaque(false);
-        g.setColor(couleurCentre);
-        g.fillOval(x - rayon, y - rayon, rayon * 2, rayon * 2);//dessine le cercle
-        g.setColor(couleurTexte);
+        g2d.setColor(couleurCentre);
+        g2d.fillOval(x - rayon, y - rayon, rayon * 2, rayon * 2);//dessine le cercle
+        g2d.setColor(couleurTexte);
         Font font = new Font("Arial", Font.BOLD, 11);
-        g.setFont(font);
-        int largeurNom = g.getFontMetrics().stringWidth(centre.getNom());
+        g2d.setFont(font);
+        int largeurNom = g2d.getFontMetrics().stringWidth(centre.getNom());
         int xNom = x - largeurNom / 2;
         int yNom = y + 5;
-        g.drawString(centre.getNom(), xNom, yNom);//ecrit le nom du sommet
+        g2d.drawString(centre.getNom(), xNom, yNom);//ecrit le nom du sommet
     }
     
     /**
@@ -63,9 +70,14 @@ public class SommetVisuel extends JPanel {
 
     public void setCouleurCentre(Color couleur) {
         this.couleurCentre = couleur;
-        
+        repaint();
     }
-    
+
+    public void setOpacity(float opacity) {
+        this.opacity = opacity;
+        repaint();
+    }
+
     /**
      *
      * @return
