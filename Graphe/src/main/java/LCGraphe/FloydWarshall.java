@@ -58,6 +58,15 @@ public class FloydWarshall {
 		copieListeToMap(copieFiabilite);//appel de la methode pour copier les donnes de la liste chainée dans la map fiabilite afin d'utliser les donnes
 		//Objectif Optimisation avec des maps
 		/*Debut de l'algo */
+		//met la fiabilite a 100 % sur la diagonale
+		for (String k : fiabilites.keySet()) {
+			for (String i : fiabilites.keySet()) {
+				if (k.equals(i)){
+					fiabilites.get(k).put(i, 1.0);
+				}
+				
+			}
+		}
 		for (String k : fiabilites.keySet()) {
 			for (String i : fiabilites.keySet()) {
 				for (String j : fiabilites.keySet()) {
@@ -92,7 +101,7 @@ public class FloydWarshall {
 	}
 	
 	
-	public void rechercheChemin(String sommetDepart,String sommetArrivee){
+	public double rechercheChemin(String sommetDepart,String sommetArrivee){
 		sommet = new ArrayList<>();
 		sommetDonnees = new ArrayList<>();
 		String chemin = sommetArrivee;
@@ -108,7 +117,6 @@ public class FloydWarshall {
 		}
 		
 		chemin = sommetDepart + " -> " + chemin;
-		//System.out.println("Chemin de " + sommetDepart + " à " + sommetArrivee + ": " + chemin);
 		
 		
 		String[] sommets = chemin.split(" -> ");
@@ -118,7 +126,7 @@ public class FloydWarshall {
 			String sommetSuivant = sommets[k + 1];
 			
 			double fiabiliteSommet = fiabilites.get(sommetActuel).get(sommetSuivant);
-		//	System.out.println("Fiabilité sommet " + sommetActuel + " -> " + sommetSuivant + ": " + fiabiliteSommet * 100);
+		
 			if(!sommet.contains(sommetActuel)){
 				sommet.add(sommetActuel);
 				
@@ -128,14 +136,11 @@ public class FloydWarshall {
 				sommetDonnees.add(fiabiliteSommet);
 			}
 		}
-	/*
-		System.out.println("Fiabilité totale : " + fiabiliteTotale * 100);
-		for(String i : sommet){
-			System.out.println("sommet : "+i);
-		}
-		for(Double i : sommetDonnees){
-			System.out.println("fiabilite : "+i);
-		}*/
+	
+		//System.out.println("Fiabilité totale : " + fiabiliteTotale * 100);
+		
+		return fiabiliteTotale*100;
+	
 	}
 	public List<String> getSommet(){
 		return sommet;
@@ -143,4 +148,5 @@ public class FloydWarshall {
 	public List<Double> getSommetDonnees(){
 		return sommetDonnees;
 	}
+	
 }

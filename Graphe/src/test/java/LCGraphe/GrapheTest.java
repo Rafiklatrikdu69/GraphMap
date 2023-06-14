@@ -34,7 +34,7 @@ class GrapheTest {
 
     @Test
     void getNombreCentreNutrition() {
-        assertEquals(graphe.getNombreCentreNutrition(), 6, "Mauvais nombre de centre de nutrition !");
+        assertEquals(graphe.getNombreSommetNutrition(), 6, "Mauvais nombre de centre de nutrition !");
 
     }
 
@@ -69,7 +69,7 @@ class GrapheTest {
 
     @Test
     void existeVoisin() {
-        System.out.println(graphe.getCentre("S28").getVoisin("S7"));
+        System.out.println(graphe.getSommet("S28").getVoisin("S7"));
         Assertions.assertTrue(graphe.existeVoisin("S28", "S7"), "S28-S7 voisin inexistant");
         Assertions.assertTrue(graphe.existeVoisin("S7", "S28"), "S7-S28 voisin inexistant");
         Assertions.assertTrue(graphe.existeVoisin("S11", "S29"), "S11-S29 voisin inexistant");
@@ -86,10 +86,10 @@ class GrapheTest {
     @Test
     void existeCentre() {
         // Il a 30 sommets entre S1 et S30
-        Assertions.assertFalse(graphe.existeCentre("S35"), "S35 existant ?");
-        Assertions.assertTrue(graphe.existeCentre("S2"), "S2 inexistant");
-        Assertions.assertFalse(graphe.existeCentre("S32"), "S31 existant ?");
-        Assertions.assertTrue(graphe.existeCentre("S5"), "S5 inexistant");
-        Assertions.assertFalse(graphe.existeCentre("S31"), "S31 existant ?");
+        Assertions.assertFalse(graphe.existeSommet("S35"), "S35 existant ?");
+        Assertions.assertTrue(graphe.existeSommet("S2"), "S2 inexistant");
+        Assertions.assertFalse(graphe.existeSommet("S32"), "S31 existant ?");
+        Assertions.assertTrue(graphe.existeSommet("S5"), "S5 inexistant");
+        Assertions.assertFalse(graphe.existeSommet("S31"), "S31 existant ?");
     }
 }
