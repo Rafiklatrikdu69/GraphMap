@@ -100,7 +100,7 @@ public class Graphe {
 			MaillonGrapheSec voisin = null;
 			MaillonGrapheSec tmp = this.lVois;//pointe vers le maillon de la liste secondaires
 			while (voisin == null && tmp != null) {
-				if (tmp.getDestination().equals(nomVoisin)) {//si le voisin qui est le destinataire est egale au nom passer en parametre
+				if (tmp.getDestination().getNom().equals(nomVoisin)) {//si le voisin qui est le destinataire est egale au nom passer en parametre
 					voisin = tmp;
 				}
 				tmp = tmp.getSuivantMaillonSec();
@@ -118,7 +118,7 @@ public class Graphe {
 			boolean verife = false;
 			MaillonGrapheSec tmp = this.lVois;
 			while (!verife && tmp != null) {
-				if (tmp.getDestination().equals(nomVoisin)) {
+				if (tmp.getDestination().getNom().equals(nomVoisin)) {
 					verife = true;//verife = true si le sommet est voisin
 				}
 				tmp = tmp.getSuivantMaillonSec();//passe au maillon suivant de la liste secondaire
@@ -135,7 +135,7 @@ public class Graphe {
 			MaillonGrapheSec tmp = this.lVois;
 			StringBuilder s = new StringBuilder();
 			while (tmp != null) {
-				s.append("Destination : ").append(tmp.getDestination()).append(" [Fiabilité : ").append(tmp.getFiabilite() * 10).append("%, Distance : ").append(tmp.getDistance()).append("Km, Durée : ").append(tmp.getDuree()).append(" minutes]\n");
+				s.append("Destination : ").append(tmp.getDestination().getNom()).append(" [Fiabilité : ").append(tmp.getFiabilite() * 10).append("%, Distance : ").append(tmp.getDistance()).append("Km, Durée : ").append(tmp.getDuree()).append(" minutes]\n");
 				tmp = tmp.getSuivantMaillonSec();
 				
 			}
@@ -295,7 +295,7 @@ public class Graphe {
 			MaillonGraphe maillonVoisin = getCentre(voisin);
 			MaillonGrapheSec tmp3 = maillonVoisin.lVois;
 			while (tmp3 != null) {
-				if (voisins1.contains(tmp3.getDestination()) && voisins2.contains(tmp3.getDestination())) {
+				if (voisins1.contains(tmp3.getDestination().getNom()) && voisins2.contains(tmp3.getDestination().getNom())) {
 					chaineVoisin.append("Les sommets " + centre1 + " et " + centre2 + " sont à une distance de 2.");
 					distance2 = true;
 					break;
@@ -496,7 +496,7 @@ public class Graphe {
 		tmp2 = tmp.lVois;
 		while (!check && tmp2 != null) {
 			
-			if (tmp2.getDestination().equals(nomDestinataire)) {//si cest trouver alors on fait les modifs
+			if (tmp2.getDestination().getNom().equals(nomDestinataire)) {//si cest trouver alors on fait les modifs
 				tmp2.setDistance(dist);
 				tmp2.setDuree(dur);
 				tmp2.setFiabilite(fiab);
@@ -520,7 +520,7 @@ public class Graphe {
 		check = false;
 		tmp2 = tmp3.getVoisin();
 		while (!check && tmp2 != null) {
-			if (tmp2.getDestination().equals(nomCentre)) {
+			if (tmp2.getDestination().getNom().equals(nomCentre)) {
 				tmp2.setDistance(dist);
 				tmp2.setDuree(dur);
 				tmp2.setFiabilite(fiab);
@@ -547,7 +547,7 @@ public class Graphe {
 		}
 		tmp2 = tmp.lVois; // Obtient la liste des voisins du maillon
 		while (!verifeExistence && tmp2 != null) { // Parcourt les voisins jusqu'à trouver le destinataire ou épuiser la liste
-			if (tmp2.getDestination().equals(nomDestinataire)) { // Vérifie si le voisin correspond au destinataire
+			if (tmp2.getDestination().getNom().equals(nomDestinataire)) { // Vérifie si le voisin correspond au destinataire
 				verifeExistence = true; // Met à jour la variable d'existence
 			}
 			tmp2 = tmp2.getSuivantMaillonSec(); // Passe au voisin suivant
@@ -743,7 +743,7 @@ public class Graphe {
 			chaine.append("Nom: ").append(tmp.getNom()).append(" | Type: ").append(tmp.getType()).append("\n");//affiche les donnes du sommets
 			MaillonGrapheSec tmp2 = tmp.getVoisin();//pointeur vers le maillon de la seconde liste chainée
 			while (tmp2 != null) {//On parcourt la liste des voisins
-				chaine.append("Fiabilité: ").append(tmp2.getFiabilite()).append(" | Distance: ").append(tmp2.getDistance()).append(" | Durée: ").append(tmp2.getDuree()).append(" | Destination: ").append(tmp2.getDestination()).append("\n");
+				chaine.append("Fiabilité: ").append(tmp2.getFiabilite()).append(" | Distance: ").append(tmp2.getDistance()).append(" | Durée: ").append(tmp2.getDuree()).append(" | Destination: ").append(tmp2.getDestination().getNom()).append("\n");
 				tmp2 = tmp2.getSuivantMaillonSec();//passe au maillon suivant
 			}
 			tmp = tmp.getSuivant();//passe au maillon suivant de la liste principal
