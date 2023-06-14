@@ -12,18 +12,22 @@ public class AjoutSommetVisuelCreation extends JPanel {
 	
 	AjoutSommetVisuelCreation() {
 		System.out.println("test classe !");
-		choixTypeSommet = new JComboBox<>();
+		choixTypeSommet = new JComboBox<>();//liste des type
 		
-		entreeSommet = new JTextField();
+		entreeSommet = new JTextField();//la saisie
 		
 		choixTypeSommet.addItem("O");
 		choixTypeSommet.addItem("M");
 		choixTypeSommet.addItem("N");
 		
 		creationSommetPanel();
-		add(panelAjoutSommet);
+		add(panelAjoutSommet);//ajout du panel dans la classe elle meme
 	}
 	
+	/**
+	 * Creation de la methode pour creer  une saisie pour l'utilisateur afin de creer le sommet
+	 *
+	 */
 	private void creationSommetPanel() {
 		panelAjoutSommet = new JPanel();
 		panelAjoutSommet.setLayout(new BorderLayout());
