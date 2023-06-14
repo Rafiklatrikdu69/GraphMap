@@ -22,7 +22,7 @@ import static javax.swing.JOptionPane.showOptionDialog;
 
 public class InterfaceGraphe extends JFrame {
 	private CardLayout cardLayout;
-
+	
 	public JPanel cp;
 	
 	private JPanel paneInfoSommet, panelInfoGraphe, panelToutesInfos;
@@ -64,7 +64,7 @@ public class InterfaceGraphe extends JFrame {
 	private Dimension screenSize;
 	private LCGraphe.Graphe graphe;
 	private JPanel contenuGraphePanel;
-
+	
 	private List<Graphe.MaillonGraphe> listSommets;
 	private List<Graphe.MaillonGrapheSec> listAretes;
 	
@@ -115,7 +115,6 @@ public class InterfaceGraphe extends JFrame {
 	
 	/**
 	 * Cette methode permet d'afficher le panel contenant toutes les infos du graphe
-	 *
 	 */
 	private void initContainerTousInfos() {
 		panelInfoGraphe = new JPanel(new BorderLayout());
@@ -487,17 +486,24 @@ public class InterfaceGraphe extends JFrame {
 	
 	/**
 	 * Creation de la Joption Pane
-<<<<<<< HEAD
-	 *
-=======
->>>>>>> feature/ajoutSommetVisuel
+	 * <<<<<<< HEAD
+	 * <p>
+	 * =======
+	 * >>>>>>> feature/ajoutSommetVisuel
 	 */
 	private void creationDuSommet() {
 		AjoutSommetVisuelCreation ajout = new AjoutSommetVisuelCreation();
 		int choix = JOptionPane.showOptionDialog(this, ajout, "Ajouter Centre", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 		if (choix == JOptionPane.OK_OPTION) {
-		
-		
+			System.out.println(ajout.getNom());
+			System.out.println(ajout.getType());
+			graphe.ajoutSommet(ajout.getNom(), ajout.getType());
+			int[] pos = graphePanel.getRandomPositionPourSommet(getContenuGraphePanel());
+			//place le sommet a une position Random x et y
+			graphePanel.initialisationPlacementSommet(graphe.getSommet(ajout.getNom()), pos[0], pos[1]);
+			getChoixDestinationComboBox().addItem(ajout.getNom());
+			graphePanel.repaint();
+			
 		}
 	}
 	
@@ -512,18 +518,18 @@ public class InterfaceGraphe extends JFrame {
 		if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			fichier = fenetreOuvertureFichier.getSelectedFile();//recupere le choix du fichier
 			if (fichier.getPath().endsWith(".csv")) {//option en plus pour verifier si on ouvre le bon fichier
-				if(!getContentPane().equals(getCp())){
+				if (!getContentPane().equals(getCp())) {
 					setContentPane(getCp());
 					setJMenuBar(getMenu());
 					pack();
 				}
-
+				
 				contenuGraphePanel.removeAll();
 				graphe = new Graphe();
 				try {
 					graphe.chargementFichier(fichier.getPath());
 				} catch (Exception excep) {
-
+				
 				}
 				mettreVisibleComposantGraphe();
 				initContainerDessinGraphePanel();
@@ -549,14 +555,14 @@ public class InterfaceGraphe extends JFrame {
 		String destination = (String) choixDestinationComboBox.getSelectedItem(); // Récupère la destination sélectionnée dans une ComboBox
 		
 		if (selectChoixChemin.equals((ChoixTypeChemin.FIABILITE.getAttribut()))) { // Vérifie si le choix du chemin est la fiabilité
-			switch (destination){
-				case "Maternité" ->{
+			switch (destination) {
+				case "Maternité" -> {
 					System.out.println("rien");
 				}
-				case "Opératoire" ->{
+				case "Opératoire" -> {
 					System.out.println("rien");
 				}
-				case "Centre de nutrition" ->{
+				case "Centre de nutrition" -> {
 					System.out.println("rien");
 				}
 				default -> {
@@ -565,17 +571,17 @@ public class InterfaceGraphe extends JFrame {
 					tableCheminsPanel.updateColonne(selectChoixChemin); // Met à jour la colonne du tableau avec le choix du chemin
 					tableCheminsPanel.addDataInTable("Depart", String.valueOf(graphe.getSommetDonnees().get(0) * 100 + " %")); // Ajoute les données de départ (fiabilité du sommet de départ) au tableau
 					double fiabiliteTotale = 1.0; // Initialise la fiabilité totale à 1.0
-
+					
 					for (String i : graphe.getListeSommetCheminGraphe()) { // Parcourt les sommets du chemin
-
+						
 						if (!i.equals(sommetSelect.getNom())) { // Vérifie si le sommet n'est pas le sommet de départ
-
+							
 							Double donneeSommet = graphe.getSommetDonnees().get(graphe.getListeSommetCheminGraphe().indexOf(i)); // Obtient la fiabilité du sommet
 							tableCheminsPanel.addDataInTable(i, String.valueOf(donneeSommet * 100) + " %"); // Ajoute les données de fiabilité du sommet au tableau
 							fiabiliteTotale *= donneeSommet; // Calcule la fiabilité totale en multipliant les fiabilités de chaque sommet
 						}
 					}
-
+					
 					tableCheminsPanel.addDataInTable("Fiabilité totale", String.valueOf(Math.round(fiabiliteTotale * 100 * 100) / 100) + " %"); // Ajoute la fiabilité totale au tableau
 				}
 			}
@@ -590,19 +596,19 @@ public class InterfaceGraphe extends JFrame {
 			tableCheminsPanel.updateColonne(selectChoixChemin); // Met à jour la colonne du tableau avec le choix du chemin
 			LinkedHashMap<String, Double> chemin = null;
 			Dijkstra tousLesCheminsDuSommet = graphe.getCheminDijkstra().get(sommetSelect.getNom());
-			switch (destination){
-				case "Maternité" ->{
-					if(sommetSelect.getType().equals("Maternité")){
+			switch (destination) {
+				case "Maternité" -> {
+					if (sommetSelect.getType().equals("Maternité")) {
 						chemin = tousLesCheminsDuSommet.getCheminsDistanceTo(sommetSelect.getNom());
-					}else {
+					} else {
 						LinkedHashMap<String, Double> meilleurChemin = null;
 						Double meilleurDistance = 0.0;
 						for (Graphe.MaillonGraphe maternite : graphe.getToutesLesMaternites()) {
 							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDistanceTo(maternite.getNom());
-							int count = tmp.size()-1;
+							int count = tmp.size() - 1;
 							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
 								if (count == 0) {
-									if(meilleurDistance == 0.0){
+									if (meilleurDistance == 0.0) {
 										meilleurChemin = tmp;
 										meilleurDistance = entry.getValue();
 									} else if (meilleurDistance < entry.getValue()) {
@@ -615,21 +621,21 @@ public class InterfaceGraphe extends JFrame {
 						}
 						chemin = meilleurChemin;
 					}
-
-
+					
+					
 				}
-				case "Opératoire" ->{
-					if(sommetSelect.getType().equals("Opératoire")){
+				case "Opératoire" -> {
+					if (sommetSelect.getType().equals("Opératoire")) {
 						chemin = tousLesCheminsDuSommet.getCheminsDistanceTo(sommetSelect.getNom());
-					}else {
+					} else {
 						LinkedHashMap<String, Double> meilleurChemin = null;
 						double meilleurDistance = 0.0;
 						for (Graphe.MaillonGraphe ope : graphe.getTousLesOperatoires()) {
 							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDistanceTo(ope.getNom());
-							int count = tmp.size()-1;
+							int count = tmp.size() - 1;
 							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
 								if (count == 0) {
-									if(meilleurDistance == 0.0){
+									if (meilleurDistance == 0.0) {
 										meilleurChemin = tmp;
 										meilleurDistance = entry.getValue();
 									} else if (meilleurDistance < entry.getValue()) {
@@ -643,20 +649,20 @@ public class InterfaceGraphe extends JFrame {
 						chemin = meilleurChemin;
 					}
 				}
-				case "Centre de nutrition" ->{
-					if(sommetSelect.getType().equals("Centre de nutrition")){
+				case "Centre de nutrition" -> {
+					if (sommetSelect.getType().equals("Centre de nutrition")) {
 						chemin = tousLesCheminsDuSommet.getCheminsDistanceTo(sommetSelect.getNom());
-					}else {
+					} else {
 						LinkedHashMap<String, Double> meilleurChemin = null;
 						double meilleurDistance = 0.0;
 						for (Graphe.MaillonGraphe CentreDeNutri : graphe.getTousLesCentreDeNutrions()) {
-
+							
 							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDistanceTo(CentreDeNutri.getNom());
-							int count = tmp.size()-1;
-
+							int count = tmp.size() - 1;
+							
 							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
 								if (count == 0) {
-									if(meilleurDistance == 0.0){
+									if (meilleurDistance == 0.0) {
 										meilleurChemin = tmp;
 										meilleurDistance = entry.getValue();
 									} else if (meilleurDistance > entry.getValue()) {
@@ -674,7 +680,7 @@ public class InterfaceGraphe extends JFrame {
 					chemin = tousLesCheminsDuSommet.getCheminsDistanceTo(destination); // Obtient le chemin le plus court en termes de distance entre le sommet de départ et la destination
 				}
 			}
-
+			
 			if (chemin != null) { // Vérifie si un chemin existe
 				
 				for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
@@ -682,7 +688,7 @@ public class InterfaceGraphe extends JFrame {
 					double distance = entry.getValue(); // Obtient la distance entre les sommets
 					
 					if (nomSommet.equals(sommetSelect.getNom())) { // Vérifie si le sommet est le sommet de départ
-						tableCheminsPanel.addDataInTable("Départ (" + nomSommet + ")",  (int) distance+ "Km"); // Ajoute les données du sommet de départ au tableau
+						tableCheminsPanel.addDataInTable("Départ (" + nomSommet + ")", (int) distance + "Km"); // Ajoute les données du sommet de départ au tableau
 					} else if (nomSommet.equals(destination)) { // Vérifie si le sommet est la destination
 						listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
 						tableCheminsPanel.addDataInTable("Arrivé (" + nomSommet + ")", (int) distance + "Km"); // Ajoute les données du sommet d'arrivée au tableau
@@ -710,9 +716,9 @@ public class InterfaceGraphe extends JFrame {
 				for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
 					String nomSommet = entry.getKey(); // Obtient le nom du sommet
 					double duree = entry.getValue(); // Obtient la durée entre les sommets
-
+					
 					if (nomSommet.equals(sommetSelect.getNom())) { // Vérifie si le sommet est le sommet de départ
-						tableCheminsPanel.addDataInTable("Départ ("+nomSommet+")", (int) duree + " min"); // Ajoute les données du sommet de départ au tableau
+						tableCheminsPanel.addDataInTable("Départ (" + nomSommet + ")", (int) duree + " min"); // Ajoute les données du sommet de départ au tableau
 					} else if (nomSommet.equals(destination)) { // Vérifie si le sommet est la destination
 						listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
 						tableCheminsPanel.addDataInTable("Arrivé (" + nomSommet + ")", (int) duree + " min"); // Ajoute les données du sommet d'arrivée au tableau

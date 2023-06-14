@@ -3,6 +3,7 @@ package Interface;
 import javax.swing.*;
 
 import java.awt.*;
+import java.util.Objects;
 
 
 public class AjoutSommetVisuelCreation extends JPanel {
@@ -34,6 +35,12 @@ public class AjoutSommetVisuelCreation extends JPanel {
 		panelAjoutSommet.setBorder(BorderFactory.createTitledBorder("panel ajout sommet"));
 		panelAjoutSommet.add(choixTypeSommet, BorderLayout.EAST);
 		panelAjoutSommet.add(entreeSommet, BorderLayout.WEST);
+	}
+	public String getNom(){
+		return entreeSommet.getText();
+	}
+	public String getType(){
+		return Objects.requireNonNull(choixTypeSommet.getSelectedItem()).toString();
 	}
 	
 }

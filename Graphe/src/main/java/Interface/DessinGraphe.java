@@ -118,7 +118,7 @@ public class DessinGraphe extends JPanel {
 	 * @param x
 	 * @param y
 	 */
-	private void initialisationPlacementSommet(Graphe.MaillonGraphe m, int x, int y) {
+	public void initialisationPlacementSommet(Graphe.MaillonGraphe m, int x, int y) {
 		// Création d'un Panel de dessin pour représenter le sommet visuellement
 		SommetVisuel dessinPanel = new SommetVisuel(m, SOMMET_HEIGHT / 2);
 		dessinPanel.setPreferredSize(new Dimension(SOMMET_WIDTH, SOMMET_HEIGHT));
@@ -232,7 +232,7 @@ public class DessinGraphe extends JPanel {
 	 * @param container
 	 * @return
 	 */
-	private int[] getRandomPositionPourSommet(JPanel container) {
+	public int[] getRandomPositionPourSommet(JPanel container) {
 		Random random = new Random();
 		int minX = 5;
 		int maxX = container.getWidth() - 30;
@@ -457,6 +457,9 @@ public class DessinGraphe extends JPanel {
 	}
 	public void setMisAjourAutoriseDjikstra(Boolean b){
 		misAjourAutorise = b;
+	}
+	public Map<Graphe.MaillonGraphe, SommetVisuel> getListeSommetVisuel(){
+		return sommets;
 	}
 }
 
