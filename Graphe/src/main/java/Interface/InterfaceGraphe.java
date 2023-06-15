@@ -1,6 +1,7 @@
 package Interface;
 
 import Interface.InfosSommetPanel.AfficherCheminPanel;
+import Interface.InfosSommetPanel.ChoixTypeSommet;
 import LCGraphe.Dijkstra;
 import LCGraphe.Graphe;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
@@ -218,7 +219,7 @@ public class InterfaceGraphe extends JFrame {
 	 *
 	 */
 	private void initContainerInfosVoisins() {
-		String[] colonneAttribut = {"Destination", "Distance", "Durée", "Fiabilité"};//tableau
+		String[] colonneAttribut = {"Destination", ChoixTypeChemin.DISTANCE.getAttribut(),ChoixTypeChemin.DUREE.getAttribut(), ChoixTypeChemin.FIABILITE.getAttribut()};//tableau
 		labelTitreVoisin = new JLabel("Liste des voisins");
 		labelTitreVoisin.setHorizontalAlignment(SwingConstants.CENTER);
 		modelInfosVoisins = new DefaultTableModel(colonneAttribut, 0);
@@ -495,16 +496,31 @@ public class InterfaceGraphe extends JFrame {
 		AjoutSommetVisuelCreation ajout = new AjoutSommetVisuelCreation();
 		int choix = JOptionPane.showOptionDialog(this, ajout, "Ajouter Centre", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 		if (choix == JOptionPane.OK_OPTION) {
-			System.out.println(ajout.getNom());
-			System.out.println(ajout.getType());
-			graphe.ajoutSommet(ajout.getNom(), ajout.getType());
-			int[] pos = graphePanel.getRandomPositionPourSommet(getContenuGraphePanel());
-			//place le sommet a une position Random x et y
-			graphePanel.initialisationPlacementSommet(graphe.getSommet(ajout.getNom()), pos[0], pos[1]);
-			getChoixDestinationComboBox().addItem(ajout.getNom());
-			graphePanel.repaint();
-			
+			if (!ajout.getNom().contains("-") && !graphe.existeSommet(ajout.getNom())) {
+				switch (ajout.getType()){
+					case "M"->{
+						graphe.ajoutSommet(ajout.getNom(), ChoixTypeSommet.MATERNITE.getTypeSommet());
+					}
+					case "O"->{
+						graphe.ajoutSommet(ajout.getNom(), ChoixTypeSommet.OPERATOIRE.getTypeSommet());
+					}
+					case "N"->{
+						graphe.ajoutSommet(ajout.getNom(), ChoixTypeSommet.NUTRITION.getTypeSommet());
+					}
+					
+				}
+				
+				int[] pos = graphePanel.getRandomPositionPourSommet(getContenuGraphePanel());
+				//place le sommet à une position Random x et y
+				graphePanel.initialisationPlacementSommet(graphe.getSommet(ajout.getNom()), pos[0], pos[1]);
+				getChoixDestinationComboBox().addItem(ajout.getNom());
+				graphePanel.repaint();
+			} else {
+				JOptionPane.showMessageDialog(null, null, "Erreur", JOptionPane.ERROR_MESSAGE);
+			}
 		}
+		
+		
 	}
 	
 	/**

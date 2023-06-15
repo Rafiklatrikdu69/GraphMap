@@ -1,9 +1,9 @@
 package Interface.InfosSommetPanel;
 
 public enum ChoixTypeSommet {
-	MATERNITE("M"),
-	NUTRITION("N"),
-	OPERATOIRE("O");
+	MATERNITE("Maternité"),
+	NUTRITION("Nutrition"),
+	OPERATOIRE("Opératoire");
 	private String type;
 	ChoixTypeSommet(String m){
 		type = m;

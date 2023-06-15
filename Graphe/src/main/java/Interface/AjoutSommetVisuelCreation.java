@@ -12,7 +12,7 @@ public class AjoutSommetVisuelCreation extends JPanel {
 	private JTextField entreeSommet ;
 	
 	AjoutSommetVisuelCreation() {
-		System.out.println("test classe !");
+		
 		choixTypeSommet = new JComboBox<>();//liste des type
 		
 		entreeSommet = new JTextField();//la saisie
