@@ -23,15 +23,12 @@ public class DessinGraphe extends JPanel {
 	private Graphe graphe;
 	private Map<Graphe.MaillonGraphe, SommetVisuel> sommets;
 	private List<AreteVisuel> listAretes;
-	private Graphe.MaillonGraphe sommetSelectionne;
+	private SommetVisuel sommetSelectionne;
 	private SommetVisuel sommetEnDeplacement;
 	//Initialise les couleurs ainsi que les taille par defaut
-	private static final int SOMMET_WIDTH = 40;
-	private static final int SOMMET_HEIGHT = 40;
-	private Color COULEUR_ARETE_CHEMIN = new Color(0, 100, 255);
-	public Color DEFAUT_COULEUR_SOMMET = new Color(58,166,170);
-	public Color COULEUR_ARETE = new Color(175,110,70);
-	public Color COULEUR_TEXTE_SOMMET = new Color(255,219,56);
+	private static final int SOMMET_WIDTH = 30;
+	private static final int SOMMET_HEIGHT = 25;
+	private Theme themeActuel = Theme.LIGHT;
 	public Color COULEUR_SOMMET_SELECT = Color.BLUE;
 	
 	/**
@@ -65,22 +62,36 @@ public class DessinGraphe extends JPanel {
 	 * @param g
 	 */
 	private void dessinerArete(Graphics g) {
-		
 		Graphics2D g2d = (Graphics2D) g;
 		listAretes.forEach(areteVisuel -> {
+			AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, areteVisuel.getOpacity());
+			g2d.setComposite(alphaComposite);
 			g2d.setColor(areteVisuel.getCouleurLigne());
 			g2d.setStroke(new BasicStroke(2));
 			int ax = areteVisuel.getSommetVisuel1().getCentreDuCercle().x;
 			int bx = areteVisuel.getSommetVisuel2().getCentreDuCercle().x;
 			int ay = areteVisuel.getSommetVisuel1().getCentreDuCercle().y;
-			int by =areteVisuel.getSommetVisuel2().getCentreDuCercle().y ;
+			int by = areteVisuel.getSommetVisuel2().getCentreDuCercle().y;
 			g2d.drawLine(ax, ay, bx, by);
-			g2d.drawRect((ax+bx)/2,(ay+by)/2,20,20);
 			
-			g2d.drawString("texte",(ax+bx)/2,(ay+by)/2);
+			// Calculer la position du texte en fonction des coordonnées de l'arête
+			int textX = (ax + bx) / 2;
+			int textY = (ay + by) / 2;
+			
+			// Déplacer le texte vers le haut pour qu'il soit juste au-dessus de l'arête
+			if (ay > by) {
+				textY -= 10; // Décalage vers le haut
+			} else {
+				textY += 20; // Décalage vers le bas
+			}
+			
+			String fiabilite = areteVisuel.getSommetVisuel2().getSommetGraphe().getVoisin().getFiabilite() + "%";
+			g2d.drawString(fiabilite, textX, textY);
 		});
 		repaint();
 	}
+
+
 	
 	/**
 	 * Méthode pour initialiser le graphe avec les sommets
@@ -113,7 +124,7 @@ public class DessinGraphe extends JPanel {
 			while (voisins != null) {
 				AreteVisuel arete = new AreteVisuel(sommetVisuel, sommets.get(voisins.getDestination()));/*creer un nouvelle arrete entre le sommet
                 de depart et le voisin*/
-				arete.setCouleurLigne(COULEUR_ARETE);
+				arete.setCouleurLigne(themeActuel.getCouleurAreteParDefaut());
 				listAretes.add(arete);
 			
 				
@@ -133,8 +144,8 @@ public class DessinGraphe extends JPanel {
 		// Création d'un Panel de dessin pour représenter le sommet visuellement
 		SommetVisuel dessinPanel = new SommetVisuel(m, SOMMET_HEIGHT / 2);
 		dessinPanel.setPreferredSize(new Dimension(SOMMET_WIDTH, SOMMET_HEIGHT));
-		dessinPanel.setCouleurCentre(DEFAUT_COULEUR_SOMMET);
-		dessinPanel.setCouleurTexte(COULEUR_TEXTE_SOMMET);
+		dessinPanel.setCouleurCentre(themeActuel.getCouleurSommetParDefaut());
+		dessinPanel.setCouleurTexte(themeActuel.getCouleurTexteParDefaut());
 		dessinPanel.setBounds(x, y, SOMMET_WIDTH, SOMMET_HEIGHT);
 		
 		dessinPanel.addMouseListener(new MouseAdapter() {
@@ -148,13 +159,16 @@ public class DessinGraphe extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
+				setOpacityToAllAretes(1.0F);
+				setOpacityToAllSommet(1.0F);
+
 				
 				if (listeArreteChemin != null&& listeSommetChemin!=null) {
 					resetColorArreteChemin();
 					resetColorSommetChemin();
 				}
 				
-				actionPerformedClickDessinPanel(m);
+				actionPerformedClickDessinPanel(dessinPanel);
 				//calculerCheminPlusCourt();
 				repaint();
 				
@@ -207,9 +221,9 @@ public class DessinGraphe extends JPanel {
 	 *
 	 * @param m
 	 */
-	private void actionPerformedClickDessinPanel(Graphe.MaillonGraphe m) {
+	private void actionPerformedClickDessinPanel(SommetVisuel m) {
 		if (sommetSelectionne != null) {
-			sommets.get(sommetSelectionne).setCouleurCentre(DEFAUT_COULEUR_SOMMET);
+			sommetSelectionne.setCouleurCentre(themeActuel.getCouleurSommetParDefaut());
 		}
 		if (sommetSelectionne != null && sommetSelectionne.equals(m)) {
 			// Si le sommet sélectionné est déjà sélectionné à nouveau, on le  désélectionne
@@ -219,21 +233,29 @@ public class DessinGraphe extends JPanel {
 		} else {
 			// Selectionne un nouveau sommet et afficher ses voisins
 			sommetSelectionne = m;
-			DefaultTableModel modelInfosVoisins = interfaceGraphe.getModelInfosVoisins();
-			
-			modelInfosVoisins.setRowCount(0);
-			
+			ArrayList<Object[]> listInfosVoisins = new ArrayList<>();
+
 			// parcourt les voisins du sommet sélectionné et les ajouter au modèle d'informations des voisins
-			sommetSelectionne.voisinsToList().forEach(voisin -> {
-				modelInfosVoisins.addRow(new Object[]{voisin.getDestination().getNom(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
+			sommetSelectionne.getSommetGraphe().voisinsToList().forEach(voisin -> {
+				listInfosVoisins.add(new Object[]{voisin.getDestination().getNom(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
 			});
+
+			setContenuDansTableVoisins(listInfosVoisins);
 			
 			// Met en évidence le sommet sélectionné visuellement
-			sommets.get(sommetSelectionne).setCouleurCentre(COULEUR_SOMMET_SELECT);
+			sommetSelectionne.setCouleurCentre(COULEUR_SOMMET_SELECT);
 			listAretes.get(1).setCouleurLigne(Color.BLUE);
-			interfaceGraphe.mettreVisibleComposantSommet(sommetSelectionne.getNom(), sommetSelectionne.getType());
+			interfaceGraphe.mettreVisibleComposantSommet(sommetSelectionne.getSommetGraphe().getNom(), sommetSelectionne.getSommetGraphe().getType());
 			
 		}
+	}
+
+	public void setContenuDansTableVoisins(List<Object[]> listInfosVoisins){
+		DefaultTableModel modelInfosVoisins = interfaceGraphe.getModelInfosVoisins();
+
+		modelInfosVoisins.setRowCount(0);
+
+		listInfosVoisins.forEach(modelInfosVoisins::addRow);
 	}
 	
 	
@@ -286,14 +308,36 @@ public class DessinGraphe extends JPanel {
 				sommetVisuel.setCouleurCentre(COULEUR_SOMMET_SELECT);
 			} else {
 				//sinon la couleur est mise par defaut
-				sommetVisuel.setCouleurCentre(DEFAUT_COULEUR_SOMMET);
+				sommetVisuel.setCouleurCentre(themeActuel.getCouleurSommetParDefaut());
 			}
-			sommetVisuel.setCouleurTexte(COULEUR_TEXTE_SOMMET);
+			sommetVisuel.setCouleurTexte(themeActuel.getCouleurTexteParDefaut());
 		});
 		listAretes.forEach(areteVisuel -> {
 			//met la couleur de l'arrete
-			areteVisuel.setCouleurLigne(COULEUR_ARETE);
+			areteVisuel.setCouleurLigne(themeActuel.getCouleurAreteParDefaut());
 		});
+	}
+
+	public void setOpacityToAllAretes(float opacity){
+		listAretes.forEach(areteVisuel -> {
+			areteVisuel.setOpacity(opacity);
+			repaint();
+		});
+	}
+	public void setOpacityToAllSommet(float opacity){
+		sommets.forEach((maillonGraphe, sommetVisuel) -> {
+			sommetVisuel.setOpacity(opacity);
+			repaint();
+		});
+	}
+
+	public void setOpacityToSommetVisuel(SommetVisuel sommetVisuel, float opacity){
+		sommetVisuel.setOpacity(opacity);
+		repaint();
+	}
+	public void setOpacityToSommetVisuel(Graphe.MaillonGraphe sommet, float opacity){
+		sommets.get(sommet).setOpacity(opacity);
+		repaint();
 	}
 	
 	/**
@@ -316,7 +360,7 @@ public class DessinGraphe extends JPanel {
 	 * @param defautCouleurSommet
 	 */
 	public void setDefautCouleurSommet(Color defautCouleurSommet) {
-		DEFAUT_COULEUR_SOMMET = defautCouleurSommet;//Couleur par defaut du sommet
+		themeActuel.setCouleurSommetParDefaut(defautCouleurSommet);//Couleur par defaut du sommet
 		repaint();
 	}
 	
@@ -325,7 +369,7 @@ public class DessinGraphe extends JPanel {
 	 * @param couleurArete
 	 */
 	public void setCouleurArete(Color couleurArete) {
-		COULEUR_ARETE = couleurArete;
+		themeActuel.setCouleurAreteParDefaut(couleurArete);
 		repaint();
 	}
 	
@@ -334,7 +378,7 @@ public class DessinGraphe extends JPanel {
 	 * @param couleurTexteSommet
 	 */
 	public void setCouleurTexteSommet(Color couleurTexteSommet) {
-		COULEUR_TEXTE_SOMMET = couleurTexteSommet;
+		themeActuel.setCouleurTexteParDefaut(couleurTexteSommet);
 		repaint();
 	}
 	
@@ -347,12 +391,11 @@ public class DessinGraphe extends JPanel {
 		repaint();
 	}
 	
-	
 	/**
 	 *
 	 * @param nomSommet
 	 * @param nomSommetDestination
-	 * @return
+	 * @return AreteVisuel
 	 */
 	AreteVisuel getArete(String nomSommet, String nomSommetDestination) {
 		AreteVisuel areteVisuel = null;
@@ -368,7 +411,7 @@ public class DessinGraphe extends JPanel {
 		return areteVisuel;
 	}
 	
-	public Graphe.MaillonGraphe getSommetSelectionne() {
+	public SommetVisuel getSommetSelectionne() {
 		return sommetSelectionne;
 	}
 	
@@ -393,9 +436,9 @@ public class DessinGraphe extends JPanel {
 				listAretes.remove(areteVisuel); // Supprime l'arête de la liste des arêtes
 				listAretes.add(areteVisuel); // Ajoute l'arête à la fin de la liste pour la mettre en premier plan
 				listeArreteChemin.add(areteVisuel); // Ajoute l'arête à la liste des arêtes du chemin
-				sommetVisuelCourant.setCouleurCentre(COULEUR_ARETE_CHEMIN); // Change la couleur du sommet courant
-				sommetVisuelSuivant.setCouleurCentre(COULEUR_ARETE_CHEMIN); // Change la couleur du sommet suivant
-				areteVisuel.setCouleurLigne(COULEUR_ARETE_CHEMIN); // Change la couleur de l'arête
+				sommetVisuelCourant.setCouleurCentre(themeActuel.getCouleurAreteCheminSelect()); // Change la couleur du sommet courant
+				sommetVisuelSuivant.setCouleurCentre(themeActuel.getCouleurAreteCheminSelect()); // Change la couleur du sommet suivant
+				areteVisuel.setCouleurLigne(themeActuel.getCouleurAreteCheminSelect()); // Change la couleur de l'arête
 			}
 			
 			misAjourAutoriseFloydWarshall = true; // Indique que la mise à jour du graphe de Floyd-Warshall est autorisée
@@ -418,9 +461,9 @@ public class DessinGraphe extends JPanel {
 			listAretes.remove(areteVisuel); // Supprime l'arête de la liste des arêtes
 			listAretes.add(areteVisuel); // Ajoute l'arête à la fin de la liste pour la mettre en premier plan
 			listeArreteChemin.add(areteVisuel); // Ajoute l'arête à la liste des arêtes du chemin
-			sommetVisuelCourant.setCouleurCentre(COULEUR_ARETE_CHEMIN); // Change la couleur du sommet courant
-			sommetVisuelSuivant.setCouleurCentre(COULEUR_ARETE_CHEMIN); // Change la couleur du sommet suivant
-			areteVisuel.setCouleurLigne(COULEUR_ARETE_CHEMIN); // Change la couleur de l'arête
+			sommetVisuelCourant.setCouleurCentre(themeActuel.getCouleurAreteCheminSelect()); // Change la couleur du sommet courant
+			sommetVisuelSuivant.setCouleurCentre(themeActuel.getCouleurAreteCheminSelect()); // Change la couleur du sommet suivant
+			areteVisuel.setCouleurLigne(themeActuel.getCouleurAreteCheminSelect()); // Change la couleur de l'arête
 			
 		}
 		misAjourAutorise = true; // Indique que la mise à jour est autorisée
@@ -431,14 +474,14 @@ public class DessinGraphe extends JPanel {
 	public void resetColorArreteChemin() {
 		listeArreteChemin.forEach(areteVisuel -> {
 			//met la couleur de l'arrete
-			areteVisuel.setCouleurLigne(COULEUR_ARETE);
+			areteVisuel.setCouleurLigne(themeActuel.getCouleurAreteParDefaut());
 		});
 		
 	}
 	public void resetColorSommetChemin() {
 		listeSommetChemin.forEach(areteVisuel -> {
 			//met la couleur de l'arrete
-			areteVisuel.setCouleurCentre(DEFAUT_COULEUR_SOMMET);
+			areteVisuel.setCouleurCentre(themeActuel.getCouleurSommetParDefaut());
 		});
 		
 	}
@@ -471,6 +514,14 @@ public class DessinGraphe extends JPanel {
 	}
 	public Map<Graphe.MaillonGraphe, SommetVisuel> getListeSommetVisuel(){
 		return sommets;
+	}
+
+	public void setThemeActuel(Theme themeActuel) {
+		this.themeActuel = themeActuel;
+	}
+
+	public Theme getThemeActuel() {
+		return themeActuel;
 	}
 }
 

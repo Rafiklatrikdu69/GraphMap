@@ -15,59 +15,7 @@ public class Graphe {
 	
 	private Map<String, Dijkstra> cheminDijkstra;//stocke tous les algos djikstra
 	private FloydWarshall f = new FloydWarshall(this);//algo de recherche du chemin le plus fiable
-	
-	public Map<String, Dijkstra> getCheminDijkstra() {
-		return cheminDijkstra;
-	}
 
-	public List<MaillonGraphe> getTousLesOperatoires(){
-		MaillonGraphe tmp = getPremier();
-		List<MaillonGraphe> resultat = new ArrayList<>();
-		while (tmp !=null){
-			if (tmp.getType().equals("Opératoire")){
-				resultat.add(tmp);
-			}
-			tmp = tmp.getSuivant();
-		}
-		return resultat;
-	}
-	public List<MaillonGraphe> getTousLesCentreDeNutrions(){
-		MaillonGraphe tmp = getPremier();
-		List<MaillonGraphe> resultat = new ArrayList<>();
-		while (tmp !=null){
-			if (tmp.getType().equals("Centre de nutrition")){
-				resultat.add(tmp);
-			}
-			tmp = tmp.getSuivant();
-		}
-		return resultat;
-	}
-	public List<MaillonGraphe> getToutesLesMaternites(){
-		MaillonGraphe tmp = getPremier();
-		List<MaillonGraphe> resultat = new ArrayList<>();
-		while (tmp !=null){
-			if (tmp.getType().equals("Maternité")){
-				resultat.add(tmp);
-			}
-			tmp = tmp.getSuivant();
-		}
-		return resultat;
-	}
-	
-	public List<String> getListeSommetCheminGraphe() {
-		return f.getSommet();
-	}
-	
-	public List<Double> getSommetDonnees() {
-		return f.getSommetDonnees();
-	}
-	
-	public double rechercheChemin(String depart, String destination) {
-	
-		return f.rechercheChemin(depart, destination);
-	}
-	
-	
 	//Liste Principale
 	public class MaillonGraphe {
 		
@@ -184,19 +132,24 @@ public class Graphe {
 		private double fiab;
 		private double dist;
 		private double dur;
+		private MaillonGraphe source;
 		private MaillonGraphe dest;
 		private MaillonGrapheSec suiv;//le maillon suivant de la liste secondaire
 		
-		private MaillonGrapheSec(double fiabilite, double distance, double duree, MaillonGraphe d) {
+		private MaillonGrapheSec(double fiabilite, double distance, double duree, MaillonGraphe s,MaillonGraphe d) {
 			fiab = fiabilite;
 			dist = distance;
 			dur = duree;
+			source = s;
 			dest = d;
 			suiv = null;
 		}
 		/**Getters et setters**/
-		
-		
+
+		public MaillonGraphe getSource() {
+			return source;
+		}
+
 		/**
 		 * @return String: destination
 		 */
@@ -308,13 +261,12 @@ public class Graphe {
 	 * @param fiab
 	 * @param dist
 	 * @param dur
-	 * @return boolean
 	 */
 	public boolean ajoutVoisin(String nomSommet, String nomDestinataire, Double fiab, Double dist, Double dur) {
 		boolean resultat = false;
 		if(existeSommet(nomSommet) && existeSommet(nomDestinataire)){
 			if(!existeVoisin(nomSommet, nomDestinataire)){
-				MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomDestinataire));//cration du nouveau maillon de la seconde liste pour dire qu'il ya une arete
+				MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomSommet), getSommet(nomDestinataire));//cration du nouveau maillon de la seconde liste pour dire qu'il ya une arete
 				MaillonGraphe tmp = this.getPremier();
 				//parcourt de liste principale
 				while (!tmp.getNom().equals(nomSommet)) {
@@ -325,7 +277,7 @@ public class Graphe {
 				nouv.suiv = tmp.lVois;
 				tmp.lVois = nouv;
 
-				MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomSommet));
+				MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomDestinataire), getSommet(nomSommet));
 				tmp = this.getPremier();
 				while (!tmp.getNom().equals(nomDestinataire)) {
 					tmp = tmp.getSuivant();
@@ -512,39 +464,6 @@ public class Graphe {
 			tmp = tmp.getSuivant();
 		}
 		return res / 2;
-	}
-	
-	
-	/**
-	 * Cette methode ajoute les Voisins(Arretes) avec
-	 * les parametres donner en entrée de la methode
-	 *
-	 * @param nomSommet
-	 * @param nomDestinataire
-	 * @param fiab
-	 * @param dist
-	 * @param dur
-	 */
-	public void ajoutSommet(String nomSommet, String nomDestinataire, Double fiab, Double dist, Double dur) {
-		MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomDestinataire));//cration du nouveau maillon de la seconde liste pour dire qu'il ya une arete
-		MaillonGraphe tmp = this.getPremier();
-		//parcourt de liste principale
-		while (!tmp.getNom().equals(nomSommet)) {
-			tmp = tmp.getSuivant();
-		}
-		//les aretes vont dans les deux sens -> allez/retour
-		//ajout de l'arete pour le sommet source
-		nouv.suiv = tmp.lVois;
-		tmp.lVois = nouv;
-		
-		MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomSommet));
-		tmp = this.getPremier();
-		while (!tmp.getNom().equals(nomDestinataire)) {
-			tmp = tmp.getSuivant();
-		}
-		//ajout de l'arete pour le sommet destinataire
-		nouv2.suiv = tmp.lVois;
-		tmp.lVois = nouv2;
 	}
 	
 	/**
@@ -813,6 +732,57 @@ public class Graphe {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Map<String, Dijkstra> getCheminDijkstra() {
+		return cheminDijkstra;
+	}
+
+	public List<MaillonGraphe> getTousLesOperatoires(){
+		MaillonGraphe tmp = getPremier();
+		List<MaillonGraphe> resultat = new ArrayList<>();
+		while (tmp !=null){
+			if (tmp.getType().equals("Opératoire")){
+				resultat.add(tmp);
+			}
+			tmp = tmp.getSuivant();
+		}
+		return resultat;
+	}
+	public List<MaillonGraphe> getTousLesCentreDeNutrions(){
+		MaillonGraphe tmp = getPremier();
+		List<MaillonGraphe> resultat = new ArrayList<>();
+		while (tmp !=null){
+			if (tmp.getType().equals("Centre de nutrition")){
+				resultat.add(tmp);
+			}
+			tmp = tmp.getSuivant();
+		}
+		return resultat;
+	}
+	public List<MaillonGraphe> getToutesLesMaternites(){
+		MaillonGraphe tmp = getPremier();
+		List<MaillonGraphe> resultat = new ArrayList<>();
+		while (tmp !=null){
+			if (tmp.getType().equals("Maternité")){
+				resultat.add(tmp);
+			}
+			tmp = tmp.getSuivant();
+		}
+		return resultat;
+	}
+
+	public List<String> getListeSommetCheminGraphe() {
+		return f.getSommet();
+	}
+
+	public List<Double> getSommetDonnees() {
+		return f.getSommetDonnees();
+	}
+
+	public double rechercheChemin(String depart, String destination) {
+
+		return f.rechercheChemin(depart, destination);
 	}
 	
 	
