@@ -9,6 +9,7 @@ public class AreteVisuel {
     private SommetVisuel sommetVisuel1;//sommet visuel 1
     private SommetVisuel sommetVisuel2;//sommet visuel 2
     private Color couleurLigne;//couleur de la ligne
+    private float opacity;
     
     /**
      *Une Arete est composer de deux sommet visuels qui sont reliés
@@ -17,6 +18,7 @@ public class AreteVisuel {
      * @param sommetVisuel2
      */
     AreteVisuel(SommetVisuel sommetVisuel1, SommetVisuel sommetVisuel2){
+        this.opacity = 1.0F;
         this.positionCentre1 = sommetVisuel1.getCentreDuCercle();
         this.positionCentre2 = sommetVisuel2.getCentreDuCercle();
         this.sommetVisuel1 = sommetVisuel1;
@@ -64,7 +66,15 @@ public class AreteVisuel {
     public Color getCouleurLigne() {
         return couleurLigne;
     }
-    
+
+    public void setOpacity(float opacity) {
+        this.opacity = opacity;
+    }
+
+    public float getOpacity() {
+        return opacity;
+    }
+
     /**
      *
      * @param positionCentre1
