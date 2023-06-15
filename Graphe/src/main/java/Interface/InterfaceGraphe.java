@@ -216,7 +216,8 @@ public class InterfaceGraphe extends JFrame {
 	 */
 	private void initContainerInfosVoisins() {
 		String[] colonneAttribut = {"Destination", ChoixTypeChemin.DISTANCE.getAttribut(),ChoixTypeChemin.DUREE.getAttribut(), ChoixTypeChemin.FIABILITE.getAttribut()};//tableau
-		labelTitreVoisin = new JLabel("VOISINS");
+		labelTitreVoisin = new JLabel("Liste Des Voisins");
+		labelTitreVoisin.setFont(new Font("Arial", Font.BOLD, 14));
 		labelTitreVoisin.setHorizontalAlignment(SwingConstants.CENTER);
 		JPanel test = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		JPanel test2 = new JPanel(new BorderLayout());
@@ -365,7 +366,9 @@ public class InterfaceGraphe extends JFrame {
 		itemFermerFenetre = new JMenuItem("Fermer");
 		
 		itemAjoutSommet = new JMenuItem("Ajouter Sommet");
+		//itemSupprSommet = new JMenuItem("Supprimer Sommet");
 		itemAjoutArete = new JMenuItem("Ajouter Arete");
+		//itemSupprArete = new JMenuItem("Supprimer Arete");
 		itemAfficherMaternite = new JMenuItem("Afficher les maternités");
 		itemAfficherCentresDeNutri = new JMenuItem("Afficher les centres de nutrition");
 		itemAfficherOperatoire = new JMenuItem("Afficher les opératoires");
@@ -580,8 +583,8 @@ public class InterfaceGraphe extends JFrame {
 					case "N"->{
 						graphe.ajoutSommet(ajout.getNom(), ChoixTypeSommet.NUTRITION.getTypeSommet());
 					}
-					
 				}
+				graphe.getCheminDijkstra().put(ajout.getNom(), new Dijkstra(graphe, ajout.getNom()));
 				
 				int[] pos = graphePanel.getRandomPositionPourSommet(getContenuGraphePanel());
 				//place le sommet à une position Random x et y
@@ -693,20 +696,22 @@ public class InterfaceGraphe extends JFrame {
 						Double meilleurDistance = 0.0;
 						for (Graphe.MaillonGraphe maternite : graphe.getToutesLesMaternites()) {
 							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDistanceTo(maternite.getNom());
-							int count = tmp.size() - 1;
-							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
-								if (count == 0) {
-									if (meilleurDistance == 0.0) {
-										meilleurChemin = tmp;
-										meilleurDistance = entry.getValue();
-										destination = entry.getKey();
-									} else if (meilleurDistance > entry.getValue()) {
-										meilleurChemin = tmp;
-										meilleurDistance = entry.getValue();
-										destination = entry.getKey();
+							if(tmp!=null){
+								int count = tmp.size() - 1;
+								for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+									if (count == 0) {
+										if (meilleurDistance == 0.0) {
+											meilleurChemin = tmp;
+											meilleurDistance = entry.getValue();
+											destination = entry.getKey();
+										} else if (meilleurDistance > entry.getValue()) {
+											meilleurChemin = tmp;
+											meilleurDistance = entry.getValue();
+											destination = entry.getKey();
+										}
 									}
+									count--;
 								}
-								count--;
 							}
 						}
 						chemin = meilleurChemin;
@@ -722,20 +727,22 @@ public class InterfaceGraphe extends JFrame {
 						double meilleurDistance = 0.0;
 						for (Graphe.MaillonGraphe ope : graphe.getTousLesOperatoires()) {
 							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDistanceTo(ope.getNom());
-							int count = tmp.size() - 1;
-							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
-								if (count == 0) {
-									if (meilleurDistance == 0.0) {
-										meilleurChemin = tmp;
-										meilleurDistance = entry.getValue();
-										destination = entry.getKey();
-									} else if (meilleurDistance > entry.getValue()) {
-										meilleurChemin = tmp;
-										meilleurDistance = entry.getValue();
-										destination = entry.getKey();
+							if(tmp!=null){
+								int count = tmp.size() - 1;
+								for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+									if (count == 0) {
+										if (meilleurDistance == 0.0) {
+											meilleurChemin = tmp;
+											meilleurDistance = entry.getValue();
+											destination = entry.getKey();
+										} else if (meilleurDistance > entry.getValue()) {
+											meilleurChemin = tmp;
+											meilleurDistance = entry.getValue();
+											destination = entry.getKey();
+										}
 									}
+									count--;
 								}
-								count--;
 							}
 						}
 						chemin = meilleurChemin;
@@ -750,21 +757,23 @@ public class InterfaceGraphe extends JFrame {
 						for (Graphe.MaillonGraphe CentreDeNutri : graphe.getTousLesCentreDeNutrions()) {
 							
 							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDistanceTo(CentreDeNutri.getNom());
-							int count = tmp.size() - 1;
-							
-							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
-								if (count == 0) {
-									if (meilleurDistance == 0.0) {
-										meilleurChemin = tmp;
-										meilleurDistance = entry.getValue();
-										destination = entry.getKey();
-									} else if (meilleurDistance > entry.getValue()) {
-										meilleurChemin = tmp;
-										meilleurDistance = entry.getValue();
-										destination = entry.getKey();
+							if(tmp!=null){
+								int count = tmp.size() - 1;
+
+								for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+									if (count == 0) {
+										if (meilleurDistance == 0.0) {
+											meilleurChemin = tmp;
+											meilleurDistance = entry.getValue();
+											destination = entry.getKey();
+										} else if (meilleurDistance > entry.getValue()) {
+											meilleurChemin = tmp;
+											meilleurDistance = entry.getValue();
+											destination = entry.getKey();
+										}
 									}
+									count--;
 								}
-								count--;
 							}
 						}
 						chemin = meilleurChemin;
@@ -813,20 +822,22 @@ public class InterfaceGraphe extends JFrame {
 						Double meilleurDuree = 0.0;
 						for (Graphe.MaillonGraphe maternite : graphe.getToutesLesMaternites()) {
 							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDureeTo(maternite.getNom());
-							int count = tmp.size() - 1;
-							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
-								if (count == 0) {
-									if (meilleurDuree == 0.0) {
-										meilleurChemin = tmp;
-										meilleurDuree = entry.getValue();
-										destination = entry.getKey();
-									} else if (meilleurDuree > entry.getValue()) {
-										meilleurChemin = tmp;
-										meilleurDuree = entry.getValue();
-										destination = entry.getKey();
+							if(tmp!=null){
+								int count = tmp.size() - 1;
+								for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+									if (count == 0) {
+										if (meilleurDuree == 0.0) {
+											meilleurChemin = tmp;
+											meilleurDuree = entry.getValue();
+											destination = entry.getKey();
+										} else if (meilleurDuree > entry.getValue()) {
+											meilleurChemin = tmp;
+											meilleurDuree = entry.getValue();
+											destination = entry.getKey();
+										}
 									}
+									count--;
 								}
-								count--;
 							}
 						}
 						chemin = meilleurChemin;
@@ -842,20 +853,22 @@ public class InterfaceGraphe extends JFrame {
 						double meilleurDuree = 0.0;
 						for (Graphe.MaillonGraphe ope : graphe.getTousLesOperatoires()) {
 							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDureeTo(ope.getNom());
-							int count = tmp.size() - 1;
-							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
-								if (count == 0) {
-									if (meilleurDuree == 0.0) {
-										meilleurChemin = tmp;
-										meilleurDuree = entry.getValue();
-										destination = entry.getKey();
-									} else if (meilleurDuree > entry.getValue()) {
-										meilleurChemin = tmp;
-										meilleurDuree = entry.getValue();
-										destination = entry.getKey();
+							if(tmp!=null){
+								int count = tmp.size() - 1;
+								for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+									if (count == 0) {
+										if (meilleurDuree == 0.0) {
+											meilleurChemin = tmp;
+											meilleurDuree = entry.getValue();
+											destination = entry.getKey();
+										} else if (meilleurDuree > entry.getValue()) {
+											meilleurChemin = tmp;
+											meilleurDuree = entry.getValue();
+											destination = entry.getKey();
+										}
 									}
+									count--;
 								}
-								count--;
 							}
 						}
 						chemin = meilleurChemin;
@@ -870,21 +883,22 @@ public class InterfaceGraphe extends JFrame {
 						for (Graphe.MaillonGraphe CentreDeNutri : graphe.getTousLesCentreDeNutrions()) {
 
 							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDureeTo(CentreDeNutri.getNom());
-							int count = tmp.size() - 1;
-
-							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
-								if (count == 0) {
-									if (meilleurDuree == 0.0) {
-										meilleurChemin = tmp;
-										meilleurDuree = entry.getValue();
-										destination = entry.getKey();
-									} else if (meilleurDuree > entry.getValue()) {
-										meilleurChemin = tmp;
-										meilleurDuree = entry.getValue();
-										destination = entry.getKey();
+							if(tmp!=null){
+								int count = tmp.size() - 1;
+								for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+									if (count == 0) {
+										if (meilleurDuree == 0.0) {
+											meilleurChemin = tmp;
+											meilleurDuree = entry.getValue();
+											destination = entry.getKey();
+										} else if (meilleurDuree > entry.getValue()) {
+											meilleurChemin = tmp;
+											meilleurDuree = entry.getValue();
+											destination = entry.getKey();
+										}
 									}
+									count--;
 								}
-								count--;
 							}
 						}
 						chemin = meilleurChemin;
