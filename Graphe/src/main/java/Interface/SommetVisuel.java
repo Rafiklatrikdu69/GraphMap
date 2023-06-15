@@ -57,6 +57,7 @@ public class SommetVisuel extends JPanel {
         g2d.setColor(couleurTexte);
         Font font = new Font("Arial", Font.BOLD, 11);
         g2d.setFont(font);
+     
         int largeurNom = g2d.getFontMetrics().stringWidth(centre.getNom());
         int xNom = x - largeurNom / 2;
         int yNom = y + 5;

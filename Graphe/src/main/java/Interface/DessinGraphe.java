@@ -9,6 +9,8 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
+import static com.formdev.flatlaf.ui.FlatUIUtils.drawString;
+
 public class DessinGraphe extends JPanel {
 	
 	private InterfaceGraphe interfaceGraphe;
@@ -67,10 +69,16 @@ public class DessinGraphe extends JPanel {
 			g2d.setComposite(alphaComposite);
 			g2d.setColor(areteVisuel.getCouleurLigne());
 			g2d.setStroke(new BasicStroke(2));
-			g2d.drawLine(areteVisuel.getSommetVisuel1().getCentreDuCercle().x, areteVisuel.getSommetVisuel1().getCentreDuCercle().y, areteVisuel.getSommetVisuel2().getCentreDuCercle().x, areteVisuel.getSommetVisuel2().getCentreDuCercle().y);
-
+			int ax = areteVisuel.getSommetVisuel1().getCentreDuCercle().x;
+			int bx = areteVisuel.getSommetVisuel2().getCentreDuCercle().x;
+			int ay = areteVisuel.getSommetVisuel1().getCentreDuCercle().y;
+			int by =areteVisuel.getSommetVisuel2().getCentreDuCercle().y ;
+			g2d.drawLine(ax, ay, bx, by);
+			g2d.drawRect((ax+bx)/2,(ay+by)/2,20,20);
 			
+			g2d.drawString("texte",(ax+bx)/2,(ay+by)/2);
 		});
+		repaint();
 	}
 	
 	/**
@@ -106,11 +114,14 @@ public class DessinGraphe extends JPanel {
                 de depart et le voisin*/
 				arete.setCouleurLigne(themeActuel.getCouleurAreteParDefaut());
 				listAretes.add(arete);
+			
 				
 				voisins = voisins.getSuivantMaillonSec();//passe au maillon suivant
 			}
 		});
 	}
+	
+	
 	
 	/**
 	 * @param m

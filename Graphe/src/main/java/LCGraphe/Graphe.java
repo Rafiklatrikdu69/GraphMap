@@ -4,8 +4,7 @@ import Exception.SommetException;
 import Exception.VoisinException;
 import Exception.ListeSommetsNull;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 
@@ -807,7 +806,30 @@ public class Graphe {
 		}
 		return chaine.toString();//renvoie la chaine String
 	}
-
+	
+	public void ajoutCentreDansCsv(String nomFichierChoisi, String nomCentre, String typeCentre, int nombreColonne){
+		try (BufferedWriter buffWrite = new BufferedWriter(new FileWriter(nomFichierChoisi, true))) {
+			StringBuilder ligne = new StringBuilder();
+			for (int i = 0; i < nombreColonne+3; i++) {
+				if(i == 0){
+					ligne.append(nomCentre);
+				} else if (i == 1) {
+					ligne.append(typeCentre);
+				} else {
+					ligne.append("0");
+				}
+				if(!(i == nombreColonne-1)){
+					ligne.append(";");
+				}
+			}
+			ligne.append("\n");
+			buffWrite.write(ligne.toString());
+			//ajoutSommet(nomCentre, typeCentre);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }
 
 
