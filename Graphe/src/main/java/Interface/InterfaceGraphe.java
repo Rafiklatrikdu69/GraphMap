@@ -8,7 +8,6 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.swing.*;
-import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -60,22 +59,19 @@ public class InterfaceGraphe extends JFrame {
 	private JRadioButtonMenuItem modeLight, modeDark;
 	private JMenu itemFichier, itemFenetre, itemModeDuGraphe, itemFonctionnalite, itemChoixTheme, itemAjoutSommetArete;
 	private JMenuItem itemFermerFenetre, itemOuvrirFichier, itemEnregisterGraphe;
-	private JMenuItem itemAjoutArete, itemAjoutSommet, itemVoisin1Distance, itemVoisin2Distance, itemVoisinPDistance;
+	private JMenuItem itemAjoutArete, itemAjoutSommet, itemAfficherMaternite, itemAfficherCentresDeNutri, itemAfficherOperatoire;
 	static JRadioButton bloquerGraphe;
 	private Dimension screenSize;
 	private LCGraphe.Graphe graphe;
 	private JPanel contenuGraphePanel;
 	
-	private List<Graphe.MaillonGraphe> listSommets;
-	private List<Graphe.MaillonGrapheSec> listAretes;
-	
 	private static final Color couleurFondPanelDarkMode = new Color(40, 40, 48);
 	private static final Color couleurFondPanelLightMode = new Color(200, 200, 200);
+
+
 	
 	public InterfaceGraphe() {
 		super();
-		listSommets = new ArrayList<>();
-		listAretes = new ArrayList<>();
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int screenWidth = (int) screenSize.getWidth();
 		int screenHeight = (int) screenSize.getHeight();
@@ -125,7 +121,7 @@ public class InterfaceGraphe extends JFrame {
 		paneInfoSommet = new JPanel(new BorderLayout()); // ce panel contient le card layout, le nom du sommet et son type.
 		paneInfoSommet.setOpaque(false);
 		//On met un minimum de dimension de ce panel pour qu'il est la place d'afficher le contenu
-		panelToutesInfos.setPreferredSize(new Dimension((int) screenSize.getWidth() / 6, (int) screenSize.getHeight()));
+		panelToutesInfos.setPreferredSize(new Dimension(((int) screenSize.getWidth() / 5)+10, (int) screenSize.getHeight()));
 		
 		cardLayout = new CardLayout(); // ce card layout sert à changer de fenetre entre "Afficher les Voisins" et "Faire un Chemin"
 		cardPanelInfos = new JPanel(cardLayout); // on met le card layout dans son panel
@@ -220,8 +216,22 @@ public class InterfaceGraphe extends JFrame {
 	 */
 	private void initContainerInfosVoisins() {
 		String[] colonneAttribut = {"Destination", ChoixTypeChemin.DISTANCE.getAttribut(),ChoixTypeChemin.DUREE.getAttribut(), ChoixTypeChemin.FIABILITE.getAttribut()};//tableau
-		labelTitreVoisin = new JLabel("Liste des voisins");
+		labelTitreVoisin = new JLabel("VOISINS");
 		labelTitreVoisin.setHorizontalAlignment(SwingConstants.CENTER);
+		JPanel test = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		JPanel test2 = new JPanel(new BorderLayout());
+		JButton afficherVoisin1Distance = new JButton("1 distance");
+		JButton afficherVoisin2Distance = new JButton("2 distance");
+		JButton afficherVoisinPDistance = new JButton("p distance");
+
+
+		test.add(afficherVoisin1Distance);
+		test.add(afficherVoisin2Distance);
+		test.add(afficherVoisinPDistance);
+		test2.add(labelTitreVoisin, BorderLayout.NORTH);
+		test2.add(test, BorderLayout.CENTER);
+
+
 		modelInfosVoisins = new DefaultTableModel(colonneAttribut, 0);
 		tableInfosVoisins = new JTable(modelInfosVoisins);
 		tableInfosVoisins.setOpaque(false);
@@ -234,7 +244,7 @@ public class InterfaceGraphe extends JFrame {
 		affichageVoisinPanel = new JPanel(new BorderLayout());
 		affichageVoisinPanel.setOpaque(false);
 		affichageVoisinPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
-		affichageVoisinPanel.add(labelTitreVoisin, BorderLayout.NORTH);
+		affichageVoisinPanel.add(test2, BorderLayout.NORTH);
 		affichageVoisinPanel.add(affichageVoisinScrollPane, BorderLayout.CENTER);
 		
 		contenuInfoSommetPanel.add(affichageVoisinPanel, BorderLayout.CENTER);
@@ -257,11 +267,14 @@ public class InterfaceGraphe extends JFrame {
 			tableCheminsPanel.updateColonne(choixChemin);
 		}
 		
-		panelChoixChemin = new JPanel(new GridLayout(2, 2));
+		panelChoixChemin = new JPanel(new GridLayout(2, 1));
 		panelChoixChemin.setOpaque(false);
-		
-		panelChoixChemin.add(choixTypeCheminComboBox);
-		panelChoixChemin.add(choixDestinationComboBox);
+		JPanel panelChoixCheminNord = new JPanel(new GridLayout(1, 2));
+
+		panelChoixCheminNord.add(choixTypeCheminComboBox);
+		panelChoixCheminNord.add(choixDestinationComboBox);
+
+		panelChoixChemin.add(panelChoixCheminNord);
 		panelChoixChemin.add(afficherCheminButton);
 		
 		contenuTousLesCheminsPanel = new JPanel(new BorderLayout());
@@ -313,9 +326,9 @@ public class InterfaceGraphe extends JFrame {
 		itemAjoutSommetArete.add(itemAjoutArete);
 		
 		itemFonctionnalite.add(itemAjoutSommetArete);
-		itemFonctionnalite.add(itemVoisin1Distance);
-		itemFonctionnalite.add(itemVoisin2Distance);
-		itemFonctionnalite.add(itemVoisinPDistance);
+		itemFonctionnalite.add(itemAfficherMaternite);
+		itemFonctionnalite.add(itemAfficherCentresDeNutri);
+		itemFonctionnalite.add(itemAfficherOperatoire);
 		itemFonctionnalite.setFont(fontBarreMenu);
 		
 		ButtonGroup groupeLightDarkMode = new ButtonGroup();
@@ -353,9 +366,9 @@ public class InterfaceGraphe extends JFrame {
 		
 		itemAjoutSommet = new JMenuItem("Ajouter Sommet");
 		itemAjoutArete = new JMenuItem("Ajouter Arete");
-		itemVoisin1Distance = new JMenuItem("Afficher voisin 1 distance");
-		itemVoisin2Distance = new JMenuItem("Afficher voisin 2 distance");
-		itemVoisinPDistance = new JMenuItem("Afficher voisin p distance");
+		itemAfficherMaternite = new JMenuItem("Afficher les maternités");
+		itemAfficherCentresDeNutri = new JMenuItem("Afficher les centres de nutrition");
+		itemAfficherOperatoire = new JMenuItem("Afficher les opératoires");
 		
 		modeLight = new JRadioButtonMenuItem("Light", true);
 		modeDark = new JRadioButtonMenuItem("Dark");
@@ -400,19 +413,16 @@ public class InterfaceGraphe extends JFrame {
 					
 					updateInterface();
 					if (graphePanel != null) {
-						graphePanel.setCouleurTexteSommet(Color.WHITE);
-						graphePanel.setDefautCouleurSommet(Color.BLACK);
-						graphePanel.setCouleurSommetSelect(Color.BLUE);
-						graphePanel.setCouleurArete(Color.BLACK);
+						graphePanel.setThemeActuel(Theme.LIGHT);
 						graphePanel.miseAJourDessin();
 						
 						tableInfosVoisins.setGridColor(couleurFondPanelLightMode);
 						//bug le chemin s'affiche tout le temps quand on change le theme
-						if (graphePanel.getMisAjourAutoriseFloydWarsall() == true) {
+						if (graphePanel.getMisAjourAutoriseFloydWarsall()) {
 							graphePanel.setMisAjourAutoriseFloydWarshall(false);
 							graphePanel.colorCheminFiabilite();
 							
-						} else if (graphePanel.getMisAjourAutoriseDjikstra() == true) {
+						} else if (graphePanel.getMisAjourAutoriseDjikstra()) {
 							graphePanel.setMisAjourAutoriseDjikstra(false);
 							graphePanel.colorCheminDjikstra();
 						}
@@ -435,11 +445,7 @@ public class InterfaceGraphe extends JFrame {
 					
 					updateInterface();//mise a jour de l'interface
 					if (graphePanel != null) {
-						tableInfosVoisins.setGridColor(couleurFondPanelDarkMode);
-						graphePanel.setCouleurTexteSommet(Color.BLACK);
-						graphePanel.setDefautCouleurSommet(new Color(225, 225, 225));
-						graphePanel.setCouleurSommetSelect(new Color(98, 98, 98));
-						graphePanel.setCouleurArete(new Color(154, 141, 141));
+						graphePanel.setThemeActuel(Theme.DARK);
 						graphePanel.miseAJourDessin();
 						if (graphePanel.getMisAjourAutoriseFloydWarsall()) {
 							graphePanel.setMisAjourAutoriseFloydWarshall(false);
@@ -478,11 +484,78 @@ public class InterfaceGraphe extends JFrame {
 				creationDuSommet();
 			}
 		});
-		
-		
+		itemAfficherMaternite.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				List<Graphe.MaillonGraphe> listMater = graphe.getToutesLesMaternites();
+
+				if(graphePanel.getSommetSelectionne()!=null){
+					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommetParDefaut());
+					mettreInvisibleComposantSommet();
+					setNotSelectAuNom();
+				}
+				try {
+					graphe.tousLesSommetToList().forEach(maillonGraphe -> {
+						if(!listMater.contains(maillonGraphe)){
+							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 0.3F);
+						} else {
+							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 1.0F);
+						}
+					});
+					graphePanel.setOpacityToAllAretes(0.1F);
+				} catch (Exception ex) {
+					throw new RuntimeException(ex);
+				}
+			}
+		});
+		itemAfficherCentresDeNutri.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				List<Graphe.MaillonGraphe> listMater = graphe.getTousLesCentreDeNutrions();
+				if(graphePanel.getSommetSelectionne()!=null){
+					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommetParDefaut());
+					mettreInvisibleComposantSommet();
+					setNotSelectAuNom();
+				}
+				try {
+					graphe.tousLesSommetToList().forEach(maillonGraphe -> {
+						if(!listMater.contains(maillonGraphe)){
+							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 0.3F);
+						} else {
+							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 1.0F);
+						}
+					});
+					graphePanel.setOpacityToAllAretes(0.1F);
+				} catch (Exception ex) {
+					throw new RuntimeException(ex);
+				}
+			}
+		});
+		itemAfficherOperatoire.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				List<Graphe.MaillonGraphe> listMater = graphe.getTousLesOperatoires();
+				if(graphePanel.getSommetSelectionne()!=null){
+					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommetParDefaut());
+					mettreInvisibleComposantSommet();
+					setNotSelectAuNom();
+				}
+				try {
+					graphe.tousLesSommetToList().forEach(maillonGraphe -> {
+						if(!listMater.contains(maillonGraphe)){
+							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 0.3F);
+						} else {
+							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 1.0F);
+						}
+					});
+					graphePanel.setOpacityToAllAretes(0.1F);
+				} catch (Exception ex) {
+					throw new RuntimeException(ex);
+				}
+			}
+		});
+
 		//////////////////////////////////////////////////////////////////////////////////////
-		
-		
 	}
 	
 	/**
@@ -563,11 +636,10 @@ public class InterfaceGraphe extends JFrame {
 		SwingUtilities.updateComponentTreeUI(this);//met a jour l'interface
 	}
 	
-	
-	// Cette méthode permet de définir un écouteur d'action pour afficher les chemins.
+		// Cette méthode permet de définir un écouteur d'action pour afficher les chemins.
 	private void setActionListenerToAfficherChemins() {
 		String selectChoixChemin = (String) choixTypeCheminComboBox.getSelectedItem(); // Récupère le choix du type de chemin sélectionné dans une ComboBox
-		Graphe.MaillonGraphe sommetSelect = graphePanel.getSommetSelectionne(); // Obtient le sommet sélectionné à partir du panneau du graphe
+		Graphe.MaillonGraphe sommetSelect = graphePanel.getSommetSelectionne().getSommetGraphe(); // Obtient le sommet sélectionné à partir du panneau du graphe
 		String destination = (String) choixDestinationComboBox.getSelectedItem(); // Récupère la destination sélectionnée dans une ComboBox
 		
 		if (selectChoixChemin.equals((ChoixTypeChemin.FIABILITE.getAttribut()))) { // Vérifie si le choix du chemin est la fiabilité
@@ -627,9 +699,11 @@ public class InterfaceGraphe extends JFrame {
 									if (meilleurDistance == 0.0) {
 										meilleurChemin = tmp;
 										meilleurDistance = entry.getValue();
-									} else if (meilleurDistance < entry.getValue()) {
+										destination = entry.getKey();
+									} else if (meilleurDistance > entry.getValue()) {
 										meilleurChemin = tmp;
 										meilleurDistance = entry.getValue();
+										destination = entry.getKey();
 									}
 								}
 								count--;
@@ -654,9 +728,11 @@ public class InterfaceGraphe extends JFrame {
 									if (meilleurDistance == 0.0) {
 										meilleurChemin = tmp;
 										meilleurDistance = entry.getValue();
-									} else if (meilleurDistance < entry.getValue()) {
+										destination = entry.getKey();
+									} else if (meilleurDistance > entry.getValue()) {
 										meilleurChemin = tmp;
 										meilleurDistance = entry.getValue();
+										destination = entry.getKey();
 									}
 								}
 								count--;
@@ -681,9 +757,11 @@ public class InterfaceGraphe extends JFrame {
 									if (meilleurDistance == 0.0) {
 										meilleurChemin = tmp;
 										meilleurDistance = entry.getValue();
+										destination = entry.getKey();
 									} else if (meilleurDistance > entry.getValue()) {
 										meilleurChemin = tmp;
 										meilleurDistance = entry.getValue();
+										destination = entry.getKey();
 									}
 								}
 								count--;
@@ -698,7 +776,6 @@ public class InterfaceGraphe extends JFrame {
 			}
 			
 			if (chemin != null) { // Vérifie si un chemin existe
-				
 				for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
 					String nomSommet = entry.getKey(); // Obtient le nom du sommet
 					double distance = entry.getValue(); // Obtient la distance entre les sommets
@@ -720,13 +797,103 @@ public class InterfaceGraphe extends JFrame {
 			graphePanel.colorCheminDjikstra(); // colorie le chemin le plus court sur le graphe selon l'algorithme de Dijkstra
 			repaint(); // redessine le graphe
 		} else if (selectChoixChemin.equals((ChoixTypeChemin.DUREE.getAttribut()))) { // Vérifie si le choix du chemin est la durée
-			
-			tableCheminsPanel.resetTable(); // Reinitialise le tableau des chemins
+
+			tableCheminsPanel.resetTable(); // Réinitialise le tableau des chemins
 			listeSommetDjikstraChemin = new ArrayList<>(); // Initialise la liste des sommets du chemin selon l'algorithme de Dijkstra
 			listeSommetDjikstraChemin.add(sommetSelect.getNom()); // Ajoute le sommet de départ à la liste des sommets du chemin
 			tableCheminsPanel.updateColonne(selectChoixChemin); // Met à jour la colonne du tableau avec le choix du chemin
-			LinkedHashMap<String, Double> chemin = graphe.getCheminDijkstra().get(sommetSelect.getNom()).getCheminsDureeTo(destination); // Obtient le chemin le plus court en termes de durée entre le sommet de départ et la destination
-			
+			LinkedHashMap<String, Double> chemin = null;
+			Dijkstra tousLesCheminsDuSommet = graphe.getCheminDijkstra().get(sommetSelect.getNom());
+			switch (destination) {
+				case "Maternité" -> {
+					if (sommetSelect.getType().equals("Maternité")) {
+						chemin = tousLesCheminsDuSommet.getCheminsDureeTo(sommetSelect.getNom());
+					} else {
+						LinkedHashMap<String, Double> meilleurChemin = null;
+						Double meilleurDuree = 0.0;
+						for (Graphe.MaillonGraphe maternite : graphe.getToutesLesMaternites()) {
+							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDureeTo(maternite.getNom());
+							int count = tmp.size() - 1;
+							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+								if (count == 0) {
+									if (meilleurDuree == 0.0) {
+										meilleurChemin = tmp;
+										meilleurDuree = entry.getValue();
+										destination = entry.getKey();
+									} else if (meilleurDuree > entry.getValue()) {
+										meilleurChemin = tmp;
+										meilleurDuree = entry.getValue();
+										destination = entry.getKey();
+									}
+								}
+								count--;
+							}
+						}
+						chemin = meilleurChemin;
+					}
+
+
+				}
+				case "Opératoire" -> {
+					if (sommetSelect.getType().equals("Opératoire")) {
+						chemin = tousLesCheminsDuSommet.getCheminsDureeTo(sommetSelect.getNom());
+					} else {
+						LinkedHashMap<String, Double> meilleurChemin = null;
+						double meilleurDuree = 0.0;
+						for (Graphe.MaillonGraphe ope : graphe.getTousLesOperatoires()) {
+							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDureeTo(ope.getNom());
+							int count = tmp.size() - 1;
+							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+								if (count == 0) {
+									if (meilleurDuree == 0.0) {
+										meilleurChemin = tmp;
+										meilleurDuree = entry.getValue();
+										destination = entry.getKey();
+									} else if (meilleurDuree > entry.getValue()) {
+										meilleurChemin = tmp;
+										meilleurDuree = entry.getValue();
+										destination = entry.getKey();
+									}
+								}
+								count--;
+							}
+						}
+						chemin = meilleurChemin;
+					}
+				}
+				case "Centre de nutrition" -> {
+					if (sommetSelect.getType().equals("Centre de nutrition")) {
+						chemin = tousLesCheminsDuSommet.getCheminsDureeTo(sommetSelect.getNom());
+					} else {
+						LinkedHashMap<String, Double> meilleurChemin = null;
+						double meilleurDuree = 0.0;
+						for (Graphe.MaillonGraphe CentreDeNutri : graphe.getTousLesCentreDeNutrions()) {
+
+							LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsDureeTo(CentreDeNutri.getNom());
+							int count = tmp.size() - 1;
+
+							for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+								if (count == 0) {
+									if (meilleurDuree == 0.0) {
+										meilleurChemin = tmp;
+										meilleurDuree = entry.getValue();
+										destination = entry.getKey();
+									} else if (meilleurDuree > entry.getValue()) {
+										meilleurChemin = tmp;
+										meilleurDuree = entry.getValue();
+										destination = entry.getKey();
+									}
+								}
+								count--;
+							}
+						}
+						chemin = meilleurChemin;
+					}
+				}
+				default -> {
+					chemin = tousLesCheminsDuSommet.getCheminsDureeTo(destination); // Obtient le chemin le plus court en termes de distance entre le sommet de départ et la destination
+				}
+			}
 			if (chemin != null) { // Verifie si un chemin existe
 				
 				for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
@@ -751,7 +918,6 @@ public class InterfaceGraphe extends JFrame {
 			repaint(); // Redessine le graphe
 		}
 	}
-	
 	/**
 	 *
 	 */
@@ -871,5 +1037,4 @@ public class InterfaceGraphe extends JFrame {
 	public JMenuItem getItemOuvrirFichier() {
 		return itemOuvrirFichier;
 	}
-	
 }
