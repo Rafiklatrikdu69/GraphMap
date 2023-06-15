@@ -309,7 +309,6 @@ public class Graphe {
 	 * @param fiab
 	 * @param dist
 	 * @param dur
-	 * @return boolean
 	 */
 	public boolean ajoutVoisin(String nomSommet, String nomDestinataire, Double fiab, Double dist, Double dur) {
 		boolean resultat = false;
@@ -513,39 +512,6 @@ public class Graphe {
 			tmp = tmp.getSuivant();
 		}
 		return res / 2;
-	}
-	
-	
-	/**
-	 * Cette methode ajoute les Voisins(Arretes) avec
-	 * les parametres donner en entrée de la methode
-	 *
-	 * @param nomSommet
-	 * @param nomDestinataire
-	 * @param fiab
-	 * @param dist
-	 * @param dur
-	 */
-	public void ajoutSommet(String nomSommet, String nomDestinataire, Double fiab, Double dist, Double dur) {
-		MaillonGrapheSec nouv = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomDestinataire));//cration du nouveau maillon de la seconde liste pour dire qu'il ya une arete
-		MaillonGraphe tmp = this.getPremier();
-		//parcourt de liste principale
-		while (!tmp.getNom().equals(nomSommet)) {
-			tmp = tmp.getSuivant();
-		}
-		//les aretes vont dans les deux sens -> allez/retour
-		//ajout de l'arete pour le sommet source
-		nouv.suiv = tmp.lVois;
-		tmp.lVois = nouv;
-		
-		MaillonGrapheSec nouv2 = new MaillonGrapheSec(fiab, dist, dur, getSommet(nomSommet));
-		tmp = this.getPremier();
-		while (!tmp.getNom().equals(nomDestinataire)) {
-			tmp = tmp.getSuivant();
-		}
-		//ajout de l'arete pour le sommet destinataire
-		nouv2.suiv = tmp.lVois;
-		tmp.lVois = nouv2;
 	}
 	
 	/**
@@ -837,8 +803,6 @@ public class Graphe {
 		}
 		return chaine.toString();//renvoie la chaine String
 	}
-	
-	
 }
 
 
