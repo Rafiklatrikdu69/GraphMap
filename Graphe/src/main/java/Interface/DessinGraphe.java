@@ -210,14 +210,14 @@ public class DessinGraphe extends JPanel {
 		} else {
 			// Selectionne un nouveau sommet et afficher ses voisins
 			sommetSelectionne = m;
-			DefaultTableModel modelInfosVoisins = interfaceGraphe.getModelInfosVoisins();
-			
-			modelInfosVoisins.setRowCount(0);
-			
+			ArrayList<Object[]> listInfosVoisins = new ArrayList<>();
+
 			// parcourt les voisins du sommet sélectionné et les ajouter au modèle d'informations des voisins
 			sommetSelectionne.getSommetGraphe().voisinsToList().forEach(voisin -> {
-				modelInfosVoisins.addRow(new Object[]{voisin.getDestination().getNom(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
+				listInfosVoisins.add(new Object[]{voisin.getDestination().getNom(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
 			});
+
+			setContenuDansTableVoisins(listInfosVoisins);
 			
 			// Met en évidence le sommet sélectionné visuellement
 			sommetSelectionne.setCouleurCentre(COULEUR_SOMMET_SELECT);
@@ -225,6 +225,14 @@ public class DessinGraphe extends JPanel {
 			interfaceGraphe.mettreVisibleComposantSommet(sommetSelectionne.getSommetGraphe().getNom(), sommetSelectionne.getSommetGraphe().getType());
 			
 		}
+	}
+
+	public void setContenuDansTableVoisins(List<Object[]> listInfosVoisins){
+		DefaultTableModel modelInfosVoisins = interfaceGraphe.getModelInfosVoisins();
+
+		modelInfosVoisins.setRowCount(0);
+
+		listInfosVoisins.forEach(modelInfosVoisins::addRow);
 	}
 	
 	
@@ -360,12 +368,11 @@ public class DessinGraphe extends JPanel {
 		repaint();
 	}
 	
-	
 	/**
 	 *
 	 * @param nomSommet
 	 * @param nomSommetDestination
-	 * @return
+	 * @return AreteVisuel
 	 */
 	AreteVisuel getArete(String nomSommet, String nomSommetDestination) {
 		AreteVisuel areteVisuel = null;
