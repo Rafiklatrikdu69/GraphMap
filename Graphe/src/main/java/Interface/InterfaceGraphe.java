@@ -45,6 +45,8 @@ public class InterfaceGraphe extends JFrame {
 	private JPanel contenuNomTypeSommetPanel;
 	private JPanel contenuInfoSommetPanel;
 	private JPanel affichageVoisinPanel;
+	private JPanel panelTitreVoisinButton;
+	private JButton afficherVoisin1Distance, afficherVoisin2Distance, afficherVoisinPDistance;
 	
 	private JPanel contenuTousLesCheminsPanel;
 	private AfficherCheminPanel tableCheminsPanel;
@@ -220,17 +222,17 @@ public class InterfaceGraphe extends JFrame {
 		labelTitreVoisin.setFont(new Font("Arial", Font.BOLD, 14));
 		labelTitreVoisin.setHorizontalAlignment(SwingConstants.CENTER);
 		JPanel test = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		JPanel test2 = new JPanel(new BorderLayout());
-		JButton afficherVoisin1Distance = new JButton("1 distance");
-		JButton afficherVoisin2Distance = new JButton("2 distance");
-		JButton afficherVoisinPDistance = new JButton("p distance");
+		panelTitreVoisinButton = new JPanel(new BorderLayout());
+		afficherVoisin1Distance = new JButton("1 distance");
+		afficherVoisin2Distance = new JButton("2 distance");
+		afficherVoisinPDistance = new JButton("p distance");
 
 
 		test.add(afficherVoisin1Distance);
 		test.add(afficherVoisin2Distance);
 		test.add(afficherVoisinPDistance);
-		test2.add(labelTitreVoisin, BorderLayout.NORTH);
-		test2.add(test, BorderLayout.CENTER);
+		panelTitreVoisinButton.add(labelTitreVoisin, BorderLayout.NORTH);
+		panelTitreVoisinButton.add(test, BorderLayout.CENTER);
 
 
 		modelInfosVoisins = new DefaultTableModel(colonneAttribut, 0);
@@ -245,7 +247,7 @@ public class InterfaceGraphe extends JFrame {
 		affichageVoisinPanel = new JPanel(new BorderLayout());
 		affichageVoisinPanel.setOpaque(false);
 		affichageVoisinPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
-		affichageVoisinPanel.add(test2, BorderLayout.NORTH);
+		affichageVoisinPanel.add(panelTitreVoisinButton, BorderLayout.NORTH);
 		affichageVoisinPanel.add(affichageVoisinScrollPane, BorderLayout.CENTER);
 		
 		contenuInfoSommetPanel.add(affichageVoisinPanel, BorderLayout.CENTER);
@@ -473,6 +475,8 @@ public class InterfaceGraphe extends JFrame {
 					
 					graphePanel.resetColorArreteChemin();
 					graphePanel.resetColorSommetChemin();
+					graphePanel.setOpacityToAllSommet(1.0F);
+					graphePanel.setOpacityToAllAretes(1.0F);
 					
 					
 					repaint();
@@ -522,7 +526,7 @@ public class InterfaceGraphe extends JFrame {
 				}
 				try {
 					graphe.tousLesSommetToList().forEach(maillonGraphe -> {
-						if(!listMater.contains(maillonGraphe)){
+						if(!listMater.contains(maillonGraphe) && !maillonGraphe.equals(graphePanel.getSommetSelectionne().getSommetGraphe())){
 							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 0.3F);
 						} else {
 							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 1.0F);
@@ -555,6 +559,48 @@ public class InterfaceGraphe extends JFrame {
 				} catch (Exception ex) {
 					throw new RuntimeException(ex);
 				}
+			}
+		});
+
+		afficherVoisin1Distance.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ArrayList<Object[]> listInfosVoisins = new ArrayList<>();
+				List<Graphe.MaillonGrapheSec> listVoisins = graphePanel.getSommetSelectionne().getSommetGraphe().voisinsToList();
+				List<Graphe.MaillonGraphe> listNomVoisins = new ArrayList<>();
+
+				// parcourt les voisins du sommet sélectionné et les ajouter au modèle d'informations des voisins
+
+				graphePanel.setOpacityToAllSommet(1.0F);
+				graphePanel.setOpacityToAllAretes(0.1F);
+				listVoisins.forEach(voisin -> {
+					listInfosVoisins.add(new Object[]{voisin.getDestination().getNom(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
+					listNomVoisins.add(voisin.getDestination());
+				});
+				try {
+					graphe.tousLesSommetToList().forEach(maillonGraphe -> {
+						if(!listNomVoisins.contains(maillonGraphe)){
+							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 0.3F);
+						} else {
+							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 1.0F);
+						}
+					});
+				} catch (Exception ex) {
+					throw new RuntimeException(ex);
+				}
+				graphePanel.setContenuDansTableVoisins(listInfosVoisins);
+			}
+		});
+		afficherVoisin2Distance.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//graphePanel.setContenuDansTableVoisins();
+			}
+		});
+		afficherVoisinPDistance.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//graphePanel.setContenuDansTableVoisins();
 			}
 		});
 
