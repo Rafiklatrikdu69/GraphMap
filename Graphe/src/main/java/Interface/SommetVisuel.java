@@ -32,7 +32,6 @@ public class SommetVisuel extends JPanel {
      *
      * @param g the <code>Graphics</code> object to protect
      */
-
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
@@ -51,13 +50,12 @@ public class SommetVisuel extends JPanel {
         g2d.setComposite(alphaComposite);
         x = getWidth() / 2;
         y = getHeight() / 2;
-        setOpaque(false);
         g2d.setColor(couleurCentre);
-        g2d.fillOval(x - rayon, y - rayon, rayon * 2, rayon * 2);//dessine le cercle
+        g2d.setStroke(new BasicStroke(2));
+        g2d.fillOval(0, 0, rayon, rayon); //dessine le cercle
         g2d.setColor(couleurTexte);
         Font font = new Font("Arial", Font.BOLD, 11);
         g2d.setFont(font);
-     
         int largeurNom = g2d.getFontMetrics().stringWidth(centre.getNom());
         int xNom = x - largeurNom / 2;
         int yNom = y + 5;
@@ -68,7 +66,6 @@ public class SommetVisuel extends JPanel {
      *
      * @param couleur
      */
-
     public void setCouleurCentre(Color couleur) {
         this.couleurCentre = couleur;
         repaint();

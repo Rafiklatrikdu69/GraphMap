@@ -3,7 +3,7 @@ package Interface;
 import java.awt.Color;
 
 public enum Theme {
-    DARK(new Color(58,166,170), Color.BLUE, new Color(175,110,70), new Color(0, 100, 255), new Color(255,219,56), new Color(255,219,56)),
+    DARK(new Color(0,107,111), Color.BLUE, new Color(124,47,0), new Color(0, 100, 255), new Color(255,219,56), new Color(175,143,0)),
     LIGHT(new Color(58,166,170), Color.BLUE, new Color(175,110,70), new Color(0, 100, 255), new Color(255,219,56), new Color(255,219,56));
 
     private Color couleurSommetParDefaut;
@@ -11,7 +11,6 @@ public enum Theme {
     private Color couleurAreteParDefaut;
     private Color couleurAreteCheminSelect;
     private Color couleurTexteParDefaut;
-    private Color couleurTexteSelect;
 
 
     Theme(Color couleurParDefaut, Color couleurSommetSelectParDefaut, Color couleurAreteParDefaut, Color couleurAreteCheminSelect, Color couleurTexteParDefaut, Color couleurTexteSelect){
@@ -20,7 +19,6 @@ public enum Theme {
         this.couleurAreteParDefaut = couleurAreteParDefaut;
         this.couleurAreteCheminSelect = couleurAreteCheminSelect;
         this.couleurTexteParDefaut = couleurTexteParDefaut;
-        this.couleurTexteSelect = couleurTexteSelect;
     }
 
     public Color getCouleurSommetParDefaut() {
@@ -43,10 +41,6 @@ public enum Theme {
         return couleurTexteParDefaut;
     }
 
-    public Color getCouleurTexteSelect() {
-        return couleurTexteSelect;
-    }
-
     public void setCouleurSommetParDefaut(Color couleurSommetParDefaut) {
         this.couleurSommetParDefaut = couleurSommetParDefaut;
     }
@@ -67,7 +61,4 @@ public enum Theme {
         this.couleurTexteParDefaut = couleurTexteParDefaut;
     }
 
-    public void setCouleurTexteSelect(Color couleurTexteSelect) {
-        this.couleurTexteSelect = couleurTexteSelect;
-    }
 }
