@@ -8,7 +8,7 @@ public class Dijkstra {
 	private Map<String, LinkedHashMap<String, Double>> mapPlusCourtCheminsDistance;
 	private Map<String, LinkedHashMap<String, Double>> mapPlusCourtCheminsDuree;
 	
-	Dijkstra(Graphe graphe, String nomSommet) {
+	public Dijkstra(Graphe graphe, String nomSommet) {
 		this.sommetDepart = nomSommet;
 		plusCourtCheminDijkstraFiabilite(graphe, this.sommetDepart);
 		plusCourtCheminDijkstraDistance(graphe, this.sommetDepart);
