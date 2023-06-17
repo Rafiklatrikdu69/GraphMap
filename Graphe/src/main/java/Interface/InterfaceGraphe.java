@@ -520,8 +520,8 @@ public class InterfaceGraphe extends JFrame {
 					
 					graphePanel.resetColorArreteChemin();
 					graphePanel.resetColorSommetChemin();
-
-
+					
+					
 				}
 				graphePanel.setOpacityToAllSommet(1.0F);
 				graphePanel.setOpacityToAllAretes(1.0F);
@@ -540,8 +540,8 @@ public class InterfaceGraphe extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<Graphe.MaillonGraphe> listMater = graphe.getToutesLesMaternites();
-
-				if(graphePanel.getSommetSelectionne()!=null){
+				
+				if (graphePanel.getSommetSelectionne() != null) {
 					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommetParDefaut());
 					mettreInvisibleComposantSommet();
 					setNotSelectAuNom();
@@ -551,7 +551,7 @@ public class InterfaceGraphe extends JFrame {
 				graphePanel.resetColorSommetChemin();
 				try {
 					graphe.tousLesSommetToList().forEach(maillonGraphe -> {
-						if(!listMater.contains(maillonGraphe)){
+						if (!listMater.contains(maillonGraphe)) {
 							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 0.3F);
 						} else {
 							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 1.0F);
@@ -567,7 +567,7 @@ public class InterfaceGraphe extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<Graphe.MaillonGraphe> listMater = graphe.getTousLesCentreDeNutrions();
-				if(graphePanel.getSommetSelectionne()!=null){
+				if (graphePanel.getSommetSelectionne() != null) {
 					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommetParDefaut());
 					mettreInvisibleComposantSommet();
 					setNotSelectAuNom();
@@ -577,7 +577,7 @@ public class InterfaceGraphe extends JFrame {
 				graphePanel.resetColorSommetChemin();
 				try {
 					graphe.tousLesSommetToList().forEach(maillonGraphe -> {
-						if(!listMater.contains(maillonGraphe)){
+						if (!listMater.contains(maillonGraphe)) {
 							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 0.3F);
 						} else {
 							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 1.0F);
@@ -593,7 +593,7 @@ public class InterfaceGraphe extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<Graphe.MaillonGraphe> listMater = graphe.getTousLesOperatoires();
-				if(graphePanel.getSommetSelectionne()!=null){
+				if (graphePanel.getSommetSelectionne() != null) {
 					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommetParDefaut());
 					mettreInvisibleComposantSommet();
 					setNotSelectAuNom();
@@ -603,7 +603,7 @@ public class InterfaceGraphe extends JFrame {
 				graphePanel.resetColorSommetChemin();
 				try {
 					graphe.tousLesSommetToList().forEach(maillonGraphe -> {
-						if(!listMater.contains(maillonGraphe)){
+						if (!listMater.contains(maillonGraphe)) {
 							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 0.3F);
 						} else {
 							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 1.0F);
@@ -615,16 +615,16 @@ public class InterfaceGraphe extends JFrame {
 				}
 			}
 		});
-
+		
 		afficherVoisin1Distance.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Object[]> listInfosVoisins = new ArrayList<>();
 				List<Graphe.MaillonGrapheSec> listVoisins = graphePanel.getSommetSelectionne().getSommetGraphe().voisinsToList();
 				List<Graphe.MaillonGraphe> listNomVoisins = new ArrayList<>();
-
+				
 				// parcourt les voisins du sommet sélectionné et les ajouter au modèle d'informations des voisins
-
+				
 				graphePanel.resetColorSommetChemin();
 				graphePanel.resetColorArreteChemin();
 				graphePanel.setOpacityToAllSommet(1.0F);
@@ -639,7 +639,7 @@ public class InterfaceGraphe extends JFrame {
 				});
 				try {
 					graphe.tousLesSommetToList().forEach(maillonGraphe -> {
-						if(!listNomVoisins.contains(maillonGraphe)){
+						if (!listNomVoisins.contains(maillonGraphe)) {
 							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 0.3F);
 						} else {
 							graphePanel.setOpacityToSommetVisuel(maillonGraphe, 1.0F);
@@ -655,12 +655,13 @@ public class InterfaceGraphe extends JFrame {
 		afficherVoisin2Distance.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//graphePanel.setContenuDansTableVoisins();
+			
 			}
+			
+			//////////////////////////////////////////////////////////////////////////////////////
 		});
-
-		//////////////////////////////////////////////////////////////////////////////////////
 	}
+	
 	
 	/**
 	 * Creation de la Joption Pane
