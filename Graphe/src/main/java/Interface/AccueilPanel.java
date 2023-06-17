@@ -8,43 +8,50 @@ import java.awt.event.ActionListener;
 public class AccueilPanel extends JPanel {
     private JButton commencer, quitter;
     private InterfaceGraphe interfaceGraphe;
-    private JPanel panelTop;
-    AccueilPanel(InterfaceGraphe interfaceGraphe){
+    
+    public AccueilPanel(InterfaceGraphe interfaceGraphe) {
         this.interfaceGraphe = interfaceGraphe;
         setLayout(new BorderLayout());
         initAccueilComponents();
         initAccueilEventListeners();
         setVisible(true);
     }
-
-
-    private void initAccueilComponents(){
-        panelTop = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    
+    private void initAccueilComponents() {
+        JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel titleLabel = new JLabel("Bienvenue !");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelTop.add(titleLabel);
-
+        
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
+        
         commencer = new JButton("Ouvrir Fichier");
         quitter = new JButton("Quitter");
-
-        commencer.setHorizontalAlignment(JButton.CENTER);
-        quitter.setHorizontalAlignment(JButton.CENTER);
-
+        
         centerPanel.add(commencer);
         centerPanel.add(quitter);
+        
         add(panelTop, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
+        
+        JLabel imageLabel = new JLabel();
+     
+        
+      //  imageLabel.setIcon(ImageAccueil.MEDECIN.getImageIcon());
+        //add(imageLabel, BorderLayout.SOUTH);
+        //System.out.println("Largeur de l'image : " + ImageAccueil.MEDECIN.getImageIcon().getIconWidth());
+        //System.out.println("Hauteur de l'image : " + ImageAccueil.MEDECIN.getImageIcon().getIconHeight());
+        
     }
-    private void initAccueilEventListeners(){
+    
+    private void initAccueilEventListeners() {
         commencer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 interfaceGraphe.setOuvrirFichierActions();
             }
         });
+        
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

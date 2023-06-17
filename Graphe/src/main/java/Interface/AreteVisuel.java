@@ -104,6 +104,7 @@ public class AreteVisuel {
     public int getTailleTrait() {
         return tailleTrait;
     }
+    
 
     public void setTailleTrait(int tailleTrait) {
         this.tailleTrait = tailleTrait;

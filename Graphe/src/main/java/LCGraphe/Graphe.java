@@ -16,6 +16,9 @@ public class Graphe {
 	private Map<String, Dijkstra> cheminDijkstra;//stocke tous les algos djikstra
 	private List<String> sommetVoisin;
 	private FloydWarshall f = new FloydWarshall(this);//algo de recherche du chemin le plus fiable
+	public List<String> getSommetVoisin(){
+		return  sommetVoisin;
+	}
 
 	//Liste Principale
 	public class MaillonGraphe {
@@ -292,6 +295,7 @@ public class Graphe {
 
 		return resultat;
 	}
+
 	private List<String> getVoisin1Distance(String sommetDepart) {
 		MaillonGraphe tmp = getSommet(sommetDepart);
 		MaillonGrapheSec tmp2 = tmp.getVoisin();
@@ -304,6 +308,8 @@ public class Graphe {
 		
 		return sommetVoisin;
 	}
+
+
 	
 	public void Voisin2Distance(String sommetDepart) {
 		 sommetVoisin = new LinkedList<>();
@@ -319,12 +325,12 @@ public class Graphe {
 			}
 			tmp2 = tmp2.getSuivantMaillonSec();
 		}
-		
+		//affichage test
 		for (String i : sommetVoisin) {
 			System.out.println("sommet : " + i);
 		}
 	}
-	
+	/////////////////////////////////////////////////////////////
 	/**
 	 * @param sommet1
 	 * @param sommet2

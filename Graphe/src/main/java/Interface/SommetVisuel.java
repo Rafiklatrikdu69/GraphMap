@@ -39,7 +39,11 @@ public class SommetVisuel extends JPanel {
         dessinerRond(g2d);
         g2d.dispose();
     }
-    
+    private  Color couleurBordureRond = new Color(199, 183, 199);
+    public void setCouleurBordureRond(Color couleurBordure){
+        couleurBordureRond = couleurBordure;
+        repaint();
+    }
     /**
      * Cette methode permet de dessiner un rond avec fillOval
      *
@@ -50,17 +54,27 @@ public class SommetVisuel extends JPanel {
         g2d.setComposite(alphaComposite);
         x = getWidth() / 2;
         y = getHeight() / 2;
+        
+        int bordureEpaisseur = 4; // Épaisseur de la bordure en pixels
+        g2d.setStroke(new BasicStroke(bordureEpaisseur));
+        
+        g2d.setColor(couleurBordureRond);
+        g2d.drawOval(bordureEpaisseur, bordureEpaisseur, rayon - bordureEpaisseur * 2, rayon - bordureEpaisseur * 2); // Dessine le contour du cercle
+        
         g2d.setColor(couleurCentre);
-        g2d.setStroke(new BasicStroke(2));
-        g2d.fillOval(0, 0, rayon, rayon); //dessine le cercle
+        g2d.fillOval(bordureEpaisseur, bordureEpaisseur, rayon - bordureEpaisseur * 2, rayon - bordureEpaisseur * 2); // Dessine le cercle intérieur
+        
         g2d.setColor(couleurTexte);
         Font font = new Font("Arial", Font.BOLD, 11);
         g2d.setFont(font);
         int largeurNom = g2d.getFontMetrics().stringWidth(centre.getNom());
         int xNom = x - largeurNom / 2;
         int yNom = y + 5;
-        g2d.drawString(centre.getNom(), xNom, yNom);//ecrit le nom du sommet
+        
+        g2d.drawString(centre.getNom(), xNom, yNom); // Écrit le nom du sommet
     }
+
+
     
     /**
      *
@@ -109,4 +123,5 @@ public class SommetVisuel extends JPanel {
     public String getSommet(){
         return this.centre.getNom();
     }
+  
 }
