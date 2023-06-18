@@ -131,11 +131,9 @@ public class InterfaceGraphe extends JFrame {
 		
 		cardLayout = new CardLayout(); // ce card layout sert à changer de fenetre entre "Afficher les Voisins" et "Faire un Chemin"
 		cardPanelInfos = new JPanel(cardLayout); // on met le card layout dans son panel
-		cardPanelInfos.setBorder(BorderFactory.createTitledBorder("card Layout"));
 		cardPanelInfos.setOpaque(false);
 		indicateurPanel = new JPanel(new FlowLayout());
 		indicateurPanel.setPreferredSize(new Dimension(400, 30));
-		indicateurPanel.setBackground(Color.LIGHT_GRAY);
 		
 		indicateur = new JLabel[3];
 		for (int i = 0; i < indicateur.length; i++) {
@@ -483,8 +481,6 @@ public class InterfaceGraphe extends JFrame {
 					if (graphePanel != null) {
 						graphePanel.setThemeActuel(Theme.LIGHT);
 						graphePanel.miseAJourDessin();
-						
-						tableInfosVoisins.setGridColor(couleurFondPanelLightMode);
 						//bug le chemin s'affiche tout le temps quand on change le theme
 						
 					}
@@ -507,7 +503,7 @@ public class InterfaceGraphe extends JFrame {
 					updateInterface();//mise a jour de l'interface
 					if (graphePanel != null) {
 						graphePanel.setThemeActuel(Theme.DARK);
-						//graphePanel.miseAJourDessin();
+						graphePanel.miseAJourDessin();
 			
 					}
 				} catch (Exception ex) {
@@ -520,7 +516,7 @@ public class InterfaceGraphe extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//affichage du chemin
-				if (graphePanel.getListeArreteChemin() != null && graphePanel.getListeSommetChemin() != null) {
+				if (graphePanel.getListeAreteChemin() != null && graphePanel.getListeSommetChemin() != null) {
 					
 					graphePanel.resetColorArreteChemin();
 					graphePanel.resetColorSommetChemin();
@@ -548,7 +544,7 @@ public class InterfaceGraphe extends JFrame {
 				List<Graphe.MaillonGraphe> listMater = graphe.getToutesLesMaternites();
 				
 				if (graphePanel.getSommetSelectionne() != null) {
-					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommetParDefaut());
+					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommet());
 					mettreInvisibleComposantSommet();
 					setNotSelectAuNom();
 				}
@@ -574,7 +570,7 @@ public class InterfaceGraphe extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				List<Graphe.MaillonGraphe> listMater = graphe.getTousLesCentreDeNutrions();
 				if (graphePanel.getSommetSelectionne() != null) {
-					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommetParDefaut());
+					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommet());
 					mettreInvisibleComposantSommet();
 					setNotSelectAuNom();
 				}
@@ -600,7 +596,7 @@ public class InterfaceGraphe extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				List<Graphe.MaillonGraphe> listMater = graphe.getTousLesOperatoires();
 				if (graphePanel.getSommetSelectionne() != null) {
-					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommetParDefaut());
+					graphePanel.getSommetSelectionne().setCouleurCentre(graphePanel.getThemeActuel().getCouleurSommet());
 					mettreInvisibleComposantSommet();
 					setNotSelectAuNom();
 				}
@@ -1056,7 +1052,7 @@ public class InterfaceGraphe extends JFrame {
 	public void mettreInvisibleComposantSommet() {
 		nomSommetSelectionneLabel.setText("");
 		typeSommetSelectionneLabel.setText("");
-		
+		cardPanelInfos.setVisible(false);
 		afficherCheminButton.setVisible(false);
 		choixTypeCheminComboBox.setVisible(false);
 		choixDestinationComboBox.setVisible(false);
@@ -1106,6 +1102,7 @@ public class InterfaceGraphe extends JFrame {
 		//initialisation des composants lier au sommet
 		nomSommetSelectionneLabel.setText("Dispensaire " + nom);
 		typeSommetSelectionneLabel.setText(type);
+		cardPanelInfos.setVisible(true);
 		itemModeDuGraphe.setEnabled(true);
 		itemFonctionnalite.setEnabled(true);
 		itemChoixTheme.setEnabled(true);
