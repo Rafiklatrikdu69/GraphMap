@@ -592,8 +592,7 @@ public class Graphe {
 		}
 		return verifeExistence; // Retourne le résultat d'existence du voisin
 	}
-	
-	
+
 	/**
 	 * Cette methode renvoie true si le sommet existe sinon elle renvoie false
 	 *
@@ -846,10 +845,11 @@ public class Graphe {
 		return chaine.toString();//renvoie la chaine String
 	}
 	
-	public void ajoutCentreDansCsv(String nomFichierChoisi, String nomCentre, String typeCentre, int nombreColonne){
+	public void ajoutCentreDansCsv(String nomFichierChoisi, String nomCentre, String typeCentre){
 		try (BufferedWriter buffWrite = new BufferedWriter(new FileWriter(nomFichierChoisi, true))) {
+			int nombreColonne = getNombreRoute()+2;
 			StringBuilder ligne = new StringBuilder();
-			for (int i = 0; i < nombreColonne+3; i++) {
+			for (int i = 0; i < nombreColonne; i++) {
 				if(i == 0){
 					ligne.append(nomCentre);
 				} else if (i == 1) {
@@ -861,14 +861,15 @@ public class Graphe {
 					ligne.append(";");
 				}
 			}
+
 			ligne.append("\n");
-			buffWrite.write(ligne.toString());
-			//ajoutSommet(nomCentre, typeCentre);
+			System.out.println(ligne);
+			//buffWrite.write(ligne.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
+
 }
 
 

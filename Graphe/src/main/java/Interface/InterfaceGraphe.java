@@ -325,6 +325,7 @@ public class InterfaceGraphe extends JFrame {
 			graphePanel = new DessinGraphe(graphe, this);
 		} else {
 			//sinon on le charge
+
 			graphePanel.changerGraphe(graphe);
 		}
 		contenuGraphePanel.add(graphePanel, BorderLayout.CENTER);
@@ -732,6 +733,7 @@ public class InterfaceGraphe extends JFrame {
 				graphe = new Graphe();
 				try {
 					graphe.chargementFichier(fichier.getPath());
+					graphe.ajoutCentreDansCsv("src/fichiersGraphe/graphe30Som74Arete.csv", "bite", "bite");
 				} catch (Exception excep) {
 				
 				}
@@ -1052,6 +1054,7 @@ public class InterfaceGraphe extends JFrame {
 	public void mettreInvisibleComposantSommet() {
 		nomSommetSelectionneLabel.setText("");
 		typeSommetSelectionneLabel.setText("");
+		indicateurPanel.setVisible(false);
 		cardPanelInfos.setVisible(false);
 		afficherCheminButton.setVisible(false);
 		choixTypeCheminComboBox.setVisible(false);
@@ -1103,6 +1106,7 @@ public class InterfaceGraphe extends JFrame {
 		nomSommetSelectionneLabel.setText("Dispensaire " + nom);
 		typeSommetSelectionneLabel.setText(type);
 		cardPanelInfos.setVisible(true);
+		indicateurPanel.setVisible(true);
 		itemModeDuGraphe.setEnabled(true);
 		itemFonctionnalite.setEnabled(true);
 		itemChoixTheme.setEnabled(true);
