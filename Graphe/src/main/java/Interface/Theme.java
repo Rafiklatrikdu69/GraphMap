@@ -3,62 +3,85 @@ package Interface;
 import java.awt.Color;
 
 public enum Theme {
-    DARK(new Color(0,107,111), new Color(199,98,122), new Color(124,47,0), new Color(0, 100, 255), new Color(255,219,56), new Color(175,143,0)),
-    LIGHT(new Color(104,174,186), new Color(199,98,122), new Color(199,183,199), new Color(0, 100, 255), new Color(240,213,67), new Color(255,219,56));
+    DARK(new Color(0,107,111), new Color(199,98,122), new Color(199, 183, 199), new Color(240, 213, 67), new Color(35,60,78), new Color(160, 135, 0), new Color(255,219,56), new Color(0,107,111), new Color(199, 183, 199)),
+    LIGHT(new Color(104,174,186), new Color(199,98,122), new Color(199, 183, 199), new Color(240, 213, 67), new Color(199,183,199), new Color(240, 213, 67), new Color(240,213,67), new Color(104, 174, 186), new Color(199, 183, 199));
 
-    private Color couleurSommetParDefaut;
-    private Color couleurSommetSelectParDefaut;
-    private Color couleurAreteParDefaut;
-    private Color couleurAreteCheminSelect;
-    private Color couleurTexteParDefaut;
+    private Color couleurSommet;
+    private Color couleurSommetSelect;
+    private Color couleurArete;
+    private Color couleurAreteChemin;
+    private Color couleurTexte;
+    private Color couleurBordureSommet;
+    private Color couleurBordureSommetChemin;
+    private Color couleurRectangleFiab;
+    private Color couleurBordureRectFiab;
 
-
-    Theme(Color couleurParDefaut, Color couleurSommetSelectParDefaut, Color couleurAreteParDefaut, Color couleurAreteCheminSelect, Color couleurTexteParDefaut, Color couleurTexteSelect){
-        this.couleurSommetParDefaut = couleurParDefaut;
-        this.couleurSommetSelectParDefaut = couleurSommetSelectParDefaut;
-        this.couleurAreteParDefaut = couleurAreteParDefaut;
-        this.couleurAreteCheminSelect = couleurAreteCheminSelect;
-        this.couleurTexteParDefaut = couleurTexteParDefaut;
+    Theme(Color couleurSommet, Color couleurSommetSelect, Color couleurBordureSommet, Color couleurBordureSommetChemin, Color couleurAreteParDefaut, Color couleurAreteCheminSelect, Color couleurTexteParDefaut, Color couleurRectangleFiab, Color couleurBordureRectFiab){
+        this.couleurSommet = couleurSommet;
+        this.couleurSommetSelect = couleurSommetSelect;
+        this.couleurArete = couleurAreteParDefaut;
+        this.couleurAreteChemin = couleurAreteCheminSelect;
+        this.couleurTexte = couleurTexteParDefaut;
+        this.couleurBordureSommet = couleurBordureSommet;
+        this.couleurBordureSommetChemin = couleurBordureSommetChemin;
+        this.couleurRectangleFiab = couleurRectangleFiab;
+        this.couleurBordureRectFiab = couleurBordureRectFiab;
     }
 
-    public Color getCouleurSommetParDefaut() {
-        return couleurSommetParDefaut;
+    public Color getCouleurSommet() {
+        return couleurSommet;
     }
 
-    public Color getCouleurSommetSelectParDefaut() {
-        return couleurSommetSelectParDefaut;
+    public Color getCouleurSommetSelect() {
+        return couleurSommetSelect;
     }
 
-    public Color getCouleurAreteParDefaut() {
-        return couleurAreteParDefaut;
+    public Color getCouleurArete() {
+        return couleurArete;
     }
 
-    public Color getCouleurAreteCheminSelect() {
-        return couleurAreteCheminSelect;
+    public Color getCouleurAreteChemin() {
+        return couleurAreteChemin;
     }
 
-    public Color getCouleurTexteParDefaut() {
-        return couleurTexteParDefaut;
+    public Color getCouleurTexte() {
+        return couleurTexte;
     }
 
-    public void setCouleurSommetParDefaut(Color couleurSommetParDefaut) {
-        this.couleurSommetParDefaut = couleurSommetParDefaut;
+    public void setCouleurSommet(Color couleurSommet) {
+        this.couleurSommet = couleurSommet;
     }
 
-    public void setCouleurSommetSelectParDefaut(Color couleurSommetSelectParDefaut) {
-        this.couleurSommetSelectParDefaut = couleurSommetSelectParDefaut;
+    public void setCouleurSommetSelect(Color couleurSommetSelect) {
+        this.couleurSommetSelect = couleurSommetSelect;
     }
 
-    public void setCouleurAreteParDefaut(Color couleurAreteParDefaut) {
-        this.couleurAreteParDefaut = couleurAreteParDefaut;
+    public void setCouleurArete(Color couleurArete) {
+        this.couleurArete = couleurArete;
     }
 
-    public void setCouleurAreteCheminSelect(Color couleurAreteCheminSelect) {
-        this.couleurAreteCheminSelect = couleurAreteCheminSelect;
+    public void setCouleurAreteChemin(Color couleurAreteChemin) {
+        this.couleurAreteChemin = couleurAreteChemin;
     }
 
-    public void setCouleurTexteParDefaut(Color couleurTexteParDefaut) {
-        this.couleurTexteParDefaut = couleurTexteParDefaut;
+    public void setCouleurTexte(Color couleurTexte) {
+        this.couleurTexte = couleurTexte;
+    }
+
+    public Color getCouleurBordureSommet() {
+        return couleurBordureSommet;
+    }
+
+    public Color getCouleurBordureSommetChemin() {
+        return couleurBordureSommetChemin;
+    }
+
+    public Color getCouleurRectangleFiab() {
+        return couleurRectangleFiab;
+    }
+
+    public Color getCouleurBordureRectFiab() {
+        return couleurBordureRectFiab;
     }
 
 }
