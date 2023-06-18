@@ -19,7 +19,7 @@ public class AreteVisuel {
      * @param sommetVisuel2
      */
     AreteVisuel(SommetVisuel sommetVisuel1, SommetVisuel sommetVisuel2){
-        this.tailleTrait = 1;
+        this.tailleTrait = 2;
         this.opacity = 1.0F;
         this.positionCentre1 = sommetVisuel1.getCentreDuCercle();
         this.positionCentre2 = sommetVisuel2.getCentreDuCercle();
