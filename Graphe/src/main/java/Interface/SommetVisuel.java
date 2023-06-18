@@ -54,8 +54,8 @@ public class SommetVisuel extends JPanel {
         g2d.setComposite(alphaComposite);
         x = getWidth() / 2;
         y = getHeight() / 2;
-        
-        int bordureEpaisseur = 4; // Épaisseur de la bordure en pixels
+
+        int bordureEpaisseur = 3; // Épaisseur de la bordure en pixels
         g2d.setStroke(new BasicStroke(bordureEpaisseur));
         
         g2d.setColor(couleurBordureRond);
