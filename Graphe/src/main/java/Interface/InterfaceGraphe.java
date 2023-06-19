@@ -19,6 +19,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 import static javax.swing.JOptionPane.showOptionDialog;
@@ -50,6 +51,7 @@ public class InterfaceGraphe extends JFrame {
     private JPanel affichageVoisinPanel;
     private JPanel panelTitreVoisinButton;
     private JButton afficherVoisin1Distance, afficherVoisin2Distance;
+    private JPanel panelInfosVoisins, comparaisonPanel;
 
     private JPanel contenuTousLesCheminsPanel;
     private AfficherCheminPanel tableCheminsPanel;
@@ -234,7 +236,7 @@ public class InterfaceGraphe extends JFrame {
      *
      */
     private void initContainerInfosVoisins() {
-        String[] colonneAttribut = {"Destination", ChoixTypeChemin.DISTANCE.getAttribut(), ChoixTypeChemin.DUREE.getAttribut(), ChoixTypeChemin.FIABILITE.getAttribut()};//tableau
+        String[] colonneAttribut = {"Destination", "Type", ChoixTypeChemin.DISTANCE.getAttribut(), ChoixTypeChemin.DUREE.getAttribut(), ChoixTypeChemin.FIABILITE.getAttribut()};//tableau
         labelTitreVoisin = new JLabel("Liste Des Voisins");
         labelTitreVoisin.setFont(new Font("Arial", Font.BOLD, 14));
         labelTitreVoisin.setHorizontalAlignment(SwingConstants.CENTER);
@@ -250,12 +252,24 @@ public class InterfaceGraphe extends JFrame {
         panelTitreVoisinButton.add(test, BorderLayout.CENTER);
 
 
-        modelInfosVoisins = new DefaultTableModel(colonneAttribut, 0);
+        modelInfosVoisins = new DefaultTableModel(colonneAttribut, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Rendre toutes les cellules non éditables
+                return false;
+            }
+        };
         tableInfosVoisins = new JTable(modelInfosVoisins);
         tableInfosVoisins.setOpaque(false);
 
         affichageVoisinScrollPane = new JScrollPane(tableInfosVoisins);
         affichageVoisinScrollPane.setOpaque(false);
+
+        panelInfosVoisins = new JPanel(new BorderLayout());
+        comparaisonPanel = new JPanel(new GridLayout(0,1));
+
+        panelInfosVoisins.add(affichageVoisinScrollPane, BorderLayout.CENTER);
+        panelInfosVoisins.add(comparaisonPanel, BorderLayout.SOUTH);
 
 
         affichageVoisinPanel = new JPanel(new BorderLayout());
@@ -264,7 +278,7 @@ public class InterfaceGraphe extends JFrame {
         affichageVoisinPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
 
         affichageVoisinPanel.add(panelTitreVoisinButton, BorderLayout.NORTH);
-        affichageVoisinPanel.add(affichageVoisinScrollPane, BorderLayout.CENTER);
+        affichageVoisinPanel.add(panelInfosVoisins, BorderLayout.CENTER);
 
     }
 
@@ -625,6 +639,8 @@ public class InterfaceGraphe extends JFrame {
 
                 if (graphePanel.getSommetSelectionne() != null) {
 
+                    comparaisonPanel.removeAll();
+
                     ArrayList<Object[]> listInfosVoisins = new ArrayList<>();
                     List<Graphe.MaillonGrapheSec> listVoisins = graphePanel.getSommetSelectionne().getSommetGraphe().voisinsToList();
                     List<Graphe.MaillonGraphe> listNomVoisins = new ArrayList<>();
@@ -637,13 +653,26 @@ public class InterfaceGraphe extends JFrame {
                     graphePanel.setOpacityToAllSommet(1.0F);
                     graphePanel.setOpacityToAllAretes(0.1F);
                     graphePanel.resetTailleTraits();
+                    AtomicInteger nombreMaternite = new AtomicInteger();
+                    AtomicInteger nombreOperatoire = new AtomicInteger();
+                    AtomicInteger nombreCentreDeNutri = new AtomicInteger();
                     listVoisins.forEach(voisin -> {
-                        listInfosVoisins.add(new Object[]{voisin.getDestination().getNom(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
+                        if(voisin.getDestination().getType().equals("Maternité")){
+                            nombreMaternite.getAndIncrement();
+                        } else if (voisin.getDestination().getType().equals("Opératoire")) {
+                            nombreOperatoire.getAndIncrement();
+                        } else if (voisin.getDestination().getType().equals("Centre de nutrition")) {
+                            nombreCentreDeNutri.getAndIncrement();
+                        }
+                        listInfosVoisins.add(new Object[]{voisin.getDestination().getNom(), voisin.getDestination().getType(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
                         AreteVisuel tmp = graphePanel.getArete(voisin.getSource().getNom(), voisin.getDestination().getNom());
                         tmp.setTailleTrait(3);
                         graphePanel.setOpacityToAreteVisuel(tmp, 1.0F);
                         listNomVoisins.add(voisin.getDestination());
                     });
+                    comparaisonPanel.add(new JLabel("Nombre de maternité "+ nombreMaternite));
+                    comparaisonPanel.add(new JLabel("Nombre d'opératoire "+ nombreOperatoire));
+                    comparaisonPanel.add(new JLabel("Nombre de centre de nutrition "+ nombreCentreDeNutri));
                     try {
                         graphe.tousLesSommetToList().forEach(maillonGraphe -> {
                             if (!listNomVoisins.contains(maillonGraphe)) {
@@ -657,6 +686,7 @@ public class InterfaceGraphe extends JFrame {
                         throw new RuntimeException(ex);
                     }
                     graphePanel.setContenuDansTableVoisins(listInfosVoisins);
+                    pack();
                 } else {
                     JOptionPane.showMessageDialog(null, null, "Aucun sommet selectionne ! ", JOptionPane.ERROR_MESSAGE);
                 }
@@ -1181,5 +1211,8 @@ public class InterfaceGraphe extends JFrame {
 
     public JPanel getCardPanelInfos() {
         return cardPanelInfos;
+    }
+    public JPanel getComparaisonPanel(){
+        return comparaisonPanel;
     }
 }
