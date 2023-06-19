@@ -3,7 +3,8 @@ package Interface;
 import Interface.InfosSommetPanel.AfficherCheminPanel;
 import Interface.InfosSommetPanel.ChoixTypeSommet;
 import Exception.ListeSommetsNull;
-import Interface.JOptionPane.AjoutSommetVisuelCreation;
+import Interface.JOptionPane.AjoutAretePanel;
+import Interface.JOptionPane.AjoutSommetPanel;
 import Interface.JOptionPane.ConfirmerAjoutDansCSV;
 import LCGraphe.Dijkstra;
 import LCGraphe.Graphe;
@@ -272,7 +273,7 @@ public class InterfaceGraphe extends JFrame {
         String[] colonneAttribut = {"Destination", "Type", ChoixTypeChemin.DISTANCE.getAttribut(), ChoixTypeChemin.DUREE.getAttribut(), ChoixTypeChemin.FIABILITE.getAttribut()};//tableau
         labelTitreVoisin = new JLabel("Liste Des Voisins");
         labelTitreVoisin.setFont(new Font("Arial", Font.BOLD, 14));
-        labelTitreVoisin.setHorizontalAlignment(SwingConstants.CENTER);
+        labelTitreVoisin.setHorizontalAlignment(JLabel.CENTER);
         JPanel test = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelTitreVoisinButton = new JPanel(new BorderLayout());
         afficherVoisin1Distance = new JButton("1 distance");
@@ -334,13 +335,17 @@ public class InterfaceGraphe extends JFrame {
             tableCheminsPanel.updateColonne(choixChemin);
         }
 
-        panelChoixChemin = new JPanel(new GridLayout(2, 1));
+        panelChoixChemin = new JPanel(new GridLayout(3, 1));
         panelChoixChemin.setOpaque(false);
         JPanel panelChoixCheminNord = new JPanel(new GridLayout(1, 2));
 
         panelChoixCheminNord.add(choixTypeCheminComboBox);
         panelChoixCheminNord.add(choixDestinationComboBox);
 
+        JLabel titreChemin = new JLabel("Créer Itinéraire");
+        titreChemin.setFont(new Font("Arial", Font.BOLD, 14));
+        titreChemin.setHorizontalAlignment(JLabel.CENTER);
+        panelChoixChemin.add(titreChemin);
         panelChoixChemin.add(panelChoixCheminNord);
         panelChoixChemin.add(afficherCheminButton);
 
@@ -580,7 +585,7 @@ public class InterfaceGraphe extends JFrame {
         itemAjoutArete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                creationArete();
             }
         });
         itemAfficherMaternite.addActionListener(new ActionListener() {
@@ -700,9 +705,9 @@ public class InterfaceGraphe extends JFrame {
                         graphePanel.setOpacityToAreteVisuel(tmp, 1.0F);
                         listNomVoisins.add(voisin.getDestination());
                     });
-                    comparaisonPanel.add(new JLabel("Nombre de maternité "+ nombreMaternite));
-                    comparaisonPanel.add(new JLabel("Nombre d'opératoire "+ nombreOperatoire));
-                    comparaisonPanel.add(new JLabel("Nombre de centre de nutrition "+ nombreCentreDeNutri));
+                    comparaisonPanel.add(new JLabel("Nombre de maternité : "+ nombreMaternite));
+                    comparaisonPanel.add(new JLabel("Nombre d'opératoire : "+ nombreOperatoire));
+                    comparaisonPanel.add(new JLabel("Nombre de centre de nutrition : "+ nombreCentreDeNutri));
                     try {
                         graphe.tousLesSommetToList().forEach(maillonGraphe -> {
                             if (!listNomVoisins.contains(maillonGraphe)) {
@@ -807,6 +812,21 @@ public class InterfaceGraphe extends JFrame {
     }
 
 
+    private void creationArete(){
+        AjoutAretePanel panel = new AjoutAretePanel(graphe);
+        int choix = JOptionPane.showOptionDialog(this, panel, "Ajouter Arete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+        if (choix == JOptionPane.OK_OPTION) {
+            if(!panel.getChoixSommet1().equals(panel.getChoixSommet2()) && !graphe.existeVoisin(panel.getChoixSommet1(),panel.getChoixSommet2())){
+                graphe.ajoutVoisin(panel.getChoixSommet1(), panel.getChoixSommet2(), panel.getFiabilite(), panel.getDistance(), panel.getDuree());
+                graphe.updateDijkstra();
+                initContainerDessinGraphePanel();
+                updateInterface();
+            } else {
+                JOptionPane.showMessageDialog(this, "Vous ne pouvez pas faire une arete de "+panel.getChoixSommet1()+" à "+panel.getChoixSommet2(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
     /**
      * Creation de la Joption Pane
      * <<<<<<< HEAD
@@ -815,7 +835,7 @@ public class InterfaceGraphe extends JFrame {
      * >>>>>>> feature/ajoutSommetVisuel
      */
     private void creationDuSommet() {
-        AjoutSommetVisuelCreation ajout = new AjoutSommetVisuelCreation();
+        AjoutSommetPanel ajout = new AjoutSommetPanel();
         int choix = JOptionPane.showOptionDialog(this, ajout, "Ajouter Centre", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
         if (choix == JOptionPane.OK_OPTION) {
             if (!ajout.getNom().contains("-") && !graphe.existeSommet(ajout.getNom())) {
@@ -890,7 +910,6 @@ public class InterfaceGraphe extends JFrame {
         comboBoxSommets.removeAllItems();
         Graphe.MaillonGraphe tmp = graphe.getPremier();
         while (tmp !=null){
-            System.out.println(tmp.getNom());
             comboBoxSommets.addItem(tmp.getNom());
             tmp = tmp.getSuivant();
         }
@@ -933,7 +952,6 @@ public class InterfaceGraphe extends JFrame {
                                             meilleurFiabilite = entry.getValue();
                                             destination = entry.getKey();
                                         } else if (meilleurFiabilite < entry.getValue()) {
-                                            System.out.println(meilleurFiabilite+" < "+entry.getValue());
                                             meilleurChemin = tmp;
                                             meilleurFiabilite = entry.getValue();
                                             destination = entry.getKey();
