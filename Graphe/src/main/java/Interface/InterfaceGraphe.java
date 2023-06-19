@@ -1245,8 +1245,22 @@ public class InterfaceGraphe extends JFrame {
     }
     private void setCheminDijkstraDistance(LinkedHashMap<String, Double> chemin, Graphe.MaillonGraphe sommetSelect, String destination){
         if (chemin != null) { // Vérifie si un chemin existe
+            String nomSommet1 = null;
+            String nomSommet2 = null;
+            int dureeTotale = 0;
+            double fiabTotale = 1.0;
             for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
                 String nomSommet = entry.getKey(); // Obtient le nom du sommet
+                if(nomSommet2 != null){
+                    nomSommet2 = nomSommet1;
+                    nomSommet1 = nomSommet;
+                    Graphe.MaillonGrapheSec arete = graphe.getSommet(nomSommet1).getVoisin(nomSommet2);
+                    fiabTotale = fiabTotale * arete.getFiabilite()/10;
+                    dureeTotale += arete.getDuree();
+                } else {
+                    nomSommet1 = nomSommet;
+                    nomSommet2 = nomSommet;
+                }
                 double distance = entry.getValue(); // Obtient la distance entre les sommets
 
                 if (nomSommet.equals(sommetSelect.getNom())) { // Vérifie si le sommet est le sommet de départ
@@ -1254,6 +1268,10 @@ public class InterfaceGraphe extends JFrame {
                 } else if (nomSommet.equals(destination)) { // Vérifie si le sommet est la destination
                     listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
                     tableCheminsPanel.addDataInTable("Arrivé (" + nomSommet + ")", (int) distance + "Km"); // Ajoute les données du sommet d'arrivée au tableau
+                    tableCheminsPanel.addDataInTable("", "");
+                    tableCheminsPanel.addDataInTable("Distance Totale", (int) distance+ " Km");
+                    tableCheminsPanel.addDataInTable("Durée Totale", + dureeTotale+" minutes");
+                    tableCheminsPanel.addDataInTable("Fiabilité Totale", (int) (fiabTotale*100)+ "%");
                 } else {
                     listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
                     tableCheminsPanel.addDataInTable(nomSommet, (int) distance + "Km"); // Ajoute les données du sommet au tableau
@@ -1267,9 +1285,22 @@ public class InterfaceGraphe extends JFrame {
     }
     private void setCheminDijkstraDuree(LinkedHashMap<String, Double> chemin, Graphe.MaillonGraphe sommetSelect, String destination){
         if (chemin != null) { // Verifie si un chemin existe
-
+            String nomSommet1 = null;
+            String nomSommet2 = null;
+            int distanceTotale = 0;
+            double fiabTotale = 1.0;
             for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
                 String nomSommet = entry.getKey(); // Obtient le nom du sommet
+                if(nomSommet2 != null){
+                    nomSommet2 = nomSommet1;
+                    nomSommet1 = nomSommet;
+                    Graphe.MaillonGrapheSec arete = graphe.getSommet(nomSommet1).getVoisin(nomSommet2);
+                    fiabTotale = fiabTotale * arete.getFiabilite()/10;
+                    distanceTotale += arete.getDistance();
+                } else {
+                    nomSommet1 = nomSommet;
+                    nomSommet2 = nomSommet;
+                }
                 double duree = entry.getValue(); // Obtient la durée entre les sommets
 
                 if (nomSommet.equals(sommetSelect.getNom())) { // Vérifie si le sommet est le sommet de départ
@@ -1277,6 +1308,10 @@ public class InterfaceGraphe extends JFrame {
                 } else if (nomSommet.equals(destination)) { // Vérifie si le sommet est la destination
                     listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
                     tableCheminsPanel.addDataInTable("Arrivé (" + nomSommet + ")", (int) duree + " min"); // Ajoute les données du sommet d'arrivée au tableau
+                    tableCheminsPanel.addDataInTable("", "");
+                    tableCheminsPanel.addDataInTable("Distance Totale", distanceTotale+ " Km");
+                    tableCheminsPanel.addDataInTable("Durée Totale", + (int) duree+" minutes");
+                    tableCheminsPanel.addDataInTable("Fiabilité Totale", (int) (fiabTotale*100)+ "%");
                 } else {
                     listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
                     tableCheminsPanel.addDataInTable(nomSommet, (int) duree + " min"); // Ajoute les données du sommet au tableau
@@ -1289,10 +1324,23 @@ public class InterfaceGraphe extends JFrame {
         graphePanel.colorCheminDjikstra(); // Colorie le chemin le plus court sur le graphe selon l'algorithme de Dijkstra
     }
     private void setCheminDijkstraFiabilite(LinkedHashMap<String, Double> chemin, Graphe.MaillonGraphe sommetSelect, String destination){
-
         if (chemin != null) { // Vérifie si un chemin existe
+            String nomSommet1 = null;
+            String nomSommet2 = null;
+            int distanceTotale = 0;
+            int dureeTotale = 0;
             for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
                 String nomSommet = entry.getKey(); // Obtient le nom du sommet
+                if(nomSommet2 != null){
+                    nomSommet2 = nomSommet1;
+                    nomSommet1 = nomSommet;
+                    Graphe.MaillonGrapheSec arete = graphe.getSommet(nomSommet1).getVoisin(nomSommet2);
+                    dureeTotale += arete.getDuree();
+                    distanceTotale += arete.getDistance();
+                } else {
+                    nomSommet1 = nomSommet;
+                    nomSommet2 = nomSommet;
+                }
                 double fiab = entry.getValue(); // Obtient la distance entre les sommets
 
                 if (nomSommet.equals(sommetSelect.getNom())) { // Vérifie si le sommet est le sommet de départ
@@ -1300,6 +1348,10 @@ public class InterfaceGraphe extends JFrame {
                 } else if (nomSommet.equals(destination)) { // Vérifie si le sommet est la destination
                     listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
                     tableCheminsPanel.addDataInTable("Arrivé (" + nomSommet + ")", (int) (fiab*100)+ "%"); // Ajoute les données du sommet d'arrivée au tableau
+                    tableCheminsPanel.addDataInTable("", "");
+                    tableCheminsPanel.addDataInTable("Distance Totale", distanceTotale+ " Km");
+                    tableCheminsPanel.addDataInTable("Durée Totale", dureeTotale+ " minutes");
+                    tableCheminsPanel.addDataInTable("Fiabilité Totale", (int) (fiab*100)+ "%");
                 } else {
                     listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
                     tableCheminsPanel.addDataInTable(nomSommet, (int) (fiab*100)+ "%"); // Ajoute les données du sommet au tableau
