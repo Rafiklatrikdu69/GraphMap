@@ -14,9 +14,9 @@ import java.util.*;
 public class Graphe {
 	
 	private Map<String, Dijkstra> cheminDijkstra;//stocke tous les algos djikstra
-	private List<String> sommetVoisin;
+	private List<MaillonGrapheSec> sommetVoisin;
 	private FloydWarshall f = new FloydWarshall(this);//algo de recherche du chemin le plus fiable
-	public List<String> getSommetVoisin(){
+	public List<MaillonGrapheSec> getSommetVoisin(){
 		return  sommetVoisin;
 	}
 
@@ -296,13 +296,13 @@ public class Graphe {
 		return resultat;
 	}
 
-	private List<String> getVoisin1Distance(String sommetDepart) {
+	private List<MaillonGrapheSec> getVoisin1Distance(String sommetDepart) {
 		MaillonGraphe tmp = getSommet(sommetDepart);
 		MaillonGrapheSec tmp2 = tmp.getVoisin();
-		List<String> sommetVoisin = new LinkedList<>();
+		sommetVoisin = new LinkedList<>();
 		
 		while (tmp2 != null) {
-			sommetVoisin.add(tmp2.getDestination().getNom());
+			sommetVoisin.add(tmp2);
 			tmp2 = tmp2.getSuivantMaillonSec();
 		}
 		
@@ -311,25 +311,19 @@ public class Graphe {
 	
 	
 	
-	public List<String> voisin2Distance(String sommetDepart) {
+	public List<MaillonGrapheSec> voisin2Distance(String sommetDepart) {
 		sommetVoisin = new LinkedList<>();
 		MaillonGraphe tmp = getSommet(sommetDepart);
 		MaillonGrapheSec tmp2 = tmp.getVoisin();
-		
-		while (tmp2 != null) {
-			List<String> voisins1Distance = getVoisin1Distance(tmp2.getDestination().getNom());
-			for (String voisin : voisins1Distance) {
-				if (!sommetVoisin.contains(voisin)) {
-					sommetVoisin.add(voisin);
+		List<Graphe.MaillonGrapheSec> listVoisins = getSommet(sommetDepart).voisinsToList();
+
+		listVoisins.forEach(voisin -> {
+			voisin.getDestination().voisinsToList().forEach(voisinVoisin -> {
+				if(!sommetVoisin.contains(voisinVoisin)){
+					sommetVoisin.add(voisinVoisin);
 				}
-			}
-			tmp2 = tmp2.getSuivantMaillonSec();
-		}
-		
-		// Affichage test
-		for (String i : sommetVoisin) {
-			System.out.println("sommet : " + i);
-		}
+			});
+		});
 		
 		return sommetVoisin;
 	}
@@ -646,7 +640,7 @@ public class Graphe {
 			ensembleSommetListe.add(tmp);//ajout la liste
 			tmp = tmp.getSuivant();
 		}
-		if (ensembleSommetListe == null) {
+		if (ensembleSommetListe.isEmpty()) {
 			throw new ListeSommetsNull("la liste est nulle !");
 		}
 		return ensembleSommetListe;//renvoie la liste
