@@ -816,8 +816,16 @@ public class Graphe {
 	}
 
 	public double rechercheChemin(String depart, String destination) {
-
 		return f.rechercheChemin(depart, destination);
+	}
+
+	public void updateDijkstra(){
+		cheminDijkstra = new HashMap<>(); // Crée une nouvelle map pour stocker les chemins de Dijkstra
+		try {
+			this.tousLesSommetToList().forEach(maillonGraphe -> { // Parcourt tous les sommets du graphe
+				cheminDijkstra.put(maillonGraphe.getNom(), new Dijkstra(this, maillonGraphe.getNom())); // Ajoute un objet Dijkstra pour chaque sommets au map cheminDijkstra
+			});
+		} catch (Exception ignored) {}
 	}
 	
 	
