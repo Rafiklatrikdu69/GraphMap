@@ -799,7 +799,9 @@ public class InterfaceGraphe extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedSommet = (String) comboBoxSommets.getSelectedItem();
-                graphePanel.actionPerformedClickDessinPanel(graphePanel.getListeSommetVisuel().get(graphe.getSommet(selectedSommet)));
+                if(selectedSommet != null){
+                    graphePanel.actionPerformedClickDessinPanel(graphePanel.getListeSommetVisuel().get(graphe.getSommet(selectedSommet)));
+                }
             }
         });
     }
@@ -869,15 +871,11 @@ public class InterfaceGraphe extends JFrame {
                 graphe = new Graphe();
                 try {
                     graphe.chargementFichier(fichierCharge.getPath());
-
                 } catch (Exception ignored) {}
                 mettreVisibleComposantGraphe();
                 initContainerDessinGraphePanel();
-                Graphe.MaillonGraphe tmp = graphe.getPremier();
-                while (tmp !=null){
-                    comboBoxSommets.addItem(tmp.getNom());
-                    tmp = tmp.getSuivant();
-                }
+
+                updateComboBoxSommets();
                 contenuGraphePanel.updateUI();
                 graphePanel.updateUI();
             } else {
@@ -885,6 +883,16 @@ public class InterfaceGraphe extends JFrame {
                 int result = showOptionDialog(null, panelFormatFichierInvalide, "Format fichier invalide ! ", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 
             }
+        }
+    }
+
+    private void updateComboBoxSommets(){
+        comboBoxSommets.removeAllItems();
+        Graphe.MaillonGraphe tmp = graphe.getPremier();
+        while (tmp !=null){
+            System.out.println(tmp.getNom());
+            comboBoxSommets.addItem(tmp.getNom());
+            tmp = tmp.getSuivant();
         }
     }
 
