@@ -863,8 +863,7 @@ public class Graphe {
 			}
 
 			ligne.append("\n");
-			System.out.println(ligne);
-			//buffWrite.write(ligne.toString());
+			buffWrite.write(ligne.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
