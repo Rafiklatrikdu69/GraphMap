@@ -1,4 +1,4 @@
-package Interface;
+package Interface.JOptionPane;
 
 import javax.swing.*;
 
@@ -7,22 +7,23 @@ import java.util.Objects;
 
 
 public class AjoutSommetVisuelCreation extends JPanel {
-	private JPanel panelAjoutSommet;
 	private JComboBox<String> choixTypeSommet;
 	private JTextField entreeSommet ;
 	
-	AjoutSommetVisuelCreation() {
+	public AjoutSommetVisuelCreation() {
+		setLayout(new GridLayout(2,2));
 		
 		choixTypeSommet = new JComboBox<>();//liste des type
-		
+
+		add(new JLabel("Nom Sommet"));
+		add(new JLabel("Type Sommet"));
 		entreeSommet = new JTextField();//la saisie
 		
-		choixTypeSommet.addItem("O");
-		choixTypeSommet.addItem("M");
-		choixTypeSommet.addItem("N");
+		choixTypeSommet.addItem("Opératoire");
+		choixTypeSommet.addItem("Maternité");
+		choixTypeSommet.addItem("Centre de nutrition");
 		
 		creationSommetPanel();
-		add(panelAjoutSommet);//ajout du panel dans la classe elle meme
 	}
 	
 	/**
@@ -30,11 +31,8 @@ public class AjoutSommetVisuelCreation extends JPanel {
 	 *
 	 */
 	private void creationSommetPanel() {
-		panelAjoutSommet = new JPanel();
-		panelAjoutSommet.setLayout(new BorderLayout());
-		panelAjoutSommet.setBorder(BorderFactory.createTitledBorder("panel ajout sommet"));
-		panelAjoutSommet.add(choixTypeSommet, BorderLayout.EAST);
-		panelAjoutSommet.add(entreeSommet, BorderLayout.WEST);
+		add(entreeSommet);
+		add(choixTypeSommet);
 	}
 	public String getNom(){
 		return entreeSommet.getText();
