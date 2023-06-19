@@ -317,7 +317,7 @@ public class DessinGraphe extends JPanel {
 			SommetVisuel jPanel = entry.getValue();
             /*Si le sommet touche  une zone qui possede deja un sommet
             alors on renvoie true pour dire que le sommet ne peux pas etre placer ici*/
-			if (jPanel.getBounds().intersects(new Rectangle(x, y, SOMMET_WIDTH, SOMMET_HEIGHT))) {
+			if (jPanel.getBounds().intersects(new Rectangle(x-30, y-30, SOMMET_WIDTH+60, SOMMET_HEIGHT+60))) {
 				return true;
 			}
 		}
