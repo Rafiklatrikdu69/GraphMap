@@ -30,6 +30,8 @@ public class DessinGraphe extends JPanel {
 	private Color couleurRectangle; // Couleur par défaut du rectangle
 	private Color couleurBordure; // Couleur par défaut du rectangle
 
+	private Map<String, Point> positionSommets;
+
 	/**
 	 * Constructeur de la classe DessinGraphe
 	 */
@@ -37,6 +39,8 @@ public class DessinGraphe extends JPanel {
 		super();
 		this.graphe = graphe;
 		this.interfaceGraphe = interfaceGraphe;
+		positionSommets = new HashMap<>();
+		setPositionSommets();
 		couleurRectangle = themeActuel.getCouleurRectangleFiab();
 		couleurBordure = themeActuel.getCouleurBordureRectFiab();
 		listeSommetChemin = new ArrayList<>();
@@ -61,19 +65,45 @@ public class DessinGraphe extends JPanel {
 		
 	}
 
-	/**
-	 * @param g
-	 */
+	private void setPositionSommets(){
+		positionSommets.put("S1", new Point(189,390));
+		positionSommets.put("S2", new Point(87,553));
+		positionSommets.put("S3", new Point(316,325));
+		positionSommets.put("S4", new Point(333,550));
+		positionSommets.put("S5", new Point(396,417));
+		positionSommets.put("S6", new Point(623,155));
+		positionSommets.put("S7", new Point(758,53));
+		positionSommets.put("S8", new Point(749,255));
+		positionSommets.put("S9", new Point(706,539));
+		positionSommets.put("S10", new Point(680,649));
+		positionSommets.put("S11", new Point(824,375));
+		positionSommets.put("S12", new Point(832,597));
+		positionSommets.put("S13", new Point(1200,310));
+		positionSommets.put("S14", new Point(892,180));
+		positionSommets.put("S15", new Point(1113,281));
+		positionSommets.put("S16", new Point(1179,473));
+		positionSommets.put("S17", new Point(940,520));
+		positionSommets.put("S18", new Point(1031,525));
+		positionSommets.put("S19", new Point(1073,749));
+		positionSommets.put("S20", new Point(822,758));
+		positionSommets.put("S21", new Point(330,660));
+		positionSommets.put("S22", new Point(207,606));
+		positionSommets.put("S23", new Point(509,803));
+		positionSommets.put("S24", new Point(510,646));
+		positionSommets.put("S25", new Point(582,449));
+		positionSommets.put("S26", new Point(604,316));
+		positionSommets.put("S27", new Point(197,172));
+		positionSommets.put("S28", new Point(417,85));
+		positionSommets.put("S29", new Point(994,382));
+		positionSommets.put("S30", new Point(1114,185));
+	}
 
-
-
-	
 	public void setCouleurRectangle(Color couleur) {
 		this.couleurRectangle = couleur;
 		repaint();
 	}
 
-	
+
 	public void setCouleurBordure(Color couleur) {
 		this.couleurBordure = couleur;
 		repaint();
@@ -129,9 +159,15 @@ public class DessinGraphe extends JPanel {
 		interfaceGraphe.getChoixDestinationComboBox().addItem("Centre de nutrition");
 		interfaceGraphe.getChoixDestinationComboBox().addItem("Opératoire");
 		while (tmp != null) {
-			int[] pos = getRandomPositionPourSommet(interfaceGraphe.getContenuGraphePanel());
+			if(interfaceGraphe.getFichierCharge().getName().equals("graphe30Som74Arete.csv")){
+				int x = positionSommets.get(tmp.getNom()).x;
+				int y = positionSommets.get(tmp.getNom()).y;
+				initialisationPlacementSommet(tmp, x, y);
+			} else {
+				int[] pos = getRandomPositionPourSommet(interfaceGraphe.getContenuGraphePanel());
+				initialisationPlacementSommet(tmp, pos[0], pos[1]);
+			}
 			//place le sommet a une position Random x et y
-			initialisationPlacementSommet(tmp, pos[0], pos[1]);
 			interfaceGraphe.getChoixDestinationComboBox().addItem(tmp.getNom());
 			tmp = tmp.getSuivant();//Passe au maillon suivant
 		}
@@ -245,6 +281,8 @@ public class DessinGraphe extends JPanel {
 	 */
 	public void actionPerformedClickDessinPanel(SommetVisuel m) {
 		resetTailleTraits();
+		setOpacityToAllAretes(1.0F);
+		setOpacityToAllSommet(1.0F);
 		interfaceGraphe.getComparaisonPanel().removeAll();
 		if (sommetSelectionne != null) {
 			sommetSelectionne.setCouleurBordureRond(themeActuel.getCouleurBordureSommet());
