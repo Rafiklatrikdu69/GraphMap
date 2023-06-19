@@ -3,6 +3,8 @@ package Interface;
 import Interface.InfosSommetPanel.AfficherCheminPanel;
 import Interface.InfosSommetPanel.ChoixTypeSommet;
 import Exception.ListeSommetsNull;
+import Interface.JOptionPane.AjoutSommetVisuelCreation;
+import Interface.JOptionPane.ConfirmerAjoutDansCSV;
 import LCGraphe.Dijkstra;
 import LCGraphe.Graphe;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
@@ -70,9 +72,8 @@ public class InterfaceGraphe extends JFrame {
 	private JPanel contenuGraphePanel;
 	private JPanel indicateurPanel;
 	private JLabel[] indicateur;
-	
-	private static final Color couleurFondPanelDarkMode = new Color(40, 40, 48);
-	private static final Color couleurFondPanelLightMode = new Color(200, 200, 200);
+
+	private File fichierCharge;
 	
 	
 	public InterfaceGraphe() throws ListeSommetsNull {
@@ -252,7 +253,6 @@ public class InterfaceGraphe extends JFrame {
 		modelInfosVoisins = new DefaultTableModel(colonneAttribut, 0);
 		tableInfosVoisins = new JTable(modelInfosVoisins);
 		tableInfosVoisins.setOpaque(false);
-		tableInfosVoisins.setGridColor(couleurFondPanelLightMode);
 		
 		affichageVoisinScrollPane = new JScrollPane(tableInfosVoisins);
 		affichageVoisinScrollPane.setOpaque(false);
@@ -686,14 +686,14 @@ public class InterfaceGraphe extends JFrame {
 		if (choix == JOptionPane.OK_OPTION) {
 			if (!ajout.getNom().contains("-") && !graphe.existeSommet(ajout.getNom())) {
 				switch (ajout.getType()) {
-					case "M" -> {
-						graphe.ajoutSommet(ajout.getNom(), ChoixTypeSommet.MATERNITE.getTypeSommet());
+					case "Opératoire" -> {
+						graphe.ajoutSommet(ajout.getNom(), ChoixTypeSommet.MATERNITE.getCode());
 					}
-					case "O" -> {
-						graphe.ajoutSommet(ajout.getNom(), ChoixTypeSommet.OPERATOIRE.getTypeSommet());
+					case "Maternité" -> {
+						graphe.ajoutSommet(ajout.getNom(), ChoixTypeSommet.OPERATOIRE.getCode());
 					}
-					case "N" -> {
-						graphe.ajoutSommet(ajout.getNom(), ChoixTypeSommet.NUTRITION.getTypeSommet());
+					case "Centre de nutrition" -> {
+						graphe.ajoutSommet(ajout.getNom(), ChoixTypeSommet.NUTRITION.getCode());
 					}
 				}
 				graphe.getCheminDijkstra().put(ajout.getNom(), new Dijkstra(graphe, ajout.getNom()));
@@ -701,7 +701,23 @@ public class InterfaceGraphe extends JFrame {
 				int[] pos = graphePanel.getRandomPositionPourSommet(getContenuGraphePanel());
 				//place le sommet à une position Random x et y
 				graphePanel.initialisationPlacementSommet(graphe.getSommet(ajout.getNom()), pos[0], pos[1]);
-				getChoixDestinationComboBox().addItem(ajout.getNom());
+				choixDestinationComboBox.addItem(ajout.getNom());
+				ConfirmerAjoutDansCSV confirmation = new ConfirmerAjoutDansCSV();
+				JOptionPane.showOptionDialog(null, confirmation, "Ajouter Centre", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{}, null);
+				if(confirmation.isConfirmer()){
+					switch (ajout.getType()) {
+						case "Opératoire" -> {
+							graphe.ajoutCentreDansCsv(fichierCharge.getAbsolutePath(), ajout.getNom(), ChoixTypeSommet.MATERNITE.getCode());
+						}
+						case "Maternité" -> {
+							graphe.ajoutCentreDansCsv(fichierCharge.getAbsolutePath(), ajout.getNom(), ChoixTypeSommet.OPERATOIRE.getCode());
+						}
+						case "Centre de nutrition" -> {
+							graphe.ajoutCentreDansCsv(fichierCharge.getAbsolutePath(), ajout.getNom(), ChoixTypeSommet.NUTRITION.getCode());
+						}
+					}
+
+				}
 				graphePanel.repaint();
 			} else {
 				JOptionPane.showMessageDialog(null, null, "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -718,11 +734,11 @@ public class InterfaceGraphe extends JFrame {
 	public void setOuvrirFichierActions() {
 		JFileChooser fenetreOuvertureFichier = new JFileChooser(new File("."));
 		fenetreOuvertureFichier.setFileFilter(new FileNameExtensionFilter("Fichiers", "csv"));//seul les format csv sont autorises et proposer
-		File fichier = new File("..\\src\\fichiersGraphe\\");//tombe directement sur le dossier voulu
-		fenetreOuvertureFichier.setCurrentDirectory(fichier);
+		fichierCharge = new File("..\\src\\fichiersGraphe\\");//tombe directement sur le dossier voulu
+		fenetreOuvertureFichier.setCurrentDirectory(fichierCharge);
 		if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			fichier = fenetreOuvertureFichier.getSelectedFile();//recupere le choix du fichier
-			if (fichier.getPath().endsWith(".csv")) {//option en plus pour verifier si on ouvre le bon fichier
+			fichierCharge = fenetreOuvertureFichier.getSelectedFile();//recupere le choix du fichier
+			if (fichierCharge.getPath().endsWith(".csv")) {//option en plus pour verifier si on ouvre le bon fichier
 				if (!getContentPane().equals(getCp())) {
 					setContentPane(getCp());
 					setJMenuBar(getMenu());
@@ -732,8 +748,7 @@ public class InterfaceGraphe extends JFrame {
 				contenuGraphePanel.removeAll();
 				graphe = new Graphe();
 				try {
-					graphe.chargementFichier(fichier.getPath());
-					graphe.ajoutCentreDansCsv("src/fichiersGraphe/graphe30Som74Arete.csv", "bite", "bite");
+					graphe.chargementFichier(fichierCharge.getPath());
 				} catch (Exception excep) {
 				
 				}
