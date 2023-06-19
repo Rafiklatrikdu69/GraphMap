@@ -243,7 +243,7 @@ public class DessinGraphe extends JPanel {
 	/**
 	 * @param m
 	 */
-	private void actionPerformedClickDessinPanel(SommetVisuel m) {
+	public void actionPerformedClickDessinPanel(SommetVisuel m) {
 		resetTailleTraits();
 		interfaceGraphe.getComparaisonPanel().removeAll();
 		if (sommetSelectionne != null) {
