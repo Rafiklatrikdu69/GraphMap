@@ -47,7 +47,6 @@ public class InterfaceGraphe extends JFrame {
     private JButton boutonSuivant, boutonPrecedent;
 
     private JPanel contenuNomTypeSommetPanel;
-    private JPanel contenuAutreFonctions;
     private JPanel affichageVoisinPanel;
     private JPanel panelTitreVoisinButton;
     private JButton afficherVoisin1Distance, afficherVoisin2Distance;
@@ -61,6 +60,7 @@ public class InterfaceGraphe extends JFrame {
 
 
     private JLabel nombreRouteLabel, nombreSommetLabel, nombreMatLabel, nombreOpLabel, nombreCentreNutriLabel, nomSommetSelectionneLabel, typeSommetSelectionneLabel;
+    private JComboBox<String> comboBoxSommets;
     private JButton afficherCheminButton;
     private JComboBox<String> choixTypeCheminComboBox, choixDestinationComboBox;
     private JMenuBar menu;
@@ -79,6 +79,8 @@ public class InterfaceGraphe extends JFrame {
 
     private Dimension infosSize;
 
+    private ImageIcon logoIUTDark, logoIUTLight, logoIUTDefaut;
+
 
     public InterfaceGraphe() throws ListeSommetsNull {
         super();
@@ -90,6 +92,10 @@ public class InterfaceGraphe extends JFrame {
 
         ImageIcon iconFenetre = new ImageIcon("src/img/doctor.png");
         setIconImage(iconFenetre.getImage());
+
+        logoIUTLight = new ImageIcon("src/img/logoIUTL1Noir72dpi.png");
+        logoIUTDark = new ImageIcon("src/img/logoIUTL1Blanc72dpi.png");
+        logoIUTDefaut = logoIUTLight;
         infosSize = new Dimension(((int) screenSize.getWidth() / 5) + 10, (int) screenSize.getHeight());
 
         initComponents();
@@ -146,7 +152,7 @@ public class InterfaceGraphe extends JFrame {
         indicateurPanel = new JPanel(new FlowLayout());
         indicateurPanel.setPreferredSize(new Dimension(400, 30));
 
-        indicateur = new JLabel[3];
+        indicateur = new JLabel[2];
         for (int i = 0; i < indicateur.length; i++) {
             indicateur[i] = new JLabel("\u2022");
             indicateur[i].setFont(indicateur[i].getFont().deriveFont(20f));
@@ -168,7 +174,6 @@ public class InterfaceGraphe extends JFrame {
 
         cardPanelInfos.add(affichageVoisinPanel, "panel 3");
         cardPanelInfos.add(contenuTousLesCheminsPanel, "panel Suivant");//panel suivant pour les chemins
-        cardPanelInfos.add(contenuAutreFonctions, "panel principale");//panel principal
 
         paneInfoSommet.add(contenuNomTypeSommetPanel, BorderLayout.NORTH);
         paneInfoSommet.add(contenuButtonSuivPrec, BorderLayout.SOUTH);
@@ -183,17 +188,17 @@ public class InterfaceGraphe extends JFrame {
     private void initContainersInfoGraphe() {
         titre = new JLabel("Graphe");//titre de l'interface
         titre.setHorizontalAlignment(JLabel.CENTER);//position au centre
-        ImageIcon logoIUT = new ImageIcon("src/img/logoIUT.png");
+
         JPanel panelLogoIUT = new JPanel(){
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 // Dessiner l'image avec sa transparence
-                Image image = logoIUT.getImage();
+                Image image = logoIUTDefaut.getImage();
                 g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        panelLogoIUT.setPreferredSize(new Dimension(logoIUT.getIconWidth(), logoIUT.getIconHeight()));
+        panelLogoIUT.setPreferredSize(new Dimension(logoIUTDefaut.getIconWidth(), logoIUTDefaut.getIconHeight()));
 
 
         titre.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -204,15 +209,24 @@ public class InterfaceGraphe extends JFrame {
         nombreCentreNutriLabel = new JLabel("");
         nombreOpLabel = new JLabel("");
         /****************************************************************/
-        JPanel panelMilieu = new JPanel(new GridLayout(5, 1));
-        panelMilieu.setOpaque(false);
-        //ajout des elements dans le panel
-        panelMilieu.add(nombreSommetLabel);
-        panelMilieu.add(nombreRouteLabel);
-        panelMilieu.add(nombreOpLabel);
-        panelMilieu.add(nombreMatLabel);
-        panelMilieu.add(nombreCentreNutriLabel);
+        JPanel panelMilieuGauche = new JPanel(new GridLayout(5, 1));
+        JPanel panelMilieu = new JPanel(new GridLayout(1, 2));
+        JPanel panelMilieuDroite = new JPanel(new GridLayout(2, 1));
 
+        comboBoxSommets = new JComboBox<>();
+        panelMilieuGauche.setOpaque(false);
+        //ajout des elements dans le panel
+        panelMilieuGauche.add(nombreSommetLabel);
+        panelMilieuGauche.add(nombreRouteLabel);
+        panelMilieuGauche.add(nombreOpLabel);
+        panelMilieuGauche.add(nombreMatLabel);
+        panelMilieuGauche.add(nombreCentreNutriLabel);
+
+        panelMilieuDroite.add(new JLabel("Sélectionner un sommet"));
+        panelMilieuDroite.add(comboBoxSommets);
+
+        panelMilieu.add(panelMilieuGauche);
+        panelMilieu.add(panelMilieuDroite);
 
         panelInfoGraphe.add(panelLogoIUT, BorderLayout.NORTH);
         panelInfoGraphe.add(titre, BorderLayout.CENTER);
@@ -247,8 +261,6 @@ public class InterfaceGraphe extends JFrame {
      *
      */
     private void initContainersInfoSommet() {
-        contenuAutreFonctions = new JPanel(new BorderLayout());
-        contenuAutreFonctions.setOpaque(false);
         initContainerInfosVoisins();
         initContainerChemin();
     }
@@ -282,6 +294,8 @@ public class InterfaceGraphe extends JFrame {
         };
         tableInfosVoisins = new JTable(modelInfosVoisins);
         tableInfosVoisins.setOpaque(false);
+        tableInfosVoisins.setEditingColumn(-1);
+        tableInfosVoisins.setEditingRow(-1);
 
         affichageVoisinScrollPane = new JScrollPane(tableInfosVoisins);
         affichageVoisinScrollPane.setOpaque(false);
@@ -290,28 +304,15 @@ public class InterfaceGraphe extends JFrame {
         comparaisonPanel = new JPanel(new GridLayout(0,1));
 
         panelInfosVoisins.add(affichageVoisinScrollPane, BorderLayout.CENTER);
-        panelInfosVoisins.add(comparaisonPanel, BorderLayout.SOUTH);
+        panelInfosVoisins.add(comparaisonPanel, BorderLayout.NORTH);
 
 
         affichageVoisinPanel = new JPanel(new BorderLayout());
         affichageVoisinPanel.setBorder(BorderFactory.createTitledBorder("voisin panel"));
         affichageVoisinPanel.setOpaque(false);
         affichageVoisinPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
-
         affichageVoisinPanel.add(panelTitreVoisinButton, BorderLayout.NORTH);
         affichageVoisinPanel.add(panelInfosVoisins, BorderLayout.CENTER);
-
-    }
-
-    private void initPanelSommets2Distances() throws ListeSommetsNull {
-
-        JButton b = new JButton("Sommets 2 distances ?");
-        contenuAutreFonctions.add(b, BorderLayout.NORTH);
-        JComboBox<String> j = new JComboBox<>();
-        graphe.tousLesSommetToList().forEach(maillonGraphe -> {
-            j.addItem(maillonGraphe.getNom());
-        });
-        contenuAutreFonctions.add(j, BorderLayout.CENTER);
 
     }
 
@@ -515,6 +516,7 @@ public class InterfaceGraphe extends JFrame {
 
                     updateInterface();
                     if (graphePanel != null) {
+                        logoIUTDefaut = logoIUTLight;
                         graphePanel.setThemeActuel(Theme.LIGHT);
                         graphePanel.miseAJourDessin();
                         //bug le chemin s'affiche tout le temps quand on change le theme
@@ -538,6 +540,7 @@ public class InterfaceGraphe extends JFrame {
 
                     updateInterface();//mise a jour de l'interface
                     if (graphePanel != null) {
+                        logoIUTDefaut = logoIUTDark;
                         graphePanel.setThemeActuel(Theme.DARK);
                         graphePanel.miseAJourDessin();
 
@@ -719,13 +722,11 @@ public class InterfaceGraphe extends JFrame {
                 if (graphePanel.getSommetSelectionne() != null) {
                     
                     comparaisonPanel.removeAll();
-                    
-                    ArrayList<Object[]> listInfosVoisins = new ArrayList<>();
-                    List<Graphe.MaillonGrapheSec> listVoisins = graphePanel.getSommetSelectionne().getSommetGraphe().voisinsToList();
+
                     List<Graphe.MaillonGraphe> listNomVoisins = new ArrayList<>();
                     
                     // parcourt les voisins du sommet sélectionné et les ajouter au modèle d'informations des voisins
-                  List<String> liste =   graphe.voisin2Distance(graphePanel.getSommetSelectionne().getSommet());
+                    List<Graphe.MaillonGrapheSec> liste =   graphe.voisin2Distance(graphePanel.getSommetSelectionne().getSommet());
                     
                     graphePanel.resetColorSommetChemin();
                     graphePanel.resetColorArreteChemin();
@@ -735,17 +736,17 @@ public class InterfaceGraphe extends JFrame {
                     AtomicInteger nombreMaternite = new AtomicInteger();
                     AtomicInteger nombreOperatoire = new AtomicInteger();
                     AtomicInteger nombreCentreDeNutri = new AtomicInteger();
-                    listVoisins.forEach(voisin -> {
-                        if(voisin.getDestination().getType().equals("Maternité")){
-                            nombreMaternite.getAndIncrement();
-                        } else if (voisin.getDestination().getType().equals("Opératoire")) {
-                            nombreOperatoire.getAndIncrement();
-                        } else if (voisin.getDestination().getType().equals("Centre de nutrition")) {
-                            nombreCentreDeNutri.getAndIncrement();
+                    liste.forEach(voisin -> {
+                        if(!listNomVoisins.contains(voisin.getDestination()) && !voisin.getDestination().equals(graphePanel.getSommetSelectionne().getSommetGraphe())){
+                            if(voisin.getDestination().getType().equals("Maternité")){
+                                nombreMaternite.getAndIncrement();
+                            } else if (voisin.getDestination().getType().equals("Opératoire")) {
+                                nombreOperatoire.getAndIncrement();
+                            } else if (voisin.getDestination().getType().equals("Centre de nutrition")) {
+                                nombreCentreDeNutri.getAndIncrement();
+                            }
+                            listNomVoisins.add(voisin.getDestination());
                         }
-                        listInfosVoisins.add(new Object[]{voisin.getDestination().getNom(), voisin.getDestination().getType(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
-                
-                        listNomVoisins.add(voisin.getDestination());
                     });
                     comparaisonPanel.add(new JLabel("Nombre de maternité "+ nombreMaternite));
                     comparaisonPanel.add(new JLabel("Nombre d'opératoire "+ nombreOperatoire));
@@ -764,7 +765,6 @@ public class InterfaceGraphe extends JFrame {
                                         if (listNomVoisins.contains(maillon)) {
                                             // Sommets à deux distances
                                             graphePanel.setOpacityToSommetVisuel(maillon, 1.0F);
-                                            graphePanel.setDefautCouleurSommet( Color.BLUE); // Modifier la couleur selon vos besoins
                                         } else {
                                             // Sommets à une distance
                                             graphePanel.setOpacityToSommetVisuel(maillon, 0.3F);
@@ -775,16 +775,11 @@ public class InterfaceGraphe extends JFrame {
                                 }
                             }
                         });
-                        
-                        
-                        
-                        
                         graphePanel.setOpacityToSommetVisuel(graphePanel.getSommetSelectionne(), 1.0F);
                         
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }
-                    graphePanel.setContenuDansTableVoisins(listInfosVoisins);
                     pack();
                 } else {
                     JOptionPane.showMessageDialog(null, null, "Aucun sommet selectionne ! ", JOptionPane.ERROR_MESSAGE);
@@ -792,6 +787,14 @@ public class InterfaceGraphe extends JFrame {
             }
 
             //////////////////////////////////////////////////////////////////////////////////////
+        });
+
+        comboBoxSommets.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedSommet = (String) comboBoxSommets.getSelectedItem();
+                graphePanel.actionPerformedClickDessinPanel(graphePanel.getListeSommetVisuel().get(graphe.getSommet(selectedSommet)));
+            }
         });
     }
 
@@ -860,11 +863,15 @@ public class InterfaceGraphe extends JFrame {
                 graphe = new Graphe();
                 try {
                     graphe.chargementFichier(fichierCharge.getPath());
-                } catch (Exception excep) {
 
-                }
+                } catch (Exception ignored) {}
                 mettreVisibleComposantGraphe();
                 initContainerDessinGraphePanel();
+                Graphe.MaillonGraphe tmp = graphe.getPremier();
+                while (tmp !=null){
+                    comboBoxSommets.addItem(tmp.getNom());
+                    tmp = tmp.getSuivant();
+                }
                 contenuGraphePanel.updateUI();
                 graphePanel.updateUI();
             } else {
@@ -912,6 +919,7 @@ public class InterfaceGraphe extends JFrame {
                                             meilleurFiabilite = entry.getValue();
                                             destination = entry.getKey();
                                         } else if (meilleurFiabilite < entry.getValue()) {
+                                            System.out.println(meilleurFiabilite+" < "+entry.getValue());
                                             meilleurChemin = tmp;
                                             meilleurFiabilite = entry.getValue();
                                             destination = entry.getKey();
@@ -941,7 +949,7 @@ public class InterfaceGraphe extends JFrame {
                                             meilleurChemin = tmp;
                                             meilleurFiabilite = entry.getValue();
                                             destination = entry.getKey();
-                                        } else if (meilleurFiabilite > entry.getValue()) {
+                                        } else if (meilleurFiabilite < entry.getValue()) {
                                             meilleurChemin = tmp;
                                             meilleurFiabilite = entry.getValue();
                                             destination = entry.getKey();
@@ -971,7 +979,7 @@ public class InterfaceGraphe extends JFrame {
                                             meilleurChemin = tmp;
                                             meilleurFiabilite = entry.getValue();
                                             destination = entry.getKey();
-                                        } else if (meilleurFiabilite > entry.getValue()) {
+                                        } else if (meilleurFiabilite < entry.getValue()) {
                                             meilleurChemin = tmp;
                                             meilleurFiabilite = entry.getValue();
                                             destination = entry.getKey();
@@ -1221,24 +1229,6 @@ public class InterfaceGraphe extends JFrame {
             repaint(); // Redessine le graphe
         }
     }
-
-    /**
-     *
-     */
-    public void mettreInvisibleComposantSommet() {
-        nomSommetSelectionneLabel.setText("");
-        typeSommetSelectionneLabel.setText("");
-        indicateurPanel.setVisible(false);
-        cardPanelInfos.setVisible(false);
-        afficherCheminButton.setVisible(false);
-        choixTypeCheminComboBox.setVisible(false);
-        choixDestinationComboBox.setVisible(false);
-        boutonSuivant.setVisible(false);
-        boutonPrecedent.setVisible(false);
-        affichageVoisinPanel.setVisible(false);
-        contenuTousLesCheminsPanel.setVisible(false);
-    }
-
     private void setCheminDijkstraDistance(LinkedHashMap<String, Double> chemin, Graphe.MaillonGraphe sommetSelect, String destination){
         if (chemin != null) { // Vérifie si un chemin existe
             for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
@@ -1310,8 +1300,25 @@ public class InterfaceGraphe extends JFrame {
     /**
      *
      */
+    public void mettreInvisibleComposantSommet() {
+        nomSommetSelectionneLabel.setText("");
+        typeSommetSelectionneLabel.setText("");
+        indicateurPanel.setVisible(false);
+        cardPanelInfos.setVisible(false);
+        afficherCheminButton.setVisible(false);
+        choixTypeCheminComboBox.setVisible(false);
+        choixDestinationComboBox.setVisible(false);
+        boutonSuivant.setVisible(false);
+        boutonPrecedent.setVisible(false);
+        affichageVoisinPanel.setVisible(false);
+        contenuTousLesCheminsPanel.setVisible(false);
+    }
+    /**
+     *
+     */
     private void mettreInvisibleComposantGraphe() {
         //Visbilite des composants
+
         titre.setVisible(false);
         nombreSommetLabel.setText("");
         nombreRouteLabel.setText("");
