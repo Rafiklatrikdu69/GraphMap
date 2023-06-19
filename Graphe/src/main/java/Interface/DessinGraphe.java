@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DessinGraphe extends JPanel {
 	
@@ -244,6 +245,7 @@ public class DessinGraphe extends JPanel {
 	 */
 	private void actionPerformedClickDessinPanel(SommetVisuel m) {
 		resetTailleTraits();
+		interfaceGraphe.getComparaisonPanel().removeAll();
 		if (sommetSelectionne != null) {
 			sommetSelectionne.setCouleurBordureRond(themeActuel.getCouleurBordureSommet());
 			sommetSelectionne.setCouleurCentre(themeActuel.getCouleurSommet());
@@ -259,10 +261,23 @@ public class DessinGraphe extends JPanel {
 			interfaceGraphe.updateIndicateur(0);
 			sommetSelectionne = m;
 			ArrayList<Object[]> listInfosVoisins = new ArrayList<>();
+			AtomicInteger nombreMaternite = new AtomicInteger();
+			AtomicInteger nombreOperatoire = new AtomicInteger();
+			AtomicInteger nombreCentreDeNutri = new AtomicInteger();
 			// parcourt les voisins du sommet sélectionné et les ajouter au modèle d'informations des voisins
 			sommetSelectionne.getSommetGraphe().voisinsToList().forEach(voisin -> {
-				listInfosVoisins.add(new Object[]{voisin.getDestination().getNom(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
+				if(voisin.getDestination().getType().equals("Maternité")){
+					nombreMaternite.getAndIncrement();
+				} else if (voisin.getDestination().getType().equals("Opératoire")) {
+					nombreOperatoire.getAndIncrement();
+				} else if (voisin.getDestination().getType().equals("Centre de nutrition")) {
+					nombreCentreDeNutri.getAndIncrement();
+				}
+				listInfosVoisins.add(new Object[]{voisin.getDestination().getNom(), voisin.getDestination().getType(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
 			});
+			interfaceGraphe.getComparaisonPanel().add(new JLabel("Nombre de maternité "+ nombreMaternite));
+			interfaceGraphe.getComparaisonPanel().add(new JLabel("Nombre d'opératoire "+ nombreOperatoire));
+			interfaceGraphe.getComparaisonPanel().add(new JLabel("Nombre de centre de nutrition "+ nombreCentreDeNutri));
 			
 			setContenuDansTableVoisins(listInfosVoisins);
 			
@@ -454,6 +469,9 @@ public class DessinGraphe extends JPanel {
 		List<String> sommetsList = graphe.getListeSommetCheminGraphe(); // Récupérer la liste des sommets
 		setOpacityToAllSommet(0.1F);
 		setOpacityToAllAretes(0.1F);
+		sommets.get(graphe.getSommet(sommetsList.get(0))).setCouleurCentre(Theme.LIGHT.getCouleurSommetSelect());
+		sommets.get(graphe.getSommet(sommetsList.get(0))).setOpacity(1.0F);
+		sommets.get(graphe.getSommet(sommetsList.get(0))).setCouleurBordureRond(Theme.LIGHT.getCouleurBordureSommetChemin());
 		for (int i = 0; i < sommetsList.size() - 1; i++) { // Parcourt les sommets du chemin
 			String sommetCourant = sommetsList.get(i); // Récupère le sommet courant
 			String sommetSuivant = sommetsList.get(i + 1); // Récupère le sommet suivant
