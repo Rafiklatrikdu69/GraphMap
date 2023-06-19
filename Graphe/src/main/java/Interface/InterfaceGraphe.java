@@ -577,6 +577,12 @@ public class InterfaceGraphe extends JFrame {
                 creationDuSommet();
             }
         });
+        itemAjoutArete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //
+            }
+        });
         itemAfficherMaternite.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1430,5 +1436,9 @@ public class InterfaceGraphe extends JFrame {
     }
     public JPanel getComparaisonPanel(){
         return comparaisonPanel;
+    }
+
+    public File getFichierCharge() {
+        return fichierCharge;
     }
 }
