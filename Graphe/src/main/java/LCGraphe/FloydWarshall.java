@@ -14,7 +14,7 @@ public class FloydWarshall {
 	private Graphe graphe;
 	
 	
-	FloydWarshall(Graphe graphe){
+	public FloydWarshall(Graphe graphe){
 		this.graphe = graphe;
 	}
 	private void  initMap(){
