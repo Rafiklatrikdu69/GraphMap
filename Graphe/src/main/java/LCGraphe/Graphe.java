@@ -308,11 +308,11 @@ public class Graphe {
 		
 		return sommetVoisin;
 	}
-
-
 	
-	public void Voisin2Distance(String sommetDepart) {
-		 sommetVoisin = new LinkedList<>();
+	
+	
+	public List<String> voisin2Distance(String sommetDepart) {
+		sommetVoisin = new LinkedList<>();
 		MaillonGraphe tmp = getSommet(sommetDepart);
 		MaillonGrapheSec tmp2 = tmp.getVoisin();
 		
@@ -325,10 +325,13 @@ public class Graphe {
 			}
 			tmp2 = tmp2.getSuivantMaillonSec();
 		}
-		//affichage test
+		
+		// Affichage test
 		for (String i : sommetVoisin) {
 			System.out.println("sommet : " + i);
 		}
+		
+		return sommetVoisin;
 	}
 	/////////////////////////////////////////////////////////////
 	/**

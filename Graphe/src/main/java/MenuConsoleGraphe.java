@@ -19,7 +19,7 @@ public class MenuConsoleGraphe {
 		
 		}
 		
-		newGraphe.Voisin2Distance("S1");
+		newGraphe.voisin2Distance("S1");
 		
 		
 		Map<String, Map<String, Double>> floydMap = new LinkedHashMap<>();

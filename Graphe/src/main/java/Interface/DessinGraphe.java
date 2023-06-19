@@ -469,6 +469,9 @@ public class DessinGraphe extends JPanel {
 		List<String> sommetsList = graphe.getListeSommetCheminGraphe(); // Récupérer la liste des sommets
 		setOpacityToAllSommet(0.1F);
 		setOpacityToAllAretes(0.1F);
+		sommets.get(graphe.getSommet(sommetsList.get(0))).setCouleurCentre(Theme.LIGHT.getCouleurSommetSelect());
+		sommets.get(graphe.getSommet(sommetsList.get(0))).setOpacity(1.0F);
+		sommets.get(graphe.getSommet(sommetsList.get(0))).setCouleurBordureRond(Theme.LIGHT.getCouleurBordureSommetChemin());
 		for (int i = 0; i < sommetsList.size() - 1; i++) { // Parcourt les sommets du chemin
 			String sommetCourant = sommetsList.get(i); // Récupère le sommet courant
 			String sommetSuivant = sommetsList.get(i + 1); // Récupère le sommet suivant

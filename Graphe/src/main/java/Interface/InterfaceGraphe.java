@@ -695,7 +695,79 @@ public class InterfaceGraphe extends JFrame {
         afficherVoisin2Distance.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (graphePanel.getSommetSelectionne() != null) {
+                    
+                    comparaisonPanel.removeAll();
+                    
+                    ArrayList<Object[]> listInfosVoisins = new ArrayList<>();
+                    List<Graphe.MaillonGrapheSec> listVoisins = graphePanel.getSommetSelectionne().getSommetGraphe().voisinsToList();
+                    List<Graphe.MaillonGraphe> listNomVoisins = new ArrayList<>();
+                    
+                    // parcourt les voisins du sommet sélectionné et les ajouter au modèle d'informations des voisins
+                  List<String> liste =   graphe.voisin2Distance(graphePanel.getSommetSelectionne().getSommet());
+                    
+                    graphePanel.resetColorSommetChemin();
+                    graphePanel.resetColorArreteChemin();
+                    graphePanel.setOpacityToAllSommet(1.0F);
+                    graphePanel.setOpacityToAllAretes(0.1F);
+                    graphePanel.resetTailleTraits();
+                    AtomicInteger nombreMaternite = new AtomicInteger();
+                    AtomicInteger nombreOperatoire = new AtomicInteger();
+                    AtomicInteger nombreCentreDeNutri = new AtomicInteger();
+                    listVoisins.forEach(voisin -> {
+                        if(voisin.getDestination().getType().equals("Maternité")){
+                            nombreMaternite.getAndIncrement();
+                        } else if (voisin.getDestination().getType().equals("Opératoire")) {
+                            nombreOperatoire.getAndIncrement();
+                        } else if (voisin.getDestination().getType().equals("Centre de nutrition")) {
+                            nombreCentreDeNutri.getAndIncrement();
+                        }
+                        listInfosVoisins.add(new Object[]{voisin.getDestination().getNom(), voisin.getDestination().getType(), (int) voisin.getDistance() + "Km", (int) voisin.getDuree() + " min", (int) voisin.getFiabilite() * 10 + "%"});
+                
+                        listNomVoisins.add(voisin.getDestination());
+                    });
+                    comparaisonPanel.add(new JLabel("Nombre de maternité "+ nombreMaternite));
+                    comparaisonPanel.add(new JLabel("Nombre d'opératoire "+ nombreOperatoire));
+                    comparaisonPanel.add(new JLabel("Nombre de centre de nutrition "+ nombreCentreDeNutri));
+                    try {
+                        graphe.tousLesSommetToList().forEach(maillonGraphe -> {
+                            if (!listNomVoisins.contains(maillonGraphe)) {
+                                // Sommets à une distance
+                                graphePanel.setOpacityToSommetVisuel(maillonGraphe, 0.3F);
+                            } else {
+                                // Sommets à deux distances
+                                graphePanel.setOpacityToSommetVisuel(maillonGraphe, 1.0F);
+                                ; // Modifier la couleur selon vos besoins
+                                try {
+                                    graphe.tousLesSommetToList().forEach(maillon -> {
+                                        if (listNomVoisins.contains(maillon)) {
+                                            // Sommets à deux distances
+                                            graphePanel.setOpacityToSommetVisuel(maillon, 1.0F);
+                                            graphePanel.setDefautCouleurSommet( Color.BLUE); // Modifier la couleur selon vos besoins
+                                        } else {
+                                            // Sommets à une distance
+                                            graphePanel.setOpacityToSommetVisuel(maillon, 0.3F);
+                                        }
+                                    });
+                                } catch (ListeSommetsNull ex) {
+                                    throw new RuntimeException(ex);
+                                }
+                            }
+                        });
+                        
+                        
+                        
+                        
+                        graphePanel.setOpacityToSommetVisuel(graphePanel.getSommetSelectionne(), 1.0F);
+                        
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    graphePanel.setContenuDansTableVoisins(listInfosVoisins);
+                    pack();
+                } else {
+                    JOptionPane.showMessageDialog(null, null, "Aucun sommet selectionne ! ", JOptionPane.ERROR_MESSAGE);
+                }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////
@@ -810,7 +882,7 @@ public class InterfaceGraphe extends JFrame {
                     tableCheminsPanel.updateColonne(selectChoixChemin); // Met à jour la colonne du tableau avec le choix du chemin
                     tableCheminsPanel.addDataInTable("Depart", String.valueOf(graphe.getSommetDonnees().get(0) * 100 + " %")); // Ajoute les données de départ (fiabilité du sommet de départ) au tableau
                     double fiabiliteTotale = 1.0; // Initialise la fiabilité totale à 1.0
-
+                    
                     for (String i : graphe.getListeSommetCheminGraphe()) { // Parcourt les sommets du chemin
 
                         if (!i.equals(sommetSelect.getNom())) { // Vérifie si le sommet n'est pas le sommet de départ
