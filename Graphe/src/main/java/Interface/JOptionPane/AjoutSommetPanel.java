@@ -6,11 +6,11 @@ import java.awt.*;
 import java.util.Objects;
 
 
-public class AjoutSommetVisuelCreation extends JPanel {
+public class AjoutSommetPanel extends JPanel {
 	private JComboBox<String> choixTypeSommet;
 	private JTextField entreeSommet ;
 	
-	public AjoutSommetVisuelCreation() {
+	public AjoutSommetPanel() {
 		setLayout(new GridLayout(2,2));
 		
 		choixTypeSommet = new JComboBox<>();//liste des type
