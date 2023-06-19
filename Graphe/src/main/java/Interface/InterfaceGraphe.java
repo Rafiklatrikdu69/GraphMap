@@ -77,14 +77,20 @@ public class InterfaceGraphe extends JFrame {
 
     private File fichierCharge;
 
+    private Dimension infosSize;
+
 
     public InterfaceGraphe() throws ListeSommetsNull {
         super();
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenWidth = (int) screenSize.getWidth();
         int screenHeight = (int) screenSize.getHeight();
-        setSize(new Dimension(screenWidth, screenHeight));
-        setPreferredSize(new Dimension(screenWidth, screenHeight));
+        setSize(new Dimension(screenWidth-200, screenHeight-200));
+        setPreferredSize(new Dimension(screenWidth-200, screenHeight-200));
+
+        ImageIcon iconFenetre = new ImageIcon("src/img/doctor.png");
+        setIconImage(iconFenetre.getImage());
+        infosSize = new Dimension(((int) screenSize.getWidth() / 5) + 10, (int) screenSize.getHeight());
 
         initComponents();
         mettreInvisibleComposantSommet();
@@ -97,6 +103,8 @@ public class InterfaceGraphe extends JFrame {
         setVisible(true);
         accueilPanel = new AccueilPanel(this);
         setContentPane(accueilPanel);
+
+
     }
 
     /**
@@ -130,7 +138,7 @@ public class InterfaceGraphe extends JFrame {
         paneInfoSommet = new JPanel(new BorderLayout()); // ce panel contient le card layout, le nom du sommet et son type.
         paneInfoSommet.setOpaque(false);
         //On met un minimum de dimension de ce panel pour qu'il est la place d'afficher le contenu
-        panelToutesInfos.setPreferredSize(new Dimension(((int) screenSize.getWidth() / 5) + 10, (int) screenSize.getHeight()));
+        panelToutesInfos.setPreferredSize(infosSize);
 
         cardLayout = new CardLayout(); // ce card layout sert à changer de fenetre entre "Afficher les Voisins" et "Faire un Chemin"
         cardPanelInfos = new JPanel(cardLayout); // on met le card layout dans son panel
@@ -173,10 +181,21 @@ public class InterfaceGraphe extends JFrame {
     }
 
     private void initContainersInfoGraphe() {
-        Dimension tmp = panelToutesInfos.getPreferredSize();
-        panelInfoGraphe.setPreferredSize(new Dimension((int) tmp.getWidth(), (int) (tmp.getHeight() / 8)));
         titre = new JLabel("Graphe");//titre de l'interface
         titre.setHorizontalAlignment(JLabel.CENTER);//position au centre
+        ImageIcon logoIUT = new ImageIcon("src/img/logoIUT.png");
+        JPanel panelLogoIUT = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Dessiner l'image avec sa transparence
+                Image image = logoIUT.getImage();
+                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        panelLogoIUT.setPreferredSize(new Dimension(logoIUT.getIconWidth(), logoIUT.getIconHeight()));
+
+
         titre.setFont(new Font("Arial", Font.PLAIN, 25));
         /*Donnes initiales du graphe */
         nombreRouteLabel = new JLabel("");
@@ -194,8 +213,10 @@ public class InterfaceGraphe extends JFrame {
         panelMilieu.add(nombreMatLabel);
         panelMilieu.add(nombreCentreNutriLabel);
 
-        panelInfoGraphe.add(titre, BorderLayout.NORTH);
-        panelInfoGraphe.add(panelMilieu, BorderLayout.CENTER);
+
+        panelInfoGraphe.add(panelLogoIUT, BorderLayout.NORTH);
+        panelInfoGraphe.add(titre, BorderLayout.CENTER);
+        panelInfoGraphe.add(panelMilieu, BorderLayout.SOUTH);
 
 
     }
@@ -865,16 +886,104 @@ public class InterfaceGraphe extends JFrame {
         String destination = (String) choixDestinationComboBox.getSelectedItem(); // Récupère la destination sélectionnée dans une ComboBox
         graphePanel.resetTailleTraits();
 
+        Dijkstra tousLesCheminsDuSommet = graphe.getCheminDijkstra().get(sommetSelect.getNom());
+        LinkedHashMap<String, Double> chemin = null;
+
         if (selectChoixChemin.equals((ChoixTypeChemin.FIABILITE.getAttribut()))) { // Vérifie si le choix du chemin est la fiabilité
+            tableCheminsPanel.resetTable(); // Réinitialise le tableau des chemins
+            tableCheminsPanel.updateColonne(selectChoixChemin); // Met à jour la colonne du tableau avec le choix du chemin
+            listeSommetDjikstraChemin = new ArrayList<>(); // Initialise la liste des sommets du chemin selon l'algorithme de Dijkstra
+            listeSommetDjikstraChemin.add(sommetSelect.getNom()); // Ajoute le sommet de départ à la liste des sommets du chemin
             switch (destination) {
                 case "Maternité" -> {
-                    System.out.println("rien");
+                    if (sommetSelect.getType().equals("Maternité")) {
+                        chemin = tousLesCheminsDuSommet.getCheminsFiabiliteTo(sommetSelect.getNom());
+                    } else {
+                        LinkedHashMap<String, Double> meilleurChemin = null;
+                        Double meilleurFiabilite = -1.0;
+                        for (Graphe.MaillonGraphe maternite : graphe.getToutesLesMaternites()) {
+                            LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsFiabiliteTo(maternite.getNom());
+                            if (tmp != null) {
+                                int count = tmp.size() - 1;
+                                for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+                                    if (count == 0) {
+                                        if (meilleurFiabilite == -1.0) {
+                                            meilleurChemin = tmp;
+                                            meilleurFiabilite = entry.getValue();
+                                            destination = entry.getKey();
+                                        } else if (meilleurFiabilite < entry.getValue()) {
+                                            meilleurChemin = tmp;
+                                            meilleurFiabilite = entry.getValue();
+                                            destination = entry.getKey();
+                                        }
+                                    }
+                                    count--;
+                                }
+                            }
+                        }
+                        chemin = meilleurChemin;
+                    }
+                    setCheminDijkstraFiabilite(chemin, sommetSelect, destination);
                 }
                 case "Opératoire" -> {
-                    System.out.println("rien");
+                    if (sommetSelect.getType().equals("Opératoire")) {
+                        chemin = tousLesCheminsDuSommet.getCheminsFiabiliteTo(sommetSelect.getNom());
+                    } else {
+                        LinkedHashMap<String, Double> meilleurChemin = null;
+                        Double meilleurFiabilite = -1.0;
+                        for (Graphe.MaillonGraphe operatoire : graphe.getTousLesOperatoires()) {
+                            LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsFiabiliteTo(operatoire.getNom());
+                            if (tmp != null) {
+                                int count = tmp.size() - 1;
+                                for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+                                    if (count == 0) {
+                                        if (meilleurFiabilite == -1.0) {
+                                            meilleurChemin = tmp;
+                                            meilleurFiabilite = entry.getValue();
+                                            destination = entry.getKey();
+                                        } else if (meilleurFiabilite > entry.getValue()) {
+                                            meilleurChemin = tmp;
+                                            meilleurFiabilite = entry.getValue();
+                                            destination = entry.getKey();
+                                        }
+                                    }
+                                    count--;
+                                }
+                            }
+                        }
+                        chemin = meilleurChemin;
+                    }
+                    setCheminDijkstraFiabilite(chemin, sommetSelect, destination);
                 }
                 case "Centre de nutrition" -> {
-                    System.out.println("rien");
+                    if (sommetSelect.getType().equals("Centre de nutrition")) {
+                        chemin = tousLesCheminsDuSommet.getCheminsFiabiliteTo(sommetSelect.getNom());
+                    } else {
+                        LinkedHashMap<String, Double> meilleurChemin = null;
+                        Double meilleurFiabilite = -1.0;
+                        for (Graphe.MaillonGraphe centreNutri : graphe.getTousLesCentreDeNutrions()) {
+                            LinkedHashMap<String, Double> tmp = tousLesCheminsDuSommet.getCheminsFiabiliteTo(centreNutri.getNom());
+                            if (tmp != null) {
+                                int count = tmp.size() - 1;
+                                for (Map.Entry<String, Double> entry : tmp.entrySet()) {
+                                    if (count == 0) {
+                                        if (meilleurFiabilite == -1.0) {
+                                            meilleurChemin = tmp;
+                                            meilleurFiabilite = entry.getValue();
+                                            destination = entry.getKey();
+                                        } else if (meilleurFiabilite > entry.getValue()) {
+                                            meilleurChemin = tmp;
+                                            meilleurFiabilite = entry.getValue();
+                                            destination = entry.getKey();
+                                        }
+                                    }
+                                    count--;
+                                }
+                            }
+                        }
+                        chemin = meilleurChemin;
+                    }
+                    setCheminDijkstraFiabilite(chemin, sommetSelect, destination);
                 }
                 default -> {
                     graphe.rechercheChemin(sommetSelect.getNom(), destination); // Effectue la recherche du chemin de plus grande fiabilité entre le sommet sélectionné et la destination
@@ -894,19 +1003,18 @@ public class InterfaceGraphe extends JFrame {
                     }
 
                     tableCheminsPanel.addDataInTable("Fiabilité totale", String.valueOf(Math.round(fiabiliteTotale * 100 * 100) / 100) + " %"); // Ajoute la fiabilité totale au tableau
+                    graphePanel.colorCheminFiabilite(); // Colorie le chemin de plus grande fiabilité sur le graphe
                 }
             }
-            graphePanel.colorCheminFiabilite(); // Colorie le chemin de plus grande fiabilité sur le graphe
+
             repaint(); // Redessine le graphe
         }
 
-        if (selectChoixChemin.equals((ChoixTypeChemin.DISTANCE.getAttribut()))) { // Vérifie si le choix du chemin est la distance
+        else if (selectChoixChemin.equals((ChoixTypeChemin.DISTANCE.getAttribut()))) { // Vérifie si le choix du chemin est la distance
             tableCheminsPanel.resetTable(); // Réinitialise le tableau des chemins
             listeSommetDjikstraChemin = new ArrayList<>(); // Initialise la liste des sommets du chemin selon l'algorithme de Dijkstra
             listeSommetDjikstraChemin.add(sommetSelect.getNom()); // Ajoute le sommet de départ à la liste des sommets du chemin
             tableCheminsPanel.updateColonne(selectChoixChemin); // Met à jour la colonne du tableau avec le choix du chemin
-            LinkedHashMap<String, Double> chemin = null;
-            Dijkstra tousLesCheminsDuSommet = graphe.getCheminDijkstra().get(sommetSelect.getNom());
             switch (destination) {
                 case "Maternité" -> {
                     if (sommetSelect.getType().equals("Maternité")) {
@@ -1004,35 +1112,16 @@ public class InterfaceGraphe extends JFrame {
                 }
             }
 
-            if (chemin != null) { // Vérifie si un chemin existe
-                for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
-                    String nomSommet = entry.getKey(); // Obtient le nom du sommet
-                    double distance = entry.getValue(); // Obtient la distance entre les sommets
-
-                    if (nomSommet.equals(sommetSelect.getNom())) { // Vérifie si le sommet est le sommet de départ
-                        tableCheminsPanel.addDataInTable("Départ (" + nomSommet + ")", (int) distance + "Km"); // Ajoute les données du sommet de départ au tableau
-                    } else if (nomSommet.equals(destination)) { // Vérifie si le sommet est la destination
-                        listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
-                        tableCheminsPanel.addDataInTable("Arrivé (" + nomSommet + ")", (int) distance + "Km"); // Ajoute les données du sommet d'arrivée au tableau
-                    } else {
-                        listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
-                        tableCheminsPanel.addDataInTable(nomSommet, (int) distance + "Km"); // Ajoute les données du sommet au tableau
-                    }
-                }
-            } else {
-                tableCheminsPanel.addDataInTable(sommetSelect.getNom() + " -> " + destination, "Aucun Chemin"); // Ajoute un message indiquant qu'aucun chemin n'existe
-            }
-
-            graphePanel.colorCheminDjikstra(); // colorie le chemin le plus court sur le graphe selon l'algorithme de Dijkstra
+            setCheminDijkstraDistance(chemin, sommetSelect, destination);
             repaint(); // redessine le graphe
-        } else if (selectChoixChemin.equals((ChoixTypeChemin.DUREE.getAttribut()))) { // Vérifie si le choix du chemin est la durée
+        }
+        else if (selectChoixChemin.equals((ChoixTypeChemin.DUREE.getAttribut()))) { // Vérifie si le choix du chemin est la durée
 
             tableCheminsPanel.resetTable(); // Réinitialise le tableau des chemins
             listeSommetDjikstraChemin = new ArrayList<>(); // Initialise la liste des sommets du chemin selon l'algorithme de Dijkstra
             listeSommetDjikstraChemin.add(sommetSelect.getNom()); // Ajoute le sommet de départ à la liste des sommets du chemin
             tableCheminsPanel.updateColonne(selectChoixChemin); // Met à jour la colonne du tableau avec le choix du chemin
-            LinkedHashMap<String, Double> chemin = null;
-            Dijkstra tousLesCheminsDuSommet = graphe.getCheminDijkstra().get(sommetSelect.getNom());
+
             switch (destination) {
                 case "Maternité" -> {
                     if (sommetSelect.getType().equals("Maternité")) {
@@ -1128,27 +1217,7 @@ public class InterfaceGraphe extends JFrame {
                     chemin = tousLesCheminsDuSommet.getCheminsDureeTo(destination); // Obtient le chemin le plus court en termes de distance entre le sommet de départ et la destination
                 }
             }
-            if (chemin != null) { // Verifie si un chemin existe
-
-                for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
-                    String nomSommet = entry.getKey(); // Obtient le nom du sommet
-                    double duree = entry.getValue(); // Obtient la durée entre les sommets
-
-                    if (nomSommet.equals(sommetSelect.getNom())) { // Vérifie si le sommet est le sommet de départ
-                        tableCheminsPanel.addDataInTable("Départ (" + nomSommet + ")", (int) duree + " min"); // Ajoute les données du sommet de départ au tableau
-                    } else if (nomSommet.equals(destination)) { // Vérifie si le sommet est la destination
-                        listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
-                        tableCheminsPanel.addDataInTable("Arrivé (" + nomSommet + ")", (int) duree + " min"); // Ajoute les données du sommet d'arrivée au tableau
-                    } else {
-                        listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
-                        tableCheminsPanel.addDataInTable(nomSommet, (int) duree + " min"); // Ajoute les données du sommet au tableau
-                    }
-                }
-            } else {
-                tableCheminsPanel.addDataInTable(sommetSelect.getNom() + " -> " + destination, "Aucun Chemin"); // Ajoute un message indiquant qu'aucun chemin n'existe
-            }
-
-            graphePanel.colorCheminDjikstra(); // Colorie le chemin le plus court sur le graphe selon l'algorithme de Dijkstra
+            setCheminDijkstraDuree(chemin, sommetSelect, destination);
             repaint(); // Redessine le graphe
         }
     }
@@ -1168,6 +1237,74 @@ public class InterfaceGraphe extends JFrame {
         boutonPrecedent.setVisible(false);
         affichageVoisinPanel.setVisible(false);
         contenuTousLesCheminsPanel.setVisible(false);
+    }
+
+    private void setCheminDijkstraDistance(LinkedHashMap<String, Double> chemin, Graphe.MaillonGraphe sommetSelect, String destination){
+        if (chemin != null) { // Vérifie si un chemin existe
+            for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
+                String nomSommet = entry.getKey(); // Obtient le nom du sommet
+                double distance = entry.getValue(); // Obtient la distance entre les sommets
+
+                if (nomSommet.equals(sommetSelect.getNom())) { // Vérifie si le sommet est le sommet de départ
+                    tableCheminsPanel.addDataInTable("Départ (" + nomSommet + ")", (int) distance + "Km"); // Ajoute les données du sommet de départ au tableau
+                } else if (nomSommet.equals(destination)) { // Vérifie si le sommet est la destination
+                    listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
+                    tableCheminsPanel.addDataInTable("Arrivé (" + nomSommet + ")", (int) distance + "Km"); // Ajoute les données du sommet d'arrivée au tableau
+                } else {
+                    listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
+                    tableCheminsPanel.addDataInTable(nomSommet, (int) distance + "Km"); // Ajoute les données du sommet au tableau
+                }
+            }
+        } else {
+            tableCheminsPanel.addDataInTable(sommetSelect.getNom() + " -> " + destination, "Aucun Chemin"); // Ajoute un message indiquant qu'aucun chemin n'existe
+        }
+
+        graphePanel.colorCheminDjikstra(); // colorie le chemin le plus court sur le graphe selon l'algorithme de Dijkstra
+    }
+    private void setCheminDijkstraDuree(LinkedHashMap<String, Double> chemin, Graphe.MaillonGraphe sommetSelect, String destination){
+        if (chemin != null) { // Verifie si un chemin existe
+
+            for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
+                String nomSommet = entry.getKey(); // Obtient le nom du sommet
+                double duree = entry.getValue(); // Obtient la durée entre les sommets
+
+                if (nomSommet.equals(sommetSelect.getNom())) { // Vérifie si le sommet est le sommet de départ
+                    tableCheminsPanel.addDataInTable("Départ (" + nomSommet + ")", (int) duree + " min"); // Ajoute les données du sommet de départ au tableau
+                } else if (nomSommet.equals(destination)) { // Vérifie si le sommet est la destination
+                    listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
+                    tableCheminsPanel.addDataInTable("Arrivé (" + nomSommet + ")", (int) duree + " min"); // Ajoute les données du sommet d'arrivée au tableau
+                } else {
+                    listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
+                    tableCheminsPanel.addDataInTable(nomSommet, (int) duree + " min"); // Ajoute les données du sommet au tableau
+                }
+            }
+        } else {
+            tableCheminsPanel.addDataInTable(sommetSelect.getNom() + " -> " + destination, "Aucun Chemin"); // Ajoute un message indiquant qu'aucun chemin n'existe
+        }
+
+        graphePanel.colorCheminDjikstra(); // Colorie le chemin le plus court sur le graphe selon l'algorithme de Dijkstra
+    }
+    private void setCheminDijkstraFiabilite(LinkedHashMap<String, Double> chemin, Graphe.MaillonGraphe sommetSelect, String destination){
+
+        if (chemin != null) { // Vérifie si un chemin existe
+            for (Map.Entry<String, Double> entry : chemin.entrySet()) { // Parcourt les sommets du chemin
+                String nomSommet = entry.getKey(); // Obtient le nom du sommet
+                double fiab = entry.getValue(); // Obtient la distance entre les sommets
+
+                if (nomSommet.equals(sommetSelect.getNom())) { // Vérifie si le sommet est le sommet de départ
+                    tableCheminsPanel.addDataInTable("Départ (" + nomSommet + ")", (int) (fiab*100)+ "%"); // Ajoute les données du sommet de départ au tableau
+                } else if (nomSommet.equals(destination)) { // Vérifie si le sommet est la destination
+                    listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
+                    tableCheminsPanel.addDataInTable("Arrivé (" + nomSommet + ")", (int) (fiab*100)+ "%"); // Ajoute les données du sommet d'arrivée au tableau
+                } else {
+                    listeSommetDjikstraChemin.add(nomSommet); // Ajoute le sommet à la liste des sommets du chemin
+                    tableCheminsPanel.addDataInTable(nomSommet, (int) (fiab*100)+ "%"); // Ajoute les données du sommet au tableau
+                }
+            }
+        } else {
+            tableCheminsPanel.addDataInTable(sommetSelect.getNom() + " -> " + destination, "Aucun Chemin"); // Ajoute un message indiquant qu'aucun chemin n'existe
+        }
+        graphePanel.colorCheminDjikstra(); // colorie le chemin le plus court sur le graphe selon l'algorithme de Dijkstra
     }
 
     /**
