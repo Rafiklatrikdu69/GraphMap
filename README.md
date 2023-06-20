@@ -1,36 +1,49 @@
-Chef de projet et developpeur : Rafik bouchenna
-developpeur : Emmanuel Ardoin  
-Fonctions developer :
-Date de rendu :
+# README
 
-Java Algo :
--Algorithme de plus courts chemin(Djikstra,FloydWarshall)
--Ajout des elements dans une liste de liste chainée
--Chargement des fichiers pour la liste de liste 
--Lister les voisins directs d'un sommets puis les voisins a deux distances d'un sommet
--Methode getter et setter puis recupuerer ou mettre a jour les elements de la liste chainée
--Modification des données de la liste
--Methode getter/setter
+## Chef de projet et développeur
+- Chef de projet et développeur : Rafik Bouchenna
 
+## Développeur
+- Développeur : Emmanuel Ardoin
 
-IHM :
--Affichage du graphe
--Deplacement des sommets sur le graphe 
--Menu Accueil 
--Ouverture fichier 
--Affichage des informations sur un sommet
--Affichage des chemins : 
-        -distances
-        -duree
-        -fiabilite
-Affichage des voisins : 
-            -directs
-            -a 2 distances
-            -a p distances 
+## Fonctions de développement
 
-Ressources utilisées:
-Cours de Java et d'IHM + documentation internet
-Outils utilisés :
-    -Map,listes,liste chainées ,etc...
+##Importation des librairies
+-Allez dans File->Project Structure -> librairies -> +
 
-JavaDoc : fichier/...
+### Java Algo
+- Implémentation des algorithmes de plus courts chemins (Dijkstra, FloydWarshall)
+- Ajout des éléments dans une liste de liste chaînée
+- Chargement des fichiers pour la liste de liste
+- Obtention des voisins directs d'un sommet, ainsi que des voisins à deux distances d'un sommet
+- Mise en place de méthodes getter et setter pour récupérer ou mettre à jour les éléments de la liste chaînée
+- Modification des données de la liste
+- Utilisation de méthodes getter/setter
+
+### IHM
+- Affichage graphique du graphe
+- Déplacement des sommets sur le graphe
+- Menu d'accueil convivial
+- Fonctionnalité d'ouverture de fichiers
+- Affichage des informations d'un sommet spécifique
+- Affichage des chemins avec les détails suivants :
+  - Distances
+  - Durée
+  - Fiabilité
+- Affichage des voisins avec les caractéristiques suivantes :
+  - Voisins directs
+  - Voisins à deux distances
+  - Voisins à p distances
+
+## Ressources utilisées
+- Cours de Java et d'IHM
+- Documentation disponible sur internet
+
+## Outils utilisés
+- Utilisation de `Map` pour les fonctionnalités de mappage
+- Utilisation de listes pour la gestion des données
+- Utilisation de listes chaînées pour la structure de données spécifique
+- Et bien d'autres outils pour faciliter le développement
+
+## JavaDoc
+- Fichier/...
