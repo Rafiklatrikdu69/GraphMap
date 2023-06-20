@@ -2,10 +2,9 @@ import Interface.InterfaceGraphe;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.swing.*;
-import java.awt.*;
 
 
-public class LancerInterface {
+public class Application {
     public static void main(String[] args){
         
 

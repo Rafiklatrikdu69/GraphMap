@@ -6,7 +6,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Scanner;
 
-public class MenuConsoleGraphe {
+public class Menu {
 	private static Graphe newGraphe = new Graphe();
 	private static String optionDispensaire2;
 	

@@ -7,6 +7,7 @@ import Interface.JOptionPane.AjoutAretePanel;
 import Interface.JOptionPane.AjoutSommetPanel;
 import Interface.JOptionPane.ConfirmerAjoutDansCSV;
 import LCGraphe.Dijkstra;
+import LCGraphe.FloydWarshall;
 import LCGraphe.Graphe;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
@@ -835,13 +836,15 @@ public class InterfaceGraphe extends JFrame {
      * >>>>>>> feature/ajoutSommetVisuel
      */
     private void creationDuSommet() {
+        
         AjoutSommetPanel ajout = new AjoutSommetPanel();
         int choix = JOptionPane.showOptionDialog(this, ajout, "Ajouter Centre", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
         if (choix == JOptionPane.OK_OPTION) {
             if (!ajout.getNom().contains("-") && !graphe.existeSommet(ajout.getNom())) {
-                graphe.ajoutSommet(ajout.getNom(), ajout.getType());
+                graphe.ajoutSommet(ajout.getNom(), ajout.getType().trim());
                 graphe.getCheminDijkstra().put(ajout.getNom(), new Dijkstra(graphe, ajout.getNom()));
-
+                FloydWarshall floydWarshall = new FloydWarshall(graphe);
+                floydWarshall.floydWarshallFiabilite();
                 int[] pos = graphePanel.getRandomPositionPourSommet(getContenuGraphePanel());
                 //place le sommet à une position Random x et y
                 graphePanel.initialisationPlacementSommet(graphe.getSommet(ajout.getNom()), pos[0], pos[1]);
