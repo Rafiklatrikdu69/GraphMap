@@ -33,7 +33,7 @@
 - Affichage des voisins avec les caractéristiques suivantes :
   - Voisins directs
   - Voisins à deux distances
-  - Voisins à p distances
+
 
 ## Ressources utilisées
 - Cours de Java et d'IHM
