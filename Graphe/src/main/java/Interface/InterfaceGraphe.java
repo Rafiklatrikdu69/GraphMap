@@ -68,8 +68,8 @@ public class InterfaceGraphe extends JFrame {
     private JMenuBar menu;
     private JRadioButtonMenuItem modeLight, modeDark;
     private JMenu itemFichier, itemFenetre, itemModeDuGraphe, itemFonctionnalite, itemChoixTheme, itemAjoutSommetArete;
-    private JMenuItem itemFermerFenetre, itemOuvrirFichier, itemEnregisterGraphe;
-    private JMenuItem itemAjoutArete, itemAjoutSommet, itemAfficherMaternite, itemAfficherCentresDeNutri, itemAfficherOperatoire;
+    private JMenuItem itemFermerFenetre, itemOuvrirFichier, itemActualiser;
+    private JMenuItem itemAjoutArete, itemAjoutSommet, itemAfficherMaternite, itemAfficherCentresDeNutri, itemAfficherOperatoire, itemComplexite;
     static JRadioButton bloquerGraphe;
     private Dimension screenSize;
     private LCGraphe.Graphe graphe;
@@ -386,11 +386,12 @@ public class InterfaceGraphe extends JFrame {
         itemModeDuGraphe.setFont(fontBarreMenu);
 
         itemFichier.add(itemOuvrirFichier);
-        itemFichier.add(itemEnregisterGraphe);
         itemFichier.setFont(fontBarreMenu);
 
         itemFenetre.add(itemChoixTheme);
+        itemFenetre.add(itemActualiser);
         itemFenetre.add(itemFermerFenetre);
+
         itemFenetre.setFont(fontBarreMenu);
 
         ButtonGroup groupeEditGraphe = new ButtonGroup();
@@ -404,6 +405,7 @@ public class InterfaceGraphe extends JFrame {
         itemFonctionnalite.add(itemAfficherMaternite);
         itemFonctionnalite.add(itemAfficherCentresDeNutri);
         itemFonctionnalite.add(itemAfficherOperatoire);
+        itemFonctionnalite.add(itemComplexite);
         itemFonctionnalite.setFont(fontBarreMenu);
 
         ButtonGroup groupeLightDarkMode = new ButtonGroup();
@@ -436,7 +438,6 @@ public class InterfaceGraphe extends JFrame {
      */
     private void initialisationJMenuItem() {
         itemOuvrirFichier = new JMenuItem("Ouvrir");
-        itemEnregisterGraphe = new JMenuItem("Enregistrer");
         itemFermerFenetre = new JMenuItem("Fermer");
 
         itemAjoutSommet = new JMenuItem("Ajouter Sommet");
@@ -446,6 +447,8 @@ public class InterfaceGraphe extends JFrame {
         itemAfficherMaternite = new JMenuItem("Afficher les maternités");
         itemAfficherCentresDeNutri = new JMenuItem("Afficher les centres de nutrition");
         itemAfficherOperatoire = new JMenuItem("Afficher les opératoires");
+        itemComplexite = new JMenuItem("Afficher les complexités");
+        itemActualiser = new JMenuItem("Actualiser");
 
         modeLight = new JRadioButtonMenuItem("Light", true);
         modeDark = new JRadioButtonMenuItem("Dark");
@@ -668,6 +671,33 @@ public class InterfaceGraphe extends JFrame {
                 }
             }
         });
+        itemComplexite.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                afficherComplexite();
+            }
+        });
+        itemActualiser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!getContentPane().equals(getCp())) {
+                    setContentPane(getCp());
+                    setJMenuBar(getMenu());
+                    pack();
+                }
+
+                contenuGraphePanel.removeAll();
+                graphe = new Graphe();
+                try {
+                    graphe.chargementFichier(fichierCharge.getPath());
+                } catch (Exception ignored) {}
+                mettreVisibleComposantGraphe();
+                initContainerDessinGraphePanel();
+
+                updateComboBoxSommets();
+                updateInterface();
+            }
+        });
 
         afficherVoisin1Distance.addActionListener(new ActionListener() {
             @Override
@@ -808,8 +838,20 @@ public class InterfaceGraphe extends JFrame {
                 if(selectedSommet != null){
                     graphePanel.actionPerformedClickDessinPanel(graphePanel.getListeSommetVisuel().get(graphe.getSommet(selectedSommet)));
                 }
+
             }
         });
+    }
+
+    private void afficherComplexite(){
+
+        JPanel panel = new JPanel(new GridLayout(2,2));
+        panel.add(new JLabel("Algorithme Floyd-Warshall"));
+        panel.add(new JLabel("O(N^3) avec N le nombre de sommets"));
+        panel.add(new JLabel("Algorithme Dijkstra"));
+        panel.add(new JLabel("O((N+E) log(N) avec N le nombre de sommets et E le nombre d'aretes"));
+
+        JOptionPane.showMessageDialog(this, panel, "Complexités des Algos", JOptionPane.INFORMATION_MESSAGE);
     }
 
 
@@ -879,7 +921,7 @@ public class InterfaceGraphe extends JFrame {
     public void setOuvrirFichierActions() {
         JFileChooser fenetreOuvertureFichier = new JFileChooser(new File("."));
         fenetreOuvertureFichier.setFileFilter(new FileNameExtensionFilter("Fichiers", "csv"));//seul les format csv sont autorises et proposer
-        fichierCharge = new File("..\\src\\fichiersGraphe\\");//tombe directement sur le dossier voulu
+        fichierCharge = new File("D:\\Manolo\\doc\\codes\\Java\\IUT\\SAE\\Graphe\\Graphe\\src\\fichiersGraphe");//tombe directement sur le dossier voulu
         fenetreOuvertureFichier.setCurrentDirectory(fichierCharge);
         if (fenetreOuvertureFichier.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             fichierCharge = fenetreOuvertureFichier.getSelectedFile();//recupere le choix du fichier
