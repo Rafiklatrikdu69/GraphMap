@@ -31,6 +31,7 @@ public class DessinGraphe extends JPanel {
 	private Color couleurBordure; // Couleur par défaut du rectangle
 
 	private Map<String, Point> positionSommets;
+	private Map<Dimension, Map<String, Point>> positionSommetsDimensions;
 
 	/**
 	 * Constructeur de la classe DessinGraphe
@@ -49,8 +50,6 @@ public class DessinGraphe extends JPanel {
 		sommets = new HashMap<>();//Map pour associe chaque maillon de la liste avec un Jpanel
 		setLayout(null); // Utiliser un layout null pour positionner les sommets manuellement
 		initialisationGraphe();
-		
-		
 	}
 	
 	
@@ -61,41 +60,40 @@ public class DessinGraphe extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		dessinerArete(g);
-		
-		
 	}
 
 	private void setPositionSommets(){
-		positionSommets.put("S1", new Point(189,390));
-		positionSommets.put("S2", new Point(87,553));
-		positionSommets.put("S3", new Point(316,325));
-		positionSommets.put("S4", new Point(333,550));
-		positionSommets.put("S5", new Point(396,417));
-		positionSommets.put("S6", new Point(623,155));
-		positionSommets.put("S7", new Point(758,53));
-		positionSommets.put("S8", new Point(749,255));
-		positionSommets.put("S9", new Point(706,539));
-		positionSommets.put("S10", new Point(680,649));
-		positionSommets.put("S11", new Point(824,375));
-		positionSommets.put("S12", new Point(832,597));
-		positionSommets.put("S13", new Point(1200,310));
-		positionSommets.put("S14", new Point(892,180));
-		positionSommets.put("S15", new Point(1113,281));
-		positionSommets.put("S16", new Point(1179,473));
-		positionSommets.put("S17", new Point(940,520));
-		positionSommets.put("S18", new Point(1031,525));
-		positionSommets.put("S19", new Point(1073,749));
-		positionSommets.put("S20", new Point(822,758));
-		positionSommets.put("S21", new Point(330,660));
-		positionSommets.put("S22", new Point(207,606));
-		positionSommets.put("S23", new Point(509,803));
-		positionSommets.put("S24", new Point(510,646));
-		positionSommets.put("S25", new Point(582,449));
-		positionSommets.put("S26", new Point(604,316));
-		positionSommets.put("S27", new Point(197,172));
-		positionSommets.put("S28", new Point(417,85));
-		positionSommets.put("S29", new Point(994,382));
-		positionSommets.put("S30", new Point(1114,185));
+		positionSommets.put("S1", new Point(103,270));
+		positionSommets.put("S2", new Point(20,363));
+		positionSommets.put("S3", new Point(244,207));
+		positionSommets.put("S4", new Point(266,408));
+		positionSommets.put("S5", new Point(300,295));
+		positionSommets.put("S6", new Point(400,131));
+		positionSommets.put("S7", new Point(498,20));
+		positionSommets.put("S8", new Point(530,170));
+		positionSommets.put("S9", new Point(689,366));
+		positionSommets.put("S10", new Point(621,484));
+		positionSommets.put("S11", new Point(646,284));
+		positionSommets.put("S12", new Point(746,442));
+		positionSommets.put("S13", new Point(960,230));
+		positionSommets.put("S14", new Point(644,127));
+		positionSommets.put("S15", new Point(860,209));
+		positionSommets.put("S16", new Point(950,365));
+		positionSommets.put("S17", new Point(835,370));
+		positionSommets.put("S18", new Point(835,463));
+		positionSommets.put("S19", new Point(929,583));
+		positionSommets.put("S20", new Point(686,564));
+		positionSommets.put("S21", new Point(263,587));
+		positionSommets.put("S22", new Point(61,512));
+		positionSommets.put("S23", new Point(459,580));
+		positionSommets.put("S24", new Point(451,514));
+		positionSommets.put("S25", new Point(456,363));
+		positionSommets.put("S26", new Point(420,244));
+		positionSommets.put("S27", new Point(164,86));
+		positionSommets.put("S28", new Point(304,63));
+		positionSommets.put("S29", new Point(784,239));
+		positionSommets.put("S30", new Point(820,90));
+
 	}
 
 	public void setCouleurRectangle(Color couleur) {
@@ -173,6 +171,7 @@ public class DessinGraphe extends JPanel {
 		}
 		
 		initialisationPlacementArete();
+
 	}
 	
 	/**
