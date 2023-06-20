@@ -18,7 +18,7 @@ public class FloydWarshallTest {
 	public FloydWarshallTest() {
 		try {
 			graphe = new Graphe();
-			graphe.chargementFichier("C:\\Users\\Rafik\\Documents\\SAE\\sae_java_outil_aide_a_la_decision\\Fichiers pour Etudiants\\liste-adjacence-jeuEssai.csv");
+			graphe.chargementFichier("src/fichiersGraphe/graphe30Som74Arete.csv");
 			
 			
 		} catch (Exception e) {

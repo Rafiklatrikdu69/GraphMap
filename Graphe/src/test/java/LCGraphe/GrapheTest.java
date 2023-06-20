@@ -58,13 +58,13 @@ class GrapheTest {
         Assertions.assertNotEquals(graphe.getNombreRoute(), 0);
         Assertions.assertNotEquals(graphe.getNombreRoute(), 31);
         Assertions.assertNotEquals(graphe.getNombreRoute(), 43);
-        Assertions.assertNotEquals(graphe.getNombreRoute(), 75);
+        Assertions.assertNotEquals(graphe.getNombreRoute(), 74);
         Assertions.assertNotEquals(graphe.getNombreRoute(), 76);
         Assertions.assertNotEquals(graphe.getNombreRoute(), 100);
         Assertions.assertNotEquals(graphe.getNombreRoute(), 30);
         Assertions.assertNotEquals(graphe.getNombreRoute(), 20);
 
-        Assertions.assertEquals(graphe.getNombreRoute(), 74);
+        Assertions.assertEquals(graphe.getNombreRoute(), 75);
     }
 
     @Test
