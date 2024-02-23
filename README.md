@@ -8,7 +8,7 @@
 
 ## Fonctions de développement
 
-##Importation des librairies
+### Importation des librairies
 -Allez dans File->Project Structure -> librairies -> +
 
 ### Java Algo
